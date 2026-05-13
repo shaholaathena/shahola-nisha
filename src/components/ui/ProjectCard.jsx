@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 const DashboardMockup = ({ color, accentColor }) => (
   <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" aria-hidden="true">
@@ -166,28 +167,44 @@ const mockupMap = {
 
 export default function ProjectCard({ project }) {
   const Mockup = mockupMap[project.type] || DashboardMockup
-  const isLarge = project.size === 'large' || project.size === 'wide'
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    if (!project.link) return
+    if (project.link.startsWith('/')) {
+      navigate(project.link)
+    } else if (project.link.startsWith('#')) {
+      document.querySelector(project.link)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      window.open(project.link, '_blank', 'noopener noreferrer')
+    }
+  }
 
   return (
     <motion.article
+      onClick={project.link ? handleClick : undefined}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -5 }}
-      className="group card-surface overflow-hidden cursor-pointer h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-zinc-900/5 hover:border-zinc-800/20"
-      style={{ minHeight: isLarge ? 380 : 300 }}
+      className={`group card-surface overflow-hidden h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-zinc-900/5 hover:border-zinc-800/20 ${project.link ? 'cursor-pointer' : 'cursor-default'}`}
+      style={{ minHeight: 560 }}
     >
       {/* Product mockup */}
       <div
         className="relative overflow-hidden flex-shrink-0"
         style={{
-          height: isLarge ? 220 : 160,
+          height: 420,
           background: project.color,
         }}
       >
         <div className="w-full h-full transform group-hover:scale-105 group-hover:rotate-1 transition-transform duration-700 ease-out">
-          <Mockup color={project.color} accentColor={project.accentColor} />
+          {project.image ? (
+            <img src={project.image} alt={project.title} className="w-full h-full object-cover object-center" />
+          ) : (
+            <Mockup color={project.color} accentColor={project.accentColor} />
+          )}
         </div>
         {/* Overlay gradient */}
         <div
@@ -235,7 +252,7 @@ export default function ProjectCard({ project }) {
                {project.impact}
              </span>
           </div>
-          <div className="w-8 h-8 rounded-full bg-surface-2 flex items-center justify-center text-ink-muted group-hover:bg-zinc-50 group-hover:text-zinc-900 transition-all transform group-hover:translate-x-1">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all transform group-hover:translate-x-1 ${project.link ? 'bg-zinc-900 text-white group-hover:bg-zinc-700' : 'bg-surface-2 text-ink-muted group-hover:bg-zinc-50 group-hover:text-zinc-900'}`}>
              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
              </svg>

@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { caseStudy } from '../../data/portfolio'
-import ImageShowcase from '../ui/ImageShowcase'
 
 export default function CaseStudyPreview() {
   return (
     <section id="case-study" className="py-28 lg:py-36 border-t border-border-subtle relative overflow-hidden">
-      {/* Background treatment */}
       <div
         className="absolute top-0 right-0 w-1/2 h-full pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 60% 70% at 80% 50%, rgba(30,58,120,0.1) 0%, transparent 70%)' }}
@@ -42,7 +41,7 @@ export default function CaseStudyPreview() {
           </motion.div>
         </div>
 
-        {/* Main case study card */}
+        {/* Teaser card */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -50,14 +49,19 @@ export default function CaseStudyPreview() {
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="card-surface overflow-hidden"
         >
-          {/* Interactive product showcase */}
-          <div className="border-b border-border-subtle">
-            <ImageShowcase />
+          {/* Hero image */}
+          <div className="relative overflow-hidden bg-[#0f3f2b]" style={{ height: 320 }}>
+            <img
+              src="https://shaholanisha.xyz/wp-content/uploads/2026/04/krishi-scaled.png"
+              alt="myBKB App screens"
+              className="w-full h-full object-cover object-center opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0f3f2b]/80 to-transparent" />
           </div>
 
           {/* Content */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
-            {/* Problem + Outcome */}
+            {/* Left — challenge + outcome + process */}
             <div className="lg:col-span-2 p-8 md:p-10 border-r border-border-subtle">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
                 <div>
@@ -69,8 +73,6 @@ export default function CaseStudyPreview() {
                   <p className="text-sm text-ink-secondary leading-relaxed">{caseStudy.outcome}</p>
                 </div>
               </div>
-
-              {/* Process phases */}
               <div>
                 <div className="text-[10px] font-semibold text-ink-faint uppercase tracking-widest mb-4">Process</div>
                 <div className="flex flex-wrap gap-2">
@@ -86,30 +88,25 @@ export default function CaseStudyPreview() {
               </div>
             </div>
 
-            {/* Metrics sidebar */}
-            <div className="p-8 md:p-10">
+            {/* Right — metrics + CTA */}
+            <div className="p-8 md:p-10 flex flex-col">
               <div className="text-[10px] font-semibold text-ink-muted uppercase tracking-widest mb-6">Key Results</div>
-              <div className="space-y-5">
+              <div className="space-y-5 flex-1">
                 {caseStudy.metrics.map((m) => (
                   <div key={m.label} className="border-b border-border-subtle pb-5 last:border-0 last:pb-0">
-                    <div className="text-ink-faintxl font-display font-semibold text-ink-primary tracking-tight mb-1">
-                      {m.value}
-                    </div>
+                    <div className="text-2xl font-display font-semibold text-ink-primary tracking-tight mb-1">{m.value}</div>
                     <div className="text-xs text-ink-muted">{m.label}</div>
                   </div>
                 ))}
               </div>
-
-              {/* CTA */}
               <div className="mt-8 pt-6 border-t border-border-subtle">
-                <a
-                  href="#contact"
-                  onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }) }}
-                  className="flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors font-medium"
+                <Link
+                  to="/case-study/bkb-mobile"
+                  className="group flex items-center justify-center gap-2 text-sm font-semibold text-zinc-900 bg-white border border-zinc-800/20 shadow-sm hover:shadow-md px-5 py-3 rounded-lg transition-all duration-200 hover:-translate-y-0.5"
                 >
-                  Request full case study
-                  <span aria-hidden="true">→</span>
-                </a>
+                  View full case study
+                  <span aria-hidden="true" className="group-hover:translate-x-1 transition-transform">→</span>
+                </Link>
               </div>
             </div>
           </div>

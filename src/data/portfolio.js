@@ -1,3 +1,5 @@
+import easyHealthImg from '../assets/easy-health.jpg';
+
 export const meta = {
   name: 'AN',
   fullName: 'Alimoon Nisha',
@@ -20,30 +22,76 @@ export const stats = [
 
 export const projects = [
   {
-    id: 'bkb-mobile',
-    title: 'Bangladesh Krishi Bank - myBKB App',
-    company: 'Bangladesh Krishi Bank',
-    type: 'mobile',
-    year: '2024',
-    tags: ['Mobile Banking', 'UI/UX', 'Figma'],
-    size: 'large',
-    impact: 'Sep-Nov 2024',
-    description: 'A mobile banking experience for managing finances, transferring funds, and paying bills from a smartphone with a simple and intuitive flow.',
-    color: '#0f3f2b',
-    accentColor: '#16a34a',
-  },
-  {
     id: 'bkb-internet',
     title: 'Bangladesh Krishi Bank - Internet Banking',
     company: 'Bangladesh Krishi Bank',
     type: 'dashboard',
     year: '2024',
     tags: ['Internet Banking', 'Web App', 'UI/UX'],
-    size: 'medium',
+    size: 'large',
     impact: 'Nov-Dec 2024',
     description: 'A web banking interface for account overview, fund transfer, beneficiary management, bill payment, statements, and transaction history.',
     color: '#123c2d',
     accentColor: '#22c55e',
+    image: 'https://shaholanisha.xyz/wp-content/uploads/2026/01/krishi-banner-3.png',
+  },
+  {
+    id: 'bkb-mobile',
+    title: 'Bangladesh Krishi Bank - myBKB App',
+    company: 'Bangladesh Krishi Bank',
+    type: 'mobile',
+    year: '2024',
+    tags: ['Mobile Banking', 'UI/UX', 'Figma'],
+    size: 'medium',
+    impact: 'Sep-Nov 2024',
+    description: 'A mobile banking experience for managing finances, transferring funds, and paying bills from a smartphone with a simple and intuitive flow.',
+    color: '#0f3f2b',
+    accentColor: '#16a34a',
+    image: 'https://shaholanisha.xyz/wp-content/uploads/2026/04/krishi-scaled.png',
+    link: '/case-study/bkb-mobile',
+    caseStudy: {
+      title: 'Bangladesh Krishi Bank — myBKB App',
+      company: 'Bangladesh Krishi Bank',
+      year: '2024',
+      role: 'UI/UX Design',
+      duration: '2 months',
+      context: 'Bangladesh Krishi Bank (BKB) is a state-owned agricultural development bank serving millions of customers across Bangladesh — from government employees in Dhaka to smallholder farmers in rural districts. As smartphone penetration and MFS adoption accelerated across the country, BKB needed a dedicated mobile banking app to serve its customer base and remain competitive in the evolving financial landscape.',
+      challenge: 'Design a mobile banking experience that makes complex banking operations — multi-type fund transfers, beneficiary management, utility bill payments, and account management — feel simple and trustworthy for a diverse user base ranging from tech-savvy urban professionals to first-time mobile banking users in rural Bangladesh, all within Bangladesh Bank regulatory requirements.',
+      outcome: 'A complete, handoff-ready mobile banking design covering 30+ user flows and 100+ screens — spanning onboarding, authentication, transfers, beneficiary management, payments, and account settings. The design established a scalable component library and a clear visual identity rooted in BKB\'s agricultural heritage, ready for Android and iOS development.',
+      phases: ['Research', 'User Flow', 'Mobile UI Design', 'Prototype', 'Handoff'],
+      metrics: [
+        { label: 'Project duration', value: '2 months' },
+        { label: 'User flows designed', value: '30+' },
+        { label: 'Screens delivered', value: '100+' },
+        { label: 'Platform', value: 'Android & iOS' },
+      ],
+      keyDecisions: [
+        {
+          title: 'Beneficiary-first transfer architecture',
+          description: 'Instead of typing account details every time, I designed a structured beneficiary system with 5 types — own BKB accounts, other BKB accounts, other banks, NPS, and mobile recharge contacts. Once saved, any transfer becomes a 3-tap process.',
+        },
+        {
+          title: 'One decision per screen',
+          description: 'Fund transfers were broken into focused micro-steps: "Who to?" → "How much?" → "Confirm." Each screen handles one question, reducing input errors and cognitive load for users less familiar with digital banking.',
+        },
+        {
+          title: 'Layered security without friction',
+          description: 'The app supports both password and PIN login, with TOTP-based confirmation for high-value transactions. Security tiers are matched to transaction risk — satisfying Bangladesh Bank guidelines without blocking everyday low-risk actions.',
+        },
+        {
+          title: 'Pre-login guest dashboard',
+          description: 'Non-authenticated users see a limited dashboard showcasing core app features. This reduces signup abandonment by letting prospective users understand the product value before committing — critical for a bank with many first-time digital customers.',
+        },
+      ],
+      flowGroups: [
+        { label: 'Authentication', items: ['Splash', 'Login with Password', 'Login with PIN', 'Forgot Password', 'Forgot User ID'] },
+        { label: 'Onboarding', items: ['Create Account', 'Guest Dashboard', 'Authenticated Dashboard'] },
+        { label: 'Fund Transfers', items: ['Own Account Transfer', 'BKB-to-BKB Transfer', 'Other Bank Transfer', 'NPS Transfer'] },
+        { label: 'Beneficiaries', items: ['Manage Beneficiaries', 'Add BKB Beneficiary', 'Add Other Bank Beneficiary', 'Add NPS Beneficiary'] },
+        { label: 'Payments & Services', items: ['Mobile Recharge', 'Utility Bill Payment', 'Deposit View', 'Bank Statement'] },
+        { label: 'Account & Profile', items: ['My Accounts', 'Add/Delete Account', 'My Profile', 'Set PIN', 'Transaction Limits', 'ATM/Branch Locator', 'Complaint & Helpline'] },
+      ],
+    }
   },
   {
     id: 'basic-bank',
@@ -57,10 +105,11 @@ export const projects = [
     description: 'A mobile banking solution for Basic Bank customers to manage finances, transfer funds, and pay bills with a user-friendly app experience.',
     color: '#063f24',
     accentColor: '#84cc16',
+    image: 'https://shaholanisha.xyz/wp-content/uploads/2026/01/magpie.png',
   },
   {
-    id: 'easy-health-doctor',
-    title: "Easy Health: Doctor's Appointments and Prescriptions",
+    id: 'ebuddy',
+    title: 'eBuddy',
     company: 'SSL Wireless Product',
     type: 'dashboard',
     year: '2024',
@@ -70,6 +119,7 @@ export const projects = [
     description: 'A platform designed to streamline doctor appointment workflows and prescription management for healthcare professionals.',
     color: '#342c78',
     accentColor: '#8b5cf6',
+    image: 'https://shaholanisha.xyz/wp-content/uploads/2026/01/ebuddy.png',
   },
   {
     id: 'willro',
@@ -83,11 +133,12 @@ export const projects = [
     description: 'A social media platform centered around reviews, helping people share experiences, ratings, and opinions across products, services, and entertainment.',
     color: '#0e5274',
     accentColor: '#38bdf8',
+    image: 'https://shaholanisha.xyz/wp-content/uploads/2026/02/willro.png',
   },
   {
-    id: 'legalized',
-    title: 'LMS - Legalized',
-    company: 'LMS - Legalized',
+    id: 'flavours-of-unity',
+    title: 'Flavours of Unity',
+    company: 'Flavours of Unity',
     type: 'system',
     year: '2024',
     tags: ['Education', 'LMS', 'Mobile & Web'],
@@ -96,6 +147,21 @@ export const projects = [
     description: 'Bangladesh-focused legal education LMS for aspiring lawyers, local businesses, and legal professionals with courses, quizzes, and learning flows.',
     color: '#1f315f',
     accentColor: '#5b7bd5',
+    image: 'https://shaholanisha.xyz/wp-content/uploads/2026/02/flavours-of-unity.png',
+  },
+  {
+    id: 'easy-health',
+    title: "Easy Health: Doctor's Appointments and Prescriptions",
+    company: 'SSL Wireless Product',
+    type: 'dashboard',
+    year: '2024',
+    tags: ['Health', 'Web Application', 'Figma'],
+    size: 'large',
+    impact: 'Healthcare workflow',
+    description: 'A platform designed to streamline doctor appointment workflows and prescription management for healthcare professionals.',
+    color: '#342c78',
+    accentColor: '#8b5cf6',
+    image: easyHealthImg,
   },
 ]
 
@@ -202,19 +268,3 @@ export const experience = [
   },
 ]
 
-export const caseStudy = {
-  title: 'Bangladesh Krishi Bank - myBKB App',
-  company: 'Bangladesh Krishi Bank',
-  year: '2024',
-  role: 'UI/UX Design',
-  duration: '2 month',
-  challenge: 'Bangladesh Krishi Bank needed a mobile banking experience that would help customers manage finances, transfer funds, and pay bills from the convenience of their smartphones.',
-  outcome: 'The final direction focused on a user-friendly and intuitive mobile app that simplifies banking tasks while supporting core financial workflows.',
-  phases: ['Research', 'User Flow', 'Mobile UI Design', 'Prototype', 'Handoff'],
-  metrics: [
-    { label: 'Project duration', value: '2 months' },
-    { label: 'Platform', value: 'Android/iOS' },
-    { label: 'Role', value: 'UI/UX' },
-    { label: 'Tool', value: 'Figma' },
-  ],
-}
