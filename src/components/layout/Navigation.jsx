@@ -61,7 +61,7 @@ export default function Navigation() {
             <img
               src={logo}
               alt="Alimoon Nisha"
-              className="h-14gi w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+              className="h-14 w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
               style={{ mixBlendMode: 'multiply' }}
             />
           </a>
