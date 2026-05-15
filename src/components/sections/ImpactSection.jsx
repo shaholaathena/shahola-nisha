@@ -2,6 +2,9 @@ import { motion } from 'framer-motion'
 import { metrics } from '../../data/portfolio'
 import MetricsCard from '../ui/MetricsCard'
 
+const EASE = [0.22, 1, 0.36, 1]
+const VP = { once: true, margin: '-80px' }
+
 const MiniBarChart = () => (
   <svg viewBox="0 0 120 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     {[28, 36, 22, 44, 32, 48, 40, 36, 44, 42].map((h, i) => (
@@ -28,22 +31,36 @@ export default function ImpactSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            viewport={VP}
+            transition={{ duration: 0.6, ease: EASE }}
           >
-            <div className="flex items-center gap-3 mb-3">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VP}
+              transition={{ duration: 0.5, ease: EASE }}
+              className="flex items-center gap-3 mb-4"
+            >
               <div className="h-px w-6 bg-zinc-800/50" />
               <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">Impact</span>
+            </motion.div>
+            <div className="overflow-hidden">
+              <motion.h2
+                initial={{ y: 30, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={VP}
+                transition={{ duration: 0.75, ease: EASE, delay: 0.07 }}
+                className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.1]"
+              >
+                Numbers that matter.
+              </motion.h2>
             </div>
-            <h2 className="font-display text-4xl sm:text-ink-faintxl font-semibold text-ink-primary tracking-tight leading-tight">
-              Numbers that matter.
-            </h2>
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={VP}
+            transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
             className="text-sm text-ink-muted max-w-xs leading-relaxed lg:text-right"
           >
             A snapshot of experience, client highlights, and product categories from the portfolio.
@@ -61,8 +78,8 @@ export default function ImpactSection() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={VP}
+          transition={{ duration: 0.6, delay: 0.4, ease: EASE }}
           className="card-surface p-6 flex flex-col sm:flex-row items-start sm:items-center gap-6"
         >
           <div className="flex-shrink-0 w-32">

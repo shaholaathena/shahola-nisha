@@ -40,7 +40,7 @@ export default function MetricsCard({ metric, index }) {
       className="card-surface p-6 sm:p-8 flex flex-col justify-between min-h-[180px] group hover:border-border-strong transition-all duration-300"
     >
       <div className="mb-6">
-        <div className="text-4xl sm:text-ink-faintxl font-display font-semibold text-ink-primary tracking-tight leading-none mb-2">
+        <div className="text-4xl sm:text-5xl font-display font-semibold text-ink-primary tracking-tight leading-none mb-2">
           <AnimatedNumber value={metric.value} suffix={metric.suffix} />
         </div>
         <div className="text-sm font-medium text-ink-primary leading-snug">

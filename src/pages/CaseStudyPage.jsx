@@ -6,6 +6,7 @@ import Footer from '../components/layout/Footer'
 import ScrollProgress from '../components/layout/ScrollProgress'
 import myBkbAppImg from '../assets/mybkb app.png'
 import homeBkbImg from '../assets/home-bkb.png'
+import logo from '../assets/logo.png'
 
 import imgFT1 from '../assets/fund transfer flow bkb/fund transfer.png'
 import imgFT2 from '../assets/fund transfer flow bkb/select account.png'
@@ -20,17 +21,20 @@ const bkb = projects.find(p => p.id === 'bkb-mobile')
 const cs = bkb.caseStudy
 const heroImage = bkb.image
 
+const EASE = [0.22, 1, 0.36, 1]
+const VP = { once: true, margin: '-80px' }
+
 const fadeUp = {
-  initial: { opacity: 0, y: 28 },
+  initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+  viewport: VP,
+  transition: { duration: 0.75, ease: EASE },
 }
 const stagger = (i) => ({
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] },
+  viewport: VP,
+  transition: { duration: 0.6, delay: i * 0.07, ease: EASE },
 })
 
 const csSections = [
@@ -49,38 +53,38 @@ const csSections = [
 const researchCards = [
   {
     category: 'Market Landscape',
-    color: '#9ca3af',
+    color: '#oklch(70.5% 0.015 286.067)',
     points: [
-      'Bangladesh MFS market growing 30%+ YoY; bKash exceeded 65M users by 2023',
-      'State-owned bank apps lag behind private MFS providers in UX maturity',
-      'Rural smartphone adoption accelerating, expanding first-time digital banking users',
+      'MFS market growing 30%+ YoY; bKash at 65M+ users',
+      'State-owned bank apps lag behind MFS in UX maturity',
+      'Rural smartphone adoption expanding first-time digital banking users',
     ],
   },
   {
     category: 'Target Users',
-    color: '#6b7280',
+    color: '#oklch(70.5% 0.015 286.067)',
     points: [
-      'BKB serves government employees, farmers, NPS holders, and rural households',
-      'Significant portion of users are first-time mobile banking adopters',
-      'Bengali language support is critical — English-only labels create friction',
+      'BKB serves government employees, farmers, and rural households',
+      'Large portion are first-time mobile banking users',
+      'Bengali support critical — English-only labels create friction',
     ],
   },
   {
     category: 'Regulatory Context',
-    color: '#52525b',
+    color: '#oklch(70.5% 0.015 286.067)',
     points: [
       'Bangladesh Bank mandates 2FA for transactions above ৳10,000',
-      'BEFTN & RTGS channel requirements govern inter-bank transfers',
-      'NPS integration must follow National Pension Authority guidelines',
+      'BEFTN & RTGS requirements govern inter-bank transfers',
+      'NPS integration follows National Pension Authority guidelines',
     ],
   },
   {
     category: 'Competitive Gaps',
-    color: '#d1d5db',
+    color: '#oklch(70.5% 0.015 286.067)',
     points: [
-      'bKash & Nagad: Simple flows but limited to MFS — no bank account management',
-      'DBBL Nexus Pay: Feature-rich but visually cluttered for new users',
-      'Existing BKB portal: Not mobile-optimised; high abandonment on small screens',
+      'bKash & Nagad: Simple but MFS-only, no bank account management',
+      'DBBL Nexus Pay: Feature-rich but cluttered for new users',
+      'Existing BKB portal: Not mobile-optimised; high abandonment',
     ],
   },
 ]
@@ -114,19 +118,22 @@ const transferSteps = [
 ]
 
 const styleColors = [
-  { name: 'Primary',      hex: '#1a1a1a', role: 'CTA, active states' },
-  { name: 'Secondary',    hex: '#374151', role: 'Hover & pressed states' },
-  { name: 'Highlight',    hex: '#9ca3af', role: 'Accents, labels' },
-  { name: 'Background',   hex: '#0a0a0a', role: 'Primary dark background' },
-  { name: 'Card Surface', hex: '#1f2937', role: 'Cards and elevated surfaces' },
-  { name: 'Border',       hex: '#374151', role: 'Dividers and strokes' },
+  { name: 'Primary',    hex: '#1B6320', role: 'Brand primary · CTA' },
+  { name: 'Dark',       hex: '#1B1B1B', role: 'Primary text' },
+  { name: 'Black',      hex: '#000000', role: 'Headings · High contrast' },
+  { name: 'Gray',       hex: '#989898', role: 'Secondary text · Muted' },
+  { name: 'Light Gray', hex: '#D1D1D1', role: 'Borders · Dividers' },
+  { name: 'White',      hex: '#FFFFFF', role: 'Backgrounds · Surfaces' },
+  { name: 'Green',      hex: '#46B679', role: 'Success · Active states' },
+  { name: 'Yellow',     hex: '#FFD80C', role: 'Warning · Highlight' },
+  { name: 'Orange',     hex: '#F98A17', role: 'Alerts · Accents' },
 ]
 
 const styleType = [
-  { role: 'Display / H1', family: 'Plus Jakarta Sans', weight: '700', size: '40–48px', sample: 'myBKB' },
-  { role: 'Heading / H2', family: 'Plus Jakarta Sans', weight: '600', size: '28–32px', sample: 'Fund Transfer' },
-  { role: 'Body',         family: 'Inter',             weight: '400', size: '14–16px', sample: 'Send money securely' },
-  { role: 'Label / Mono', family: 'Inter Mono',        weight: '500', size: '10–11px', sample: 'USER FLOW · 01' },
+  { role: 'Display / H1', family: 'Circular Std', weight: '700', size: '40–48px', sample: 'myBKB Banking' },
+  { role: 'Heading / H2', family: 'Circular Std', weight: '500', size: '28–32px', sample: 'Fund Transfer' },
+  { role: 'Body',         family: 'Circular Std', weight: '400', size: '14–16px', sample: 'Send money securely to anyone, anywhere.' },
+  { role: 'Label / Cap',  family: 'Circular Std', weight: '400', size: '10–11px', sample: 'USER FLOW · 01' },
 ]
 
 export default function CaseStudyPage() {
@@ -173,10 +180,10 @@ export default function CaseStudyPage() {
                   title={label}
                   className="group flex items-center justify-end gap-2"
                 >
-                  <span className={`text-[11px] font-mono transition-all duration-200 ${isActive ? 'opacity-100 text-zinc-600' : 'opacity-0 group-hover:opacity-50 text-slate-400'}`}>
+                  <span className={`text-[11px] font-mono transition-all duration-200 ${isActive ? 'opacity-100 text-zinc-600' : 'opacity-0 group-hover:opacity-50 text-ink-muted'}`}>
                     {num} {label}
                   </span>
-                  <div className={`rounded-full transition-all duration-200 ${isActive ? 'w-2 h-2 bg-zinc-500' : 'w-1.5 h-1.5 bg-slate-300 group-hover:bg-slate-400'}`} />
+                  <div className={`rounded-full transition-all duration-200 ${isActive ? 'w-2 h-2 bg-zinc-500' : 'w-1.5 h-1.5 bg-zinc-300 group-hover:bg-zinc-400'}`} />
                 </button>
               )
             })}
@@ -188,8 +195,7 @@ export default function CaseStudyPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-surface-base/80 backdrop-blur-xl border-b border-border-subtle">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 rounded-md bg-zinc-900 flex items-center justify-center text-white text-sm font-semibold font-display tracking-tight group-hover:scale-105 transition-transform">AN</div>
-            <span className="text-base font-semibold text-ink-primary hidden sm:block tracking-tight">Alimoon Nisha</span>
+            <img src={logo} alt="Alimoon Nisha" className="h-14 w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300" style={{ mixBlendMode: 'multiply' }} />
           </Link>
           <Link to="/" className="group flex items-center gap-2 text-base text-ink-secondary hover:text-ink-primary transition-colors">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-0.5 transition-transform">
@@ -222,10 +228,10 @@ export default function CaseStudyPage() {
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                   className="flex items-center gap-3 mb-8"
                 >
-                  <span className="text-xs font-mono uppercase tracking-[0.2em] text-slate-400">Case Study</span>
-                  <span className="w-1 h-1 rounded-full bg-slate-300" />
-                  <span className="text-xs font-mono uppercase tracking-[0.2em] text-slate-400">{cs.year}</span>
-                  <span className="w-1 h-1 rounded-full bg-slate-300" />
+                  <span className="text-xs font-mono uppercase tracking-[0.2em] text-ink-muted">Case Study</span>
+                  <span className="w-1 h-1 rounded-full bg-zinc-300" />
+                  <span className="text-xs font-mono uppercase tracking-[0.2em] text-ink-muted">{cs.year}</span>
+                  <span className="w-1 h-1 rounded-full bg-zinc-300" />
                   <span className="text-xs font-mono uppercase tracking-[0.2em] text-zinc-600">{cs.company}</span>
                 </motion.div>
 
@@ -238,36 +244,31 @@ export default function CaseStudyPage() {
                   style={{ fontSize: 'clamp(2.75rem, 6vw, 4.5rem)' }}
                 >
                   myBKB
-                  <span className="text-slate-300"> —</span>
+                  <span className="text-zinc-300"> —</span>
                 </motion.h1>
                 <motion.p
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.85, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-lg text-ink-secondary mb-10 leading-relaxed"
-                >
-                  Designing a full-featured mobile banking app for Bangladesh Krishi Bank — serving farmers, government employees, and first-time digital banking users across Bangladesh.
+                  className="text-lg text-ink-secondary mb-8 leading-relaxed"
+                >BKB is a state-owned agricultural bank serving millions across Bangladesh — from government employees to rural farmers. With MFS adoption accelerating, they needed a mobile banking app to stay competitive.
                 </motion.p>
 
-                {/* Meta strip */}
+                {/* Phase tags */}
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-wrap gap-x-8 gap-y-4 items-center pt-8 border-t border-border-subtle"
+                  transition={{ duration: 0.7, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                  className="flex flex-wrap gap-2"
                 >
-                  {[
-                    { label: 'Role',      value: cs.role },
-                    { label: 'Duration',  value: cs.duration },
-                    { label: 'Platform',  value: 'Android & iOS' },
-                    { label: 'Tool',      value: 'Figma' },
-                  ].map(item => (
-                    <div key={item.label} className="flex items-center gap-2.5">
-                      <span className="text-xs font-mono uppercase tracking-[0.15em] text-slate-400">{item.label}</span>
-                      <span className="text-sm font-semibold text-ink-primary">{item.value}</span>
-                    </div>
+                  {cs.phases.map((phase, i) => (
+                    <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-subtle text-xs font-mono text-ink-muted bg-surface-1">
+                      <span className="text-zinc-300 text-[9px]">0{i + 1}</span>
+                      {phase}
+                    </span>
                   ))}
                 </motion.div>
+
               </div>
 
               {/* Right: abstract app mockup */}
@@ -277,17 +278,17 @@ export default function CaseStudyPage() {
 
             </div>
 
-            {/* Metrics — full width below */}
+            {/* Metrics */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.34, ease: [0.16, 1, 0.3, 1] }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-border-subtle rounded-2xl overflow-hidden border border-border-subtle"
+              transition={{ duration: 0.6, delay: 0.34, ease: [0.16, 1, 0.3, 1] }}
+              className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-zinc-200 pt-8"
             >
-              {cs.metrics.map((m) => (
-                <div key={m.label} className="bg-surface-base px-6 py-5">
-                  <div className="text-2xl lg:text-3xl font-display font-bold text-ink-primary mb-1 tracking-tight">{m.value}</div>
-                  <div className="text-xs text-slate-400 uppercase tracking-[0.12em] font-mono">{m.label}</div>
+              {cs.metrics.map((m, i) => (
+                <div key={m.label} className={i === 0 ? 'pr-6' : 'px-6'}>
+                  <div className="text-2xl font-display font-bold text-ink-primary tracking-tight mb-0.5">{m.value}</div>
+                  <div className="text-[10px] text-ink-muted uppercase tracking-[0.14em] font-mono">{m.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -301,140 +302,212 @@ export default function CaseStudyPage() {
         <section id="cs-brief" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
           <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 mb-16">
+            {/* Top: Title + Specs */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-10">
               <motion.div className="lg:col-span-7" {...fadeUp}>
                 <SectionLabel num="02" label="Project Brief" />
-                <h2 className="font-display text-4xl sm:text-5xl font-bold text-ink-primary tracking-tight mb-6 leading-tight">
+                <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight mb-5 leading-[1.1]">
                   Building Bangladesh's agricultural bank into mobile
                 </h2>
-                <p className="text-lg lg:text-xl text-ink-secondary leading-relaxed">{cs.context}</p>
+                <p className="text-base text-ink-secondary leading-relaxed max-w-xl">{cs.context}</p>
               </motion.div>
+
               <motion.div className="lg:col-span-5" {...fadeUp} transition={{ duration: 0.75, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}>
-                <SectionLabel num="" label="Project Info" />
-                <div className="card-surface rounded-2xl overflow-hidden">
-                  {[
-                    { label: 'Client',    value: cs.company },
-                    { label: 'My Role',   value: cs.role },
-                    { label: 'Duration',  value: cs.duration },
-                    { label: 'Year',      value: cs.year },
-                    { label: 'Platform',  value: 'Android & iOS' },
-                    { label: 'Tool',      value: 'Figma' },
-                  ].map((item, i, arr) => (
-                    <div key={item.label} className={`flex justify-between items-center px-6 py-4 ${i < arr.length - 1 ? 'border-b border-border-subtle' : ''}`}>
-                      <span className="text-sm text-slate-400">{item.label}</span>
-                      <span className="text-sm font-semibold text-ink-primary">{item.value}</span>
-                    </div>
-                  ))}
+                <div className="card-surface rounded-2xl p-6 relative overflow-hidden h-full">
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-zinc-400/50 via-zinc-200/30 to-transparent" />
+                  <p className="text-[10px] font-mono font-semibold text-zinc-400 tracking-[0.18em] uppercase mb-6">Project Specs</p>
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-6">
+                    {[
+                      { label: 'Client',   value: cs.company },
+                      { label: 'My Role',  value: cs.role },
+                      { label: 'Duration', value: cs.duration },
+                      { label: 'Year',     value: cs.year },
+                      { label: 'Platform', value: 'Android & iOS' },
+                      { label: 'Tool',     value: 'Figma' },
+                    ].map((item) => (
+                      <div key={item.label}>
+                        <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.14em] mb-1.5">{item.label}</div>
+                        <div className="text-sm font-semibold text-ink-primary">{item.value}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             </div>
 
             {/* Challenge + Outcome */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <motion.div {...fadeUp} className="card-surface rounded-2xl p-8 lg:p-10 relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-zinc-400/70 via-zinc-400/25 to-transparent" />
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-zinc-100">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  </div>
-                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">The Challenge</span>
-                </div>
-                <p className="text-base text-ink-secondary leading-relaxed">{cs.challenge}</p>
-              </motion.div>
+            <div className="pt-14 border-t border-zinc-100">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 lg:gap-x-24">
 
-              <motion.div {...fadeUp} transition={{ duration: 0.75, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-                className="rounded-2xl p-8 lg:p-10 relative overflow-hidden border border-zinc-700/50"
-                style={{ background: 'linear-gradient(135deg, #111827 0%, #1f2937 100%)' }}>
-                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-zinc-500/70 via-zinc-500/25 to-transparent" />
-                <div className="absolute bottom-0 right-0 w-36 h-36 pointer-events-none" style={{ background: 'radial-gradient(circle at 100% 100%, rgba(255,255,255,0.04), transparent 70%)' }} />
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-white/10">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <motion.div {...fadeUp}>
+                  <div className="flex items-center gap-2.5 mb-7">
+                    <span className="text-[14px] font-mono text-zinc-300 tracking-widest tabular-nums">01</span>
+                    <span className="h-px w-8 bg-zinc-200 shrink-0" />
+                    <span className="text-[14px] font-mono text-zinc-400 uppercase tracking-[0.22em]">The Challenge</span>
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-400/70">The Outcome</span>
-                </div>
-                <p className="text-base text-white/80 leading-relaxed relative z-10">{cs.outcome}</p>
-              </motion.div>
+                  <p className="text-[1.15rem] sm:text-[1.25rem] text-ink-primary leading-[1.8] font-light">{cs.challenge}</p>
+                </motion.div>
+
+                <motion.div {...fadeUp} transition={{ duration: 0.75, delay: 0.12, ease: EASE }}>
+                  <div className="flex items-center gap-2.5 mb-7">
+                    <span className="text-[14px] font-mono text-zinc-300 tracking-widest tabular-nums">02</span>
+                    <span className="h-px w-8 bg-zinc-200 shrink-0" />
+                    <span className="text-[14px] font-mono text-zinc-400 uppercase tracking-[0.22em]">The Outcome</span>
+                  </div>
+                  <p className="text-[1.15rem] sm:text-[1.25rem] text-ink-primary leading-[1.8] font-light">{cs.outcome}</p>
+                </motion.div>
+
+              </div>
             </div>
+
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
             03  TIMELINE / TOOLS / ROLE
         ══════════════════════════════════════════ */}
-        <section id="cs-timeline" style={{ background: '#0a0a0a', scrollMarginTop: '64px' }} className="border-b border-white/5">
+        <section id="cs-timeline" style={{ scrollMarginTop: '64px' }} className="bg-surface-base">
           <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
-            <motion.div {...fadeUp} className="mb-14">
-              <DarkSectionLabel num="03" label="Timeline · Tools · Role" />
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight">
-                2-month sprint from discovery to handoff
-              </h2>
-            </motion.div>
 
-            {/* Timeline bar */}
-            <motion.div {...fadeUp} className="mb-14">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-white/30 uppercase tracking-widest">Sep 2024</span>
-                <span className="text-xs font-mono text-white/30 uppercase tracking-widest">Nov 2024</span>
-              </div>
-              <div className="relative h-2 rounded-full overflow-hidden mb-8" style={{ background: 'rgba(255,255,255,0.06)' }}>
-                <motion.div
-                  className="absolute inset-y-0 left-0 rounded-full"
-                  style={{ background: 'linear-gradient(to right, #374151, #9ca3af)' }}
-                  initial={{ width: 0 }}
-                  whileInView={{ width: '100%' }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-                />
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {/* Header: heading left + descriptor right */}
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8 mb-16">
+              <motion.div {...fadeUp}>
+                <SectionLabel num="03" label="Timeline · Tools · Role" />
+                <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-ink-primary tracking-tight leading-[1.0]">
+                  2-month sprint
+                </h2>
+                <p className="font-display text-4xl sm:text-5xl lg:text-6xl font-light text-zinc-300 tracking-tight leading-[1.1] mt-1">
+                  from discovery to handoff
+                </p>
+              </motion.div>
+              <motion.p
+                {...fadeUp}
+                transition={{ duration: 0.75, delay: 0.14, ease: EASE }}
+                className="text-base text-ink-secondary leading-[1.75] max-w-[22rem] lg:text-right lg:pt-3"
+              >
+                A focused 8-week journey from research to handoff — designed to solve real user problems and deliver impactful solutions.
+              </motion.p>
+            </div>
+
+            {/* Horizontal timeline */}
+            <motion.div {...fadeUp} className="mb-16">
+              <div className="relative grid grid-cols-2 sm:grid-cols-4 gap-y-10 gap-x-0">
+
+
                 {[
-                  { phase: 'Week 1–2',  title: 'Research & Discovery',        color: '#374151' },
-                  { phase: 'Week 3–4',  title: 'IA & User Flows',             color: '#4b5563' },
-                  { phase: 'Week 5–6',  title: 'Visual Design & Components',  color: '#6b7280' },
-                  { phase: 'Week 7–8',  title: 'Prototype & Handoff',         color: '#9ca3af' },
-                ].map((t, i) => (
-                  <motion.div key={i} {...stagger(i)} className="rounded-xl p-4 border border-white/6" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                    <div className="w-2 h-2 rounded-full mb-3" style={{ background: t.color }} />
-                    <div className="text-xs font-mono text-white/30 mb-1">{t.phase}</div>
-                    <div className="text-sm font-semibold text-white/75">{t.title}</div>
+                  { num: '01', week: 'Week 1–2', title: 'Research &\nDiscovery'         },
+                  { num: '02', week: 'Week 3–4', title: 'IA &\nUser Flows'              },
+                  { num: '03', week: 'Week 5–6', title: 'Visual Design\n& Components'   },
+                  { num: '04', week: 'Week 7–8', title: 'Prototype\n& Handoff'          },
+                ].map((t, i, arr) => (
+                  <motion.div key={i} {...stagger(i)} className="flex flex-col items-start pl-4 sm:pl-0">
+
+                    {/* Content */}
+                    <div className="sm:pr-6">
+                      <div className="text-[10px] font-mono text-zinc-400 tracking-[0.16em] mb-2">{t.week}</div>
+                      <div className="text-base font-bold text-ink-primary leading-snug whitespace-pre-line">{t.title}</div>
+                    </div>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Role */}
-              <motion.div {...stagger(0)} className="rounded-2xl p-6 border border-white/6" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-4">My Role</div>
-                <div className="text-xl font-bold text-white mb-2">UI/UX Designer</div>
-                <p className="text-base text-white/40 leading-relaxed">
-                  End-to-end ownership — from competitive research and user flows through visual design, prototyping, and developer handoff.
-                </p>
+            {/* Divider */}
+            <div className="border-t border-zinc-100 mb-14" />
+
+            {/* Role · Tools · Deliverables — flat, no cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+
+              {/* My Role */}
+              <motion.div {...stagger(0)}>
+                <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-[0.24em] mb-6">My Role</p>
+                <h3 className="text-2xl font-bold text-ink-primary mb-6 leading-tight">UI/UX Designer</h3>
+                <ul className="space-y-3">
+                  {[
+                    'Competitive research & benchmarking',
+                    'User flows & information architecture',
+                    'Visual design & component system',
+                    'Figma prototyping',
+                    'Developer handoff',
+                  ].map(r => (
+                    <li key={r} className="flex items-start gap-3">
+                      <span className="w-1 h-1 rounded-full bg-zinc-300 mt-[7px] shrink-0" />
+                      <span className="text-sm text-ink-secondary leading-relaxed">{r}</span>
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
-              {/* Tools */}
-              <motion.div {...stagger(1)} className="rounded-2xl p-6 border border-white/6" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-4">Tools</div>
-                {[
-                  { name: 'Figma',    note: 'Design, components, prototype' },
-                  { name: 'FigJam',   note: 'User flow mapping & IA' },
-                  { name: 'Notion',   note: 'Research notes & content doc' },
-                ].map((t, i) => (
-                  <div key={i} className={`flex items-center justify-between py-2.5 ${i < 2 ? 'border-b border-white/6' : ''}`}>
-                    <span className="text-base font-semibold text-white/80">{t.name}</span>
-                    <span className="text-sm text-white/30">{t.note}</span>
-                  </div>
-                ))}
-              </motion.div>
-              {/* Deliverables */}
-              <motion.div {...stagger(2)} className="rounded-2xl p-6 border border-white/6" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-4">Deliverables</div>
-                <div className="flex flex-wrap gap-2">
-                  {['30+ User Flows', '100+ Screens', 'Component Library', 'Prototype', 'Design Handoff', 'Android & iOS'].map(d => (
-                    <span key={d} className="px-2.5 py-1 rounded-lg text-sm text-white/50 border border-white/8" style={{ background: 'rgba(255,255,255,0.04)' }}>{d}</span>
+
+              {/* Tools Used */}
+              <motion.div {...stagger(1)}>
+                <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-[0.24em] mb-6">Tools Used</p>
+                <div className="space-y-5">
+                  {[
+                    {
+                      name: 'Figma', note: 'Design, components & prototype',
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 38 57" fill="none">
+                          <path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE"/>
+                          <path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 0 1-19 0z" fill="#0ACF83"/>
+                          <path d="M19 0v19H9.5a9.5 9.5 0 0 1 0-19H19z" fill="#FF7262"/>
+                          <path d="M19 0h9.5a9.5 9.5 0 0 1 0 19H19V0z" fill="#F24E1E"/>
+                          <path d="M19 19h9.5a9.5 9.5 0 0 1 0 19H19V19z" fill="#A259FF"/>
+                        </svg>
+                      ),
+                    },
+                    {
+                      name: 'FigJam', note: 'User flow mapping & IA',
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 38 57" fill="none">
+                          <rect width="38" height="38" rx="8" fill="#9747FF" opacity="0.15"/>
+                          <path d="M19 0v19H9.5a9.5 9.5 0 0 1 0-19H19z" fill="#9747FF"/>
+                          <path d="M19 19h9.5a9.5 9.5 0 0 1 0 19H19V19z" fill="#9747FF" opacity="0.6"/>
+                          <path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 0 1-19 0z" fill="#9747FF" opacity="0.4"/>
+                        </svg>
+                      ),
+                    },
+                    {
+                      name: 'Notion', note: 'Research notes & documentation',
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 100 100" fill="none">
+                          <rect width="100" height="100" rx="14" fill="#fff"/>
+                          <rect width="100" height="100" rx="14" fill="#000" opacity="0.06"/>
+                          <path d="M24 18h36l16 16v52H24V18z" fill="white" stroke="#e5e7eb" strokeWidth="3"/>
+                          <path d="M60 18v16h16" fill="none" stroke="#e5e7eb" strokeWidth="3"/>
+                          <path d="M34 42h32M34 54h32M34 66h20" stroke="#9ca3af" strokeWidth="3" strokeLinecap="round"/>
+                        </svg>
+                      ),
+                    },
+                  ].map((t) => (
+                    <div key={t.name} className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-xl border border-border-subtle bg-surface-1 flex items-center justify-center shrink-0 overflow-hidden">
+                        {t.icon}
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold text-ink-primary leading-none mb-1">{t.name}</div>
+                        <div className="text-xs text-ink-muted leading-snug">{t.note}</div>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </motion.div>
+
+              {/* Deliverables */}
+              <motion.div {...stagger(2)}>
+                <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-[0.24em] mb-6">Deliverables</p>
+                <ul className="space-y-3.5">
+                  {['30+ User Flows', '100+ Screens', 'Component Library', 'Figma Prototype', 'Design Handoff doc', 'Android & iOS'].map(d => (
+                    <li key={d} className="flex items-center gap-3">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0 text-zinc-400">
+                        <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2"/>
+                        <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span className="text-sm text-ink-secondary">{d}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+
             </div>
           </div>
         </section>
@@ -444,80 +517,230 @@ export default function CaseStudyPage() {
         ══════════════════════════════════════════ */}
         <section id="cs-process" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
           <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
-            <motion.div {...fadeUp} className="mb-14">
-              <SectionLabel num="04" label="Design Process" />
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-ink-primary tracking-tight max-w-lg leading-tight">
-                A structured approach, applied end-to-end
-              </h2>
-            </motion.div>
 
+            {/* Header: heading left + descriptor right */}
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16">
+              <motion.div {...fadeUp}>
+                <SectionLabel num="04" label="Design Process" />
+                <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.08] max-w-lg">
+                  A structured approach,{' '}
+                  <span className="italic font-light text-zinc-400">applied end-to-end</span>
+                </h2>
+              </motion.div>
+              <motion.p
+                {...fadeUp}
+                transition={{ duration: 0.75, delay: 0.14, ease: EASE }}
+                className="text-base text-ink-secondary leading-[1.75] max-w-[22rem] lg:text-right"
+              >
+                From user research to final handoff, every step is intentional — driven by clarity, collaboration, and impact.
+              </motion.p>
+            </div>
+
+            {/* Timeline + cards */}
             <div className="relative">
-              <div className="hidden lg:block absolute top-[54px] left-[54px] right-[54px] h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.06) 15%, rgba(0,0,0,0.06) 85%, transparent)' }} />
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              {/* Connecting line (desktop only) */}
+              <div className="hidden lg:block absolute top-[27px] left-[27px] right-[27px] h-px bg-zinc-100 z-0" />
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-3">
                 {[
-                  { num: '01', phase: 'Research',    desc: 'User needs, business goals, pain points' },
-                  { num: '02', phase: 'Define',       desc: 'IA, user flows, feature priorities' },
-                  { num: '03', phase: 'Design',       desc: 'Visual system, screens, components' },
-                  { num: '04', phase: 'Prototype',    desc: 'Figma prototype, real navigation' },
-                  { num: '05', phase: 'Validate',     desc: 'Stakeholder review, iteration' },
-                  { num: '06', phase: 'Handoff',      desc: 'Assets, specs, dev collaboration' },
+                  {
+                    num: '01', phase: 'Research', desc: 'User needs, business goals, pain points',
+                    icon: (
+                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="9.5" cy="9.5" r="6" />
+                        <path d="M14 14l4 4" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    num: '02', phase: 'Define', desc: 'IA, user flows, feature priorities',
+                    icon: (
+                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="5" y="2" width="12" height="18" rx="2" />
+                        <path d="M8 7h6M8 11h6M8 15h4" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    num: '03', phase: 'Design', desc: 'Visual system, screens, components',
+                    icon: (
+                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 17l3-1 9-9-2-2-9 9-1 3z" />
+                        <path d="M14 5l2 2" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    num: '04', phase: 'Prototype', desc: 'Figma prototype, real navigation',
+                    icon: (
+                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="16" height="16" rx="2" />
+                        <rect x="7" y="7" width="8" height="8" rx="1" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    num: '05', phase: 'Validate', desc: 'Stakeholder review, iteration',
+                    icon: (
+                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="M7.5 11l2.5 2.5 4.5-4.5" />
+                      </svg>
+                    ),
+                  },
+                  {
+                    num: '06', phase: 'Handoff', desc: 'Assets, specs, dev collaboration',
+                    icon: (
+                      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 2L9 13" />
+                        <path d="M20 2l-6 18-5-8-8-5 19-5z" />
+                      </svg>
+                    ),
+                  },
                 ].map((p, i) => (
-                  <motion.div key={i} {...stagger(i)} className="card-surface rounded-2xl p-5 flex flex-col gap-4 group hover:border-zinc-300/60 transition-colors">
-                    <div className="w-12 h-12 rounded-xl border border-border-subtle bg-surface-1 flex items-center justify-center group-hover:border-zinc-300 group-hover:bg-zinc-50 transition-colors">
-                      <span className="text-sm font-display font-bold text-slate-400 group-hover:text-zinc-700 transition-colors">{p.num}</span>
+                  <motion.div key={i} {...stagger(i)} className="flex flex-col">
+                    {/* Number node — sits on top of the connecting line */}
+                    <div className="relative z-10 w-14 h-14 rounded-full border border-border-subtle bg-surface-base flex items-center justify-center mb-5 shrink-0 self-start">
+                      <span className="text-[11px] font-mono text-zinc-400 tabular-nums">{p.num}</span>
                     </div>
-                    <div>
-                      <div className="text-base font-bold text-ink-primary mb-1">{p.phase}</div>
-                      <div className="text-sm text-slate-400 leading-snug">{p.desc}</div>
+
+                    {/* Card */}
+                    <div className="card-surface rounded-2xl p-5 flex flex-col gap-4 flex-1 group hover:border-zinc-300/60 transition-colors duration-200">
+                      <div className="text-zinc-400 group-hover:text-zinc-600 transition-colors">
+                        {p.icon}
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-ink-primary mb-2">{p.phase}</div>
+                        <div className="w-6 h-px bg-zinc-200 mb-3" />
+                        <div className="text-xs text-ink-muted leading-relaxed">{p.desc}</div>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
               </div>
             </div>
+
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
             05  SECONDARY RESEARCH / DESK RESEARCH
         ══════════════════════════════════════════ */}
-        <section id="cs-research" style={{ background: '#0d0d0d', scrollMarginTop: '64px' }} className="border-b border-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 55% 60% at 85% 20%, rgba(255,255,255,0.02) 0%, transparent 70%)' }} />
-          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
-            <motion.div {...fadeUp} className="mb-14">
-              <DarkSectionLabel num="05" label="Secondary Research · Desk Research" />
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight max-w-2xl leading-tight">
-                Understanding the ecosystem before designing
-              </h2>
-            </motion.div>
+        <section id="cs-research" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
+          <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
 
-            {/* Key insight callout */}
-            <motion.div {...fadeUp} className="mb-10 rounded-2xl p-6 lg:p-8 border border-zinc-700/40 relative overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)' }}>
-              <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-zinc-400/60 via-zinc-400/30 to-transparent rounded-l-2xl" />
-              <div className="text-xs font-bold uppercase tracking-widest text-zinc-400/60 mb-3">Key Insight</div>
-              <p className="text-lg text-white/80 leading-relaxed max-w-3xl">
-                First-time mobile banking users make up a large portion of BKB's customer base, spanning rural farmers to urban government employees. This made clarity, progressive disclosure, and a guided flow non-negotiable design principles.
-              </p>
-            </motion.div>
+            {/* Header: heading left + key insight card right */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start mb-12">
+              <motion.div {...fadeUp}>
+                <SectionLabel num="05" label="Secondary Research · Desk Research" />
+                <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.08]">
+                  Understanding the ecosystem before designing.
+                </h2>
+              </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {researchCards.map((card, i) => (
-                <motion.div key={i} {...stagger(i)} className="rounded-2xl p-6 border border-white/6 relative overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                  <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl" style={{ background: `linear-gradient(to right, ${card.color}60, transparent)` }} />
-                  <div className="flex items-center gap-2.5 mb-5">
-                    <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: card.color }} />
-                    <span className="text-xs font-bold uppercase tracking-[0.16em] text-white/40">{card.category}</span>
+              {/* Key Insight card */}
+              <motion.div
+                {...fadeUp}
+                transition={{ duration: 0.75, delay: 0.14, ease: EASE }}
+                className="card-surface rounded-2xl p-6 lg:p-7 flex items-start gap-5"
+              >
+                <div className="w-11 h-11 rounded-full border border-border-subtle bg-surface-1 flex items-center justify-center shrink-0">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B6320" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 18h6M12 2a7 7 0 0 1 4 12.9V16a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.1A7 7 0 0 1 12 2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-[10px] font-mono font-semibold uppercase tracking-[0.22em] mb-2.5" style={{ color: '#1B6320' }}>Key Insight</p>
+                  <p className="text-sm text-ink-secondary leading-[1.75]">
+                    First-time mobile banking users span BKB's base — from rural farmers to urban government employees. Clarity and guided flows were non-negotiable.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Research cards 2×2 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              {[
+                {
+                  num: '01', category: 'Market Landscape', points: researchCards[0].points,
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/>
+                    </svg>
+                  ),
+                },
+                {
+                  num: '02', category: 'Target Users', points: researchCards[1].points,
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+                      <circle cx="17" cy="7" r="2.5" opacity="0.5"/><path d="M21 21v-2a3 3 0 0 0-3-3" opacity="0.5"/>
+                    </svg>
+                  ),
+                },
+                {
+                  num: '03', category: 'Regulatory Context', points: researchCards[2].points,
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 3l8 3.5v5c0 4.4-3.4 8.5-8 9.5C7.4 19.5 4 15.4 4 11V6.5L12 3z"/>
+                      <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                  ),
+                },
+                {
+                  num: '04', category: 'Competitive Gaps', points: researchCards[3].points,
+                  icon: (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                      <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
+                    </svg>
+                  ),
+                },
+              ].map((card, i) => (
+                <motion.div key={i} {...stagger(i)} className="card-surface rounded-2xl p-6">
+                  {/* Card header: icon + category */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-9 h-9 rounded-xl border border-border-subtle bg-surface-1 flex items-center justify-center shrink-0 text-zinc-400">
+                      {card.icon}
+                    </div>
+                    <span className="text-[10px] font-mono font-semibold uppercase tracking-[0.2em]" style={{ color: '#1B6320' }}>
+                      {card.category}
+                    </span>
                   </div>
+
+                  {/* Bullet points */}
                   <ul className="space-y-3">
                     {card.points.map((pt, j) => (
                       <li key={j} className="flex items-start gap-3">
-                        <div className="w-1 h-1 rounded-full mt-1.5 shrink-0" style={{ background: card.color, opacity: 0.5 }} />
-                        <span className="text-base text-white/55 leading-relaxed">{pt}</span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-zinc-300 mt-[7px] shrink-0" />
+                        <span className="text-sm text-ink-secondary leading-[1.7]">{pt}</span>
                       </li>
                     ))}
                   </ul>
                 </motion.div>
               ))}
             </div>
+
+            {/* What This Means — full-width bottom banner */}
+            <motion.div
+              {...fadeUp}
+              className="card-surface rounded-2xl p-6 lg:p-7 flex items-center gap-5 lg:gap-7"
+            >
+              <div className="w-12 h-12 rounded-full border border-border-subtle bg-surface-1 flex items-center justify-center shrink-0">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B6320" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+                  <path d="M12 2v2M12 20v2M2 12h2M20 12h2"/>
+                </svg>
+              </div>
+              <div className="w-px h-10 bg-zinc-100 shrink-0 hidden sm:block" />
+              <div>
+                <p className="text-[10px] font-mono font-semibold uppercase tracking-[0.22em] mb-2" style={{ color: '#1B6320' }}>What This Means</p>
+                <p className="text-sm text-ink-secondary leading-[1.75]">
+                  Our design needs to be simple, trustworthy, and local-first — helping first-time users feel confident while meeting regulatory standards and competing with leading MFS apps.
+                </p>
+              </div>
+            </motion.div>
+
           </div>
         </section>
 
@@ -528,7 +751,7 @@ export default function CaseStudyPage() {
           <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
             <motion.div {...fadeUp} className="mb-14">
               <SectionLabel num="06" label="Features" />
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-ink-primary tracking-tight max-w-xl leading-tight">
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight max-w-xl leading-[1.1]">
                 8 core modules, 100+ screens
               </h2>
             </motion.div>
@@ -537,11 +760,11 @@ export default function CaseStudyPage() {
               {features.map((f, i) => (
                 <motion.div key={i} {...stagger(i)} className="card-surface rounded-2xl p-6 group hover:border-zinc-300/60 hover:shadow-sm transition-all duration-300 relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-zinc-400/30 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left rounded-t-2xl" />
-                  <div className="w-8 h-8 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center mb-4 group-hover:bg-zinc-200 transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-surface-1 border border-border-subtle flex items-center justify-center mb-4 group-hover:bg-surface-2 transition-colors">
                     <FeatureIcon name={f.icon} />
                   </div>
                   <div className="text-base font-bold text-ink-primary mb-2 leading-snug">{f.label}</div>
-                  <div className="text-sm text-slate-400 leading-relaxed">{f.desc}</div>
+                  <div className="text-sm text-ink-muted leading-relaxed">{f.desc}</div>
                 </motion.div>
               ))}
             </div>
@@ -551,34 +774,48 @@ export default function CaseStudyPage() {
         {/* ══════════════════════════════════════════
             07  USER FLOW
         ══════════════════════════════════════════ */}
-        <section id="cs-flow" style={{ background: '#0a0a0a', scrollMarginTop: '64px' }} className="border-b border-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 50% 60% at 10% 70%, rgba(255,255,255,0.02) 0%, transparent 65%)' }} />
-          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
+        <section id="cs-flow" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
+          <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
 
-            <motion.div {...fadeUp} className="mb-14">
-              <DarkSectionLabel num="07" label="User Flow" />
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                <h2 className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight">
+            {/* Header */}
+            <motion.div {...fadeUp} className="mb-16">
+              <SectionLabel num="07" label="User Flow" />
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+                <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.1]">
                   30+ flows designed end-to-end
                 </h2>
-                <span className="text-sm font-mono text-white/25 shrink-0">6 flow groups · 100+ screens</span>
+              </div>
+              <div className="flex flex-wrap gap-6">
+                {[['6', 'flow groups'], ['30+', 'user flows'], ['100+', 'screens']].map(([val, lbl]) => (
+                  <div key={lbl} className="flex items-baseline gap-1.5">
+                    <span className="font-display text-2xl font-bold text-ink-primary">{val}</span>
+                    <span className="text-sm text-ink-muted">{lbl}</span>
+                  </div>
+                ))}
               </div>
             </motion.div>
 
             {/* Flow groups grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-24">
               {cs.flowGroups.map((group, i) => (
-                <motion.div key={group.label} {...stagger(i)} className="rounded-2xl border border-white/8 overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)' }}>
-                  <div className="flex items-center justify-between px-5 py-4 border-b border-white/8">
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-mono font-bold text-zinc-400 bg-zinc-500/10">{i + 1}</div>
-                      <span className="text-sm font-semibold text-white/75 uppercase tracking-wider">{group.label}</span>
+                <motion.div key={group.label} {...stagger(i)} className="card-surface rounded-2xl overflow-hidden group hover:border-border-default transition-colors duration-200">
+                  <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-xs font-mono text-ink-muted tabular-nums">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span className="w-px h-3 bg-border-subtle" />
+                      <span className="text-sm font-semibold text-ink-primary">{group.label}</span>
                     </div>
-                    <span className="text-xs font-mono text-white/25 bg-white/5 px-2 py-0.5 rounded-full">{group.items.length}</span>
+                    <span className="text-xs font-mono text-ink-muted bg-surface-1 border border-border-subtle px-2 py-0.5 rounded-full">
+                      {group.items.length} flows
+                    </span>
                   </div>
                   <div className="p-5 flex flex-wrap gap-2">
                     {group.items.map(item => (
-                      <span key={item} className="px-2.5 py-1 rounded-lg text-sm text-white/45 border border-white/8" style={{ background: 'rgba(255,255,255,0.04)' }}>{item}</span>
+                      <span key={item} className="px-2.5 py-1 rounded-lg text-xs font-medium text-ink-secondary bg-surface-1 border border-border-subtle leading-none py-1.5">
+                        {item}
+                      </span>
                     ))}
                   </div>
                 </motion.div>
@@ -586,31 +823,64 @@ export default function CaseStudyPage() {
             </div>
 
             {/* Fund Transfer Spotlight */}
-            <div className="border-t border-white/8 pt-20">
-              <motion.div {...fadeUp} className="mb-10">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-0.5 h-4 rounded-full bg-zinc-500/60" />
-                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-400/60">Flow Spotlight: Fund Transfer</span>
+            <div className="border-t border-border-subtle pt-20">
+
+              {/* Spotlight Header */}
+              <motion.div {...fadeUp} className="mb-12">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-1 border border-border-subtle mb-6">
+                  <div className="w-1.5 h-1.5 rounded-full bg-ink-muted" />
+                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">Flow Spotlight · Fund Transfer</span>
                 </div>
-                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-                  <h3 className="font-display text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
-                    Sending money in{' '}
-                    <span style={{ color: '#9ca3af' }}>
-                      3 taps or less
-                    </span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-end">
+                  <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-ink-primary tracking-tight leading-[1.1]">
+                    Sending money in<br />
+                    <span className="text-ink-muted">3 taps or less</span>
                   </h3>
-                  <p className="text-base text-white/35 max-w-xs leading-relaxed shrink-0">
+                  <p className="text-base text-ink-secondary leading-relaxed lg:max-w-sm lg:mb-1">
                     Once a beneficiary is saved, every subsequent transfer collapses to select → amount → confirm.
                   </p>
                 </div>
               </motion.div>
 
+              {/* Step-by-step flow connector */}
+              <motion.div {...fadeUp} className="mb-14">
+                <p className="text-xs font-mono text-ink-muted uppercase tracking-widest mb-5">6-step transfer flow</p>
+                <div className="relative flex flex-col sm:flex-row items-stretch gap-0">
+                  {transferSteps.map((s, i) => (
+                    <div key={s.step} className="flex sm:flex-col flex-1 items-center sm:items-start gap-0 relative">
+                      {/* Connector line */}
+                      {i < transferSteps.length - 1 && (
+                        <div className="hidden sm:block absolute top-4 left-[calc(100%_-_12px)] w-full h-px bg-border-subtle z-0" />
+                      )}
+                      <div className="flex sm:flex-col items-center sm:items-start gap-3 sm:gap-3 w-full pr-0 sm:pr-4">
+                        {/* Step bubble */}
+                        <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-full shrink-0 border text-xs font-bold font-mono transition-colors
+                          ${i === 4 ? 'bg-ink-primary border-ink-primary text-surface-base' : 'bg-surface-base border-border-default text-ink-muted'}`}>
+                          {String(s.step).padStart(2, '0')}
+                        </div>
+                        {/* Vertical line for mobile */}
+                        {i < transferSteps.length - 1 && (
+                          <div className="sm:hidden w-px h-6 bg-border-subtle ml-0" />
+                        )}
+                        <div className="sm:mt-3 pb-4 sm:pb-0">
+                          <div className="text-sm font-semibold text-ink-primary mb-0.5">{s.title}</div>
+                          <div className="text-xs text-ink-muted leading-snug">{s.description}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
               {/* Real App Flow Screens */}
-              <motion.div {...fadeUp} className="mb-12 relative -mx-6 lg:-mx-10 px-6 lg:px-10 overflow-x-auto hide-scrollbar pb-6">
-                <div className="flex gap-5 min-w-max">
+              <motion.div {...fadeUp} className="mb-14 relative -mx-6 lg:-mx-10 px-6 lg:px-10 overflow-x-auto hide-scrollbar pb-6">
+                <div className="flex gap-4 min-w-max">
                   {[imgFT1, imgFT4, imgFT2, imgFT3, imgFT7, imgFT5, imgFT6, imgFT8].map((imgSrc, idx) => (
-                    <div key={idx} className="w-[240px] sm:w-[260px] md:w-[280px] shrink-0 rounded-[32px] overflow-hidden border-[6px] border-[#1a1a1a] shadow-2xl bg-white relative">
-                      <img src={imgSrc} alt={`Fund Transfer Step ${idx + 1}`} className="w-full h-auto object-cover" />
+                    <div key={idx} className="shrink-0 flex flex-col items-center gap-3">
+                      <div className="w-[220px] sm:w-[240px] rounded-[28px] overflow-hidden border-[5px] border-zinc-200 shadow-xl bg-white">
+                        <img src={imgSrc} alt={`Fund Transfer Step ${idx + 1}`} className="w-full h-auto object-cover" />
+                      </div>
+                      <span className="text-xs font-mono text-ink-muted tabular-nums">{String(idx + 1).padStart(2, '0')}</span>
                     </div>
                   ))}
                 </div>
@@ -618,64 +888,40 @@ export default function CaseStudyPage() {
 
               {/* Transfer types */}
               <motion.div {...fadeUp} className="mb-12">
-                <p className="text-xs font-mono text-white/25 uppercase tracking-widest mb-4">5 transfer types</p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <p className="text-xs font-mono text-ink-muted uppercase tracking-widest mb-5">5 transfer types</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                   {transferTypes.map((type, i) => (
-                    <motion.div key={type.id} {...stagger(i)} className="rounded-xl border p-4 relative overflow-hidden"
-                      style={{ borderColor: `${type.color}20`, background: `${type.color}08` }}>
-                      <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl" style={{ background: `linear-gradient(to right, ${type.color}60, transparent)` }} />
-                      <div className="w-2 h-2 rounded-full mb-3" style={{ background: type.color }} />
-                      <div className="text-sm font-bold text-white/80 mb-1">{type.label}</div>
-                      <div className="text-sm text-white/35 leading-snug">{type.description}</div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* 6-step phone mockup flow */}
-              <motion.div {...fadeUp} className="mb-10">
-                <p className="text-xs font-mono text-white/25 uppercase tracking-widest mb-8">6-step transfer flow</p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 lg:gap-4">
-                  {transferSteps.map((step, i) => (
-                    <motion.div key={i} {...stagger(i)} className="flex flex-col items-center gap-4">
-                      <div className="relative">
-                        <PhoneScreen step={step.step} />
-                        {i < transferSteps.length - 1 && (
-                          <div className="hidden lg:block absolute top-[60px] -right-5 pointer-events-none" aria-hidden="true">
-                            <svg viewBox="0 0 20 10" width="20" height="10"><path d="M0 5 L14 5 M10 2 L14 5 L10 8" stroke="rgba(255,255,255,0.2)" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                          </div>
-                        )}
-                        <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-lg"
-                          style={{ background: i === 5 ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)', color: i === 5 ? '#0a0a0a' : '#9ca3af' }}>
-                          {step.step}
-                        </div>
+                    <motion.div key={type.id} {...stagger(i)} className="card-surface rounded-xl p-4 relative overflow-hidden hover:border-border-default transition-colors duration-150">
+                      <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-xl" style={{ background: `linear-gradient(90deg, ${type.color}80 0%, transparent 100%)` }} />
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: type.color }} />
+                        <span className="text-xs font-mono text-ink-muted">{String(i + 1).padStart(2, '0')}</span>
                       </div>
-                      <div className="text-center">
-                        <div className="text-sm font-bold text-white/75 mb-0.5">{step.title}</div>
-                        <div className="text-xs text-white/28 leading-snug">{step.description}</div>
-                      </div>
+                      <div className="text-sm font-bold text-ink-primary mb-1.5">{type.label}</div>
+                      <div className="text-xs text-ink-muted leading-snug">{type.description}</div>
                     </motion.div>
                   ))}
                 </div>
               </motion.div>
 
               {/* Principles strip */}
-              <motion.div {...fadeUp} className="pt-8 border-t border-white/8 grid grid-cols-1 sm:grid-cols-3 gap-6">
-                {[
-                  { title: 'Bangladesh Bank compliant', body: 'TOTP OTP for high-value transactions; PIN for standard transfers' },
-                  { title: 'Beneficiary-first',         body: 'Save once — every future transfer to the same contact skips 2 steps' },
-                  { title: 'One decision per screen',   body: 'Reduces errors for first-time mobile banking users' },
-                ].map((p, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-md bg-white/8 flex items-center justify-center shrink-0 mt-0.5 border border-white/12">
-                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <motion.div {...fadeUp} className="pt-8 border-t border-border-subtle">
+                <p className="text-xs font-mono text-ink-muted uppercase tracking-widest mb-6">Design principles</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  {[
+                    { num: '01', title: 'Bangladesh Bank compliant', body: 'TOTP OTP for high-value transactions; PIN for standard transfers' },
+                    { num: '02', title: 'Beneficiary-first',         body: 'Save once — every future transfer to the same contact skips 2 steps' },
+                    { num: '03', title: 'One decision per screen',   body: 'Reduces errors for first-time mobile banking users' },
+                  ].map((p, i) => (
+                    <div key={i} className="flex items-start gap-4">
+                      <span className="text-xs font-mono text-ink-muted tabular-nums shrink-0 mt-0.5">{p.num}</span>
+                      <div>
+                        <div className="text-sm font-semibold text-ink-primary mb-1">{p.title}</div>
+                        <div className="text-sm text-ink-muted leading-relaxed">{p.body}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-sm font-semibold text-white/65 mb-0.5">{p.title}</div>
-                      <div className="text-sm text-white/30 leading-relaxed">{p.body}</div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </motion.div>
             </div>
           </div>
@@ -684,28 +930,28 @@ export default function CaseStudyPage() {
         {/* ══════════════════════════════════════════
             08  WIREFRAME / HAND-SKETCH
         ══════════════════════════════════════════ */}
-        <section id="cs-wireframe" style={{ background: '#f8fafc', scrollMarginTop: '64px' }} className="border-b border-border-subtle">
+        <section id="cs-wireframe" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
           <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
             <motion.div {...fadeUp} className="mb-14">
               <SectionLabel num="08" label="Wireframe · Hand Sketch" />
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                 <div className="lg:col-span-6">
-                  <h2 className="font-display text-4xl sm:text-5xl font-bold text-ink-primary tracking-tight mb-4 leading-tight">
+                  <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight mb-4 leading-[1.1]">
                     Layout validated before pixels
                   </h2>
                   <p className="text-lg text-ink-secondary leading-relaxed">
-                    Before opening Figma, key screens were sketched by hand — focusing on layout hierarchy, information density, and navigation patterns. Low-fidelity wireframes were then created to validate structure with stakeholders early, before visual design began.
+                    Key screens sketched by hand before Figma — testing layout hierarchy and navigation. Low-fidelity wireframes validated structure with stakeholders before visual design.
                   </p>
                 </div>
                 <div className="lg:col-span-6 flex flex-col gap-3">
                   {[
-                    'Sketched the dashboard layout first — where to put balance, quick actions, and recent transactions',
-                    'Wireframed the transfer flow as a linear sequence to test step count and decision points',
-                    'Ran a quick internal review of wireframes before committing to the visual system',
+                    'Sketched dashboard layout — balance, quick actions, and recent transactions',
+                    'Wireframed transfer flow as linear steps to test step count and decisions',
+                    'Internal review of wireframes before committing to visual design',
                   ].map((note, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-md border border-zinc-200 bg-zinc-50 flex items-center justify-center shrink-0 mt-0.5">
-                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      <div className="w-5 h-5 rounded-md border border-border-subtle bg-surface-1 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-ink-muted"><polyline points="20 6 9 17 4 12"/></svg>
                       </div>
                       <p className="text-base text-ink-secondary leading-relaxed">{note}</p>
                     </div>
@@ -716,7 +962,7 @@ export default function CaseStudyPage() {
 
             {/* Wireframe screens */}
             <motion.div {...fadeUp}>
-              <p className="text-xs font-mono text-slate-400 uppercase tracking-widest mb-8">Key screens — low-fidelity</p>
+              <p className="text-xs font-mono text-ink-muted uppercase tracking-widest mb-8">Key screens — low-fidelity</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                 {[
                   { label: 'Dashboard',      sublabel: 'Home screen overview' },
@@ -725,12 +971,12 @@ export default function CaseStudyPage() {
                   { label: 'Review',         sublabel: 'Confirm before sending' },
                 ].map((screen, i) => (
                   <motion.div key={i} {...stagger(i)} className="flex flex-col items-center gap-3">
-                    <div className="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm">
+                    <div className="rounded-2xl border border-border-subtle overflow-hidden bg-surface-base shadow-sm">
                       <WireframePhone screen={i + 1} />
                     </div>
                     <div className="text-center">
                       <div className="text-sm font-bold text-ink-primary mb-0.5">{screen.label}</div>
-                      <div className="text-sm text-slate-400">{screen.sublabel}</div>
+                      <div className="text-sm text-ink-muted">{screen.sublabel}</div>
                     </div>
                   </motion.div>
                 ))}
@@ -742,30 +988,29 @@ export default function CaseStudyPage() {
         {/* ══════════════════════════════════════════
             09  STYLE GUIDE
         ══════════════════════════════════════════ */}
-        <section id="cs-styleguide" style={{ background: '#0d0d0d', scrollMarginTop: '64px' }} className="border-b border-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 50% 60% at 80% 80%, rgba(255,255,255,0.02) 0%, transparent 65%)' }} />
-          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
+        <section id="cs-styleguide" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
+          <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
             <motion.div {...fadeUp} className="mb-14">
-              <DarkSectionLabel num="09" label="Style Guide" />
-              <h2 className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight">
+              <SectionLabel num="09" label="Style Guide" />
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.1]">
                 Visual language rooted in BKB's identity
               </h2>
             </motion.div>
 
             {/* Color palette */}
             <motion.div {...fadeUp} className="mb-14">
-              <p className="text-xs font-mono text-white/30 uppercase tracking-widest mb-6">Color System</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              <p className="text-xs font-mono text-ink-muted uppercase tracking-widest mb-6">Color System</p>
+              <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3">
                 {styleColors.map((c, i) => (
-                  <motion.div key={i} {...stagger(i)} className="flex flex-col gap-3">
+                  <motion.div key={i} {...stagger(i)} className="flex flex-col gap-2.5">
                     <div
-                      className="w-full h-16 rounded-xl border border-white/8"
-                      style={{ background: c.hex, boxShadow: `0 4px 20px ${c.hex}30` }}
+                      className="w-full aspect-square rounded-2xl border border-zinc-100"
+                      style={{ background: c.hex, boxShadow: c.hex === '#FFFFFF' ? 'inset 0 0 0 1px #e5e7eb' : `0 4px 16px ${c.hex}28` }}
                     />
                     <div>
-                      <div className="text-sm font-semibold text-white/80 mb-0.5">{c.name}</div>
-                      <div className="text-xs font-mono text-white/30 mb-1">{c.hex}</div>
-                      <div className="text-xs text-white/25 leading-snug">{c.role}</div>
+                      <div className="text-xs font-semibold text-ink-primary mb-0.5">{c.name}</div>
+                      <div className="text-[11px] font-mono text-ink-muted mb-1 uppercase">{c.hex}</div>
+                      <div className="text-[11px] text-ink-muted leading-snug">{c.role}</div>
                     </div>
                   </motion.div>
                 ))}
@@ -774,28 +1019,24 @@ export default function CaseStudyPage() {
 
             {/* Typography */}
             <motion.div {...fadeUp}>
-              <p className="text-xs font-mono text-white/30 uppercase tracking-widest mb-6">Typography</p>
-              <div className="rounded-2xl border border-white/8 overflow-hidden" style={{ background: 'rgba(255,255,255,0.02)' }}>
-                {styleType.map((t, i) => (
-                  <div key={i} className={`flex flex-col sm:flex-row sm:items-center gap-4 px-6 py-5 ${i < styleType.length - 1 ? 'border-b border-white/6' : ''}`}>
-                    <div className="sm:w-36 shrink-0">
-                      <div className="text-xs font-mono text-white/30 mb-0.5">{t.role}</div>
-                      <div className="text-sm text-white/40">{t.family} · {t.weight} · {t.size}</div>
-                    </div>
-                    <div
-                      className="text-white/85"
-                      style={{
-                        fontFamily: t.family.includes('Jakarta') ? 'Plus Jakarta Sans, Inter, sans-serif' : t.family.includes('Mono') ? 'JetBrains Mono, monospace' : 'Inter, sans-serif',
-                        fontWeight: t.weight,
-                        fontSize: i === 0 ? '28px' : i === 1 ? '20px' : i === 2 ? '14px' : '11px',
-                        letterSpacing: i === 3 ? '0.1em' : undefined,
-                        textTransform: i === 3 ? 'uppercase' : undefined,
-                      }}
-                    >
-                      {t.sample}
-                    </div>
+              <p className="text-[11px] font-mono text-zinc-400 uppercase tracking-[0.24em] mb-6">Typography</p>
+              <div className="rounded-xl border border-border-subtle bg-surface-base px-8 py-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div>
+                  <p className="text-xs font-mono text-ink-muted mb-2">Primary typeface</p>
+                  <div
+                    className="text-4xl sm:text-5xl font-bold text-ink-primary tracking-tight"
+                    style={{ fontFamily: '"DM Sans", ui-sans-serif, system-ui, sans-serif' }}
+                  >
+                    Circular Std
                   </div>
-                ))}
+                </div>
+                <div className="flex flex-wrap gap-2 sm:justify-end">
+                  {['Light', 'Book', 'Medium', 'Bold', 'Black'].map(w => (
+                    <span key={w} className="px-3 py-1.5 rounded-lg text-xs font-medium text-ink-secondary bg-surface-1 border border-border-subtle">
+                      {w}
+                    </span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </div>
@@ -804,38 +1045,37 @@ export default function CaseStudyPage() {
         {/* ══════════════════════════════════════════
             10  VISUAL DESIGN
         ══════════════════════════════════════════ */}
-        <section id="cs-visual" style={{ background: '#0a0a0a', scrollMarginTop: '64px' }} className="border-b border-white/5 relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 30% 40%, rgba(255,255,255,0.02) 0%, transparent 70%)' }} />
-          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
+        <section id="cs-visual" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
+          <div className="max-w-7xl mx-auto px-6 lg:px-10 py-20 lg:py-28">
             <motion.div {...fadeUp} className="mb-14">
-              <DarkSectionLabel num="10" label="Visual Design" />
+              <SectionLabel num="10" label="Visual Design" />
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-                <h2 className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight leading-tight max-w-xl">
+                <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.1] max-w-xl">
                   A complete, handoff-ready mobile banking experience
                 </h2>
-                <p className="text-base text-white/35 max-w-sm leading-relaxed shrink-0">
-                  30+ flows, 100+ screens — spanning authentication, transfers, payments, beneficiaries, and account management. Built for Android and iOS.
+                <p className="text-base text-ink-muted max-w-sm leading-relaxed shrink-0">
+                  30+ flows, 100+ screens — authentication, transfers, payments, and account management. Android & iOS.
                 </p>
               </div>
             </motion.div>
 
             {/* Full app image */}
-            <motion.div {...fadeUp} className="mb-10 rounded-2xl overflow-hidden border border-white/8">
+            <motion.div {...fadeUp} className="mb-10 rounded-2xl overflow-hidden border border-border-subtle">
               <img src={myBkbAppImg} alt="myBKB final visual design screens" className="w-full object-cover object-top" />
             </motion.div>
 
             {/* Design decisions */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {cs.keyDecisions.map((decision, i) => (
-                <motion.div key={i} {...stagger(i)} className="rounded-2xl p-7 border border-white/8 relative overflow-hidden group hover:border-zinc-600/60 transition-colors" style={{ background: 'rgba(255,255,255,0.025)' }}>
-                  <div className="absolute top-0 left-7 h-0.5 bg-zinc-500/40 transition-all duration-300 w-5 group-hover:w-12" />
-                  <div className="absolute -bottom-3 -right-1 font-display font-bold leading-none select-none pointer-events-none" style={{ fontSize: '7rem', color: 'rgba(255,255,255,0.025)' }} aria-hidden="true">
+                <motion.div key={i} {...stagger(i)} className="card-surface rounded-2xl p-7 relative overflow-hidden group hover:border-zinc-300/60 transition-colors">
+                  <div className="absolute top-0 left-7 h-0.5 bg-zinc-300 transition-all duration-300 w-5 group-hover:w-12" />
+                  <div className="absolute -bottom-3 -right-1 font-display font-bold leading-none select-none pointer-events-none text-zinc-100" style={{ fontSize: '7rem' }} aria-hidden="true">
                     {String(i + 1).padStart(2, '0')}
                   </div>
                   <div className="relative z-10">
-                    <div className="text-xs font-mono text-white/20 mb-5 tracking-widest">{String(i + 1).padStart(2, '0')}</div>
-                    <h3 className="text-base font-bold text-white/85 mb-3 leading-snug">{decision.title}</h3>
-                    <p className="text-sm text-white/40 leading-relaxed">{decision.description}</p>
+                    <div className="text-xs font-mono text-ink-muted mb-5 tracking-widest">{String(i + 1).padStart(2, '0')}</div>
+                    <h3 className="text-base font-bold text-ink-primary mb-3 leading-snug">{decision.title}</h3>
+                    <p className="text-sm text-ink-muted leading-relaxed">{decision.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -844,26 +1084,23 @@ export default function CaseStudyPage() {
         </section>
 
         {/* ── CTA ── */}
-        <section className="relative overflow-hidden bg-surface-base">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(16,185,129,0.06) 0%, transparent 70%)' }} />
+        <section className="relative overflow-hidden bg-surface-base border-t border-border-subtle">
           <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-28 lg:py-36 text-center">
             <motion.div {...fadeUp}>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-slate-400 mb-6">Interested in working together?</p>
-              <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-ink-primary tracking-tight leading-tight mb-12">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-ink-muted mb-6">Interested in working together?</p>
+              <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl font-semibold text-ink-primary tracking-tight leading-[1.06] mb-12">
                 Let&apos;s build something<br />
-                <span style={{ color: '#9ca3af' }}>
-                  meaningful.
-                </span>
+                <span className="text-zinc-400">meaningful.</span>
               </h2>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a href="https://www.linkedin.com/in/shahola-nisha/" target="_blank" rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 px-8 py-4 text-base font-bold text-white bg-zinc-900 rounded-xl hover:bg-zinc-800 transition-all hover:-translate-y-0.5 shadow-lg">
+                  className="group inline-flex items-center gap-3 px-7 py-3.5 text-sm font-semibold text-white bg-zinc-900 rounded-md hover:bg-zinc-800 transition-all hover:-translate-y-0.5 shadow-sm">
                   Get in touch
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
                     <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
                   </svg>
                 </a>
-                <Link to="/" className="inline-flex items-center gap-2 px-8 py-4 text-base font-medium text-ink-secondary hover:text-ink-primary border border-border-default rounded-xl transition-colors hover:border-slate-300">
+                <Link to="/" className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium text-ink-secondary hover:text-ink-primary border border-border-strong rounded-md transition-colors">
                   View all work
                 </Link>
               </div>
@@ -928,7 +1165,7 @@ function AbstractAppMockup() {
                         <div className="w-3 h-3 rounded-full border-[1.5px] border-slate-400 mb-1" />
                         <div className="absolute bottom-0 w-6 h-3 border-t-[1.5px] border-l-[1.5px] border-r-[1.5px] border-slate-400 rounded-t-full" />
                      </div>
-                     <div className="w-12 h-1.5 bg-slate-300" />
+                     <div className="w-12 h-1.5 bg-zinc-300" />
                    </div>
                    <motion.div whileHover={{ rotate: 15, scale: 1.1 }}>
                       {/* Bell outline */}
@@ -943,15 +1180,15 @@ function AbstractAppMockup() {
                 >
                    {/* Image Placeholder cross */}
                    <div className="w-[80px] h-[60px] mr-3 relative border-2 border-slate-200 bg-slate-50 overflow-hidden flex-shrink-0">
-                      <svg className="absolute inset-0 w-full h-full text-slate-300" preserveAspectRatio="none" viewBox="0 0 100 100">
+                      <svg className="absolute inset-0 w-full h-full text-zinc-300" preserveAspectRatio="none" viewBox="0 0 100 100">
                         <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" strokeWidth="1" />
                         <line x1="100" y1="0" x2="0" y2="100" stroke="currentColor" strokeWidth="1" />
                       </svg>
                    </div>
                    {/* Text skeleton */}
                    <div className="flex flex-col gap-2 flex-1">
-                      <div className="w-full h-1.5 bg-slate-300" />
-                      <div className="w-2/3 h-1.5 bg-slate-300" />
+                      <div className="w-full h-1.5 bg-zinc-300" />
+                      <div className="w-2/3 h-1.5 bg-zinc-300" />
                       <div className="w-1/2 h-1.5 bg-slate-200 mt-1" />
                    </div>
                 </motion.div>
@@ -986,13 +1223,7 @@ function AbstractAppMockup() {
               <div className="absolute bottom-0 left-0 right-0 h-[56px] bg-white border-t-2 border-slate-200 flex justify-around items-center px-1 z-40">
                  {[1, 2, 3, 4].map((i) => (
                    <motion.div key={i} whileHover={{ y: -3 }} className="flex flex-col items-center justify-center gap-1.5 w-14 h-12 cursor-pointer">
-                     {i === 1 ? (
-                        <div className="w-5 h-4 border-2 border-slate-400 border-b-0 rounded-t-sm relative">
-                           <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 border-t-2 border-l-2 border-slate-400 rotate-45" />
-                        </div>
-                     ) : (
-                        <div className="w-5 h-4 border-2 border-slate-300 rounded-sm" />
-                     )}
+                     <div className={`w-5 h-4 border-2 rounded-sm ${i === 1 ? 'border-slate-400' : 'border-slate-300'}`} />
                      <div className={`w-8 h-1 ${i === 1 ? 'bg-slate-400' : 'bg-slate-200'}`} />
                    </motion.div>
                  ))}
@@ -1018,7 +1249,7 @@ function AbstractAppMockup() {
                 </div>
                 <div className="flex flex-col gap-2 flex-1">
                   <div className="w-full h-1.5 bg-slate-400" />
-                  <div className="w-2/3 h-1.5 bg-slate-300" />
+                  <div className="w-2/3 h-1.5 bg-zinc-300" />
                 </div>
              </motion.div>
           </motion.div>
@@ -1040,7 +1271,7 @@ function AbstractAppMockup() {
                    <div className="w-4 h-5 border-2 border-slate-400 rounded-sm" />
                 </div>
                 <div className="flex flex-col gap-2 flex-1">
-                  <div className="w-full h-1.5 bg-slate-300" />
+                  <div className="w-full h-1.5 bg-zinc-300" />
                   <div className="w-1/2 h-1.5 bg-slate-200" />
                 </div>
              </motion.div>
@@ -1075,19 +1306,10 @@ function AbstractAppMockup() {
 /* ── Helper: Section labels ── */
 function SectionLabel({ num, label }) {
   return (
-    <div className="flex items-center gap-2.5 mb-5">
-      {num && <span className="text-xs font-mono text-slate-300">{num}</span>}
-      <div className="w-0.5 h-3.5 rounded-full bg-zinc-400/50 shrink-0" />
-      <span className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">{label}</span>
-    </div>
-  )
-}
-function DarkSectionLabel({ num, label }) {
-  return (
-    <div className="flex items-center gap-2.5 mb-5">
-      {num && <span className="text-xs font-mono text-white/20">{num}</span>}
-      <div className="w-0.5 h-3.5 rounded-full bg-zinc-400/50 shrink-0" />
-      <span className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-400/55">{label}</span>
+    <div className="flex items-center gap-2.5 mb-4">
+      {num && <span className="text-xs font-mono text-ink-muted">{num}</span>}
+      <div className="w-0.5 h-3.5 rounded-full bg-border-default shrink-0" />
+      <span className="text-xs font-semibold uppercase tracking-[0.18em] text-ink-muted">{label}</span>
     </div>
   )
 }

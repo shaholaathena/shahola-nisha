@@ -29,7 +29,7 @@ const certs = [
     title: 'Internet of Things (IoT)',
     issuer: 'Certificate of Achievement',
     platform: 'Independent',
-    year: '2024',
+    year: '2018',
     url: null,
   },
 ]
@@ -40,14 +40,14 @@ export default function CertificationsSection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-16">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-8">
           <div>
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={VP}
               transition={{ duration: 0.5, ease: EASE }}
-              className="flex items-center gap-3 mb-6"
+              className="flex items-center gap-3 mb-4"
             >
               <div className="h-px w-6 bg-zinc-800/50" />
               <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">Credentials</span>

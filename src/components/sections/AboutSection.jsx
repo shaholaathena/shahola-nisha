@@ -86,7 +86,7 @@ export default function AboutSection() {
             viewport={{ once: true, margin: '-80px' }}
             className="lg:col-span-5"
           >
-            <motion.div variants={bioItem} className="flex items-center gap-3 mb-6">
+            <motion.div variants={bioItem} className="flex items-center gap-3 mb-4">
               <div className="h-px w-6 bg-zinc-800/50" />
               <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">Who I am</span>
             </motion.div>

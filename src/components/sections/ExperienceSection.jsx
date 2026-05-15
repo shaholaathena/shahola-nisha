@@ -10,7 +10,7 @@ export default function ExperienceSection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-16">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-8">
           <div>
             <motion.div
               initial={{ opacity: 0, y: 12 }}

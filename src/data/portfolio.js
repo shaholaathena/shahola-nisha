@@ -55,9 +55,9 @@ export const projects = [
       year: '2024',
       role: 'UI/UX Design',
       duration: '2 months',
-      context: 'Bangladesh Krishi Bank (BKB) is a state-owned agricultural development bank serving millions of customers across Bangladesh — from government employees in Dhaka to smallholder farmers in rural districts. As smartphone penetration and MFS adoption accelerated across the country, BKB needed a dedicated mobile banking app to serve its customer base and remain competitive in the evolving financial landscape.',
-      challenge: 'Design a mobile banking experience that makes complex banking operations — multi-type fund transfers, beneficiary management, utility bill payments, and account management — feel simple and trustworthy for a diverse user base ranging from tech-savvy urban professionals to first-time mobile banking users in rural Bangladesh, all within Bangladesh Bank regulatory requirements.',
-      outcome: 'A complete, handoff-ready mobile banking design covering 30+ user flows and 100+ screens — spanning onboarding, authentication, transfers, beneficiary management, payments, and account settings. The design established a scalable component library and a clear visual identity rooted in BKB\'s agricultural heritage, ready for Android and iOS development.',
+     
+      challenge: 'Make complex banking — fund transfers, beneficiary management, bill payments — feel simple for users ranging from urban professionals to first-time mobile banking users in rural Bangladesh, within Bangladesh Bank regulations.',
+      outcome: 'Handoff-ready design covering 30+ flows and 100+ screens — onboarding, transfers, payments, and account management — with a scalable component library for Android & iOS.',
       phases: ['Research', 'User Flow', 'Mobile UI Design', 'Prototype', 'Handoff'],
       metrics: [
         { label: 'Project duration', value: '2 months' },
@@ -68,19 +68,19 @@ export const projects = [
       keyDecisions: [
         {
           title: 'Beneficiary-first transfer architecture',
-          description: 'Instead of typing account details every time, I designed a structured beneficiary system with 5 types — own BKB accounts, other BKB accounts, other banks, NPS, and mobile recharge contacts. Once saved, any transfer becomes a 3-tap process.',
+          description: 'Structured beneficiary system with 5 types — once saved, any transfer becomes a 3-tap process.',
         },
         {
           title: 'One decision per screen',
-          description: 'Fund transfers were broken into focused micro-steps: "Who to?" → "How much?" → "Confirm." Each screen handles one question, reducing input errors and cognitive load for users less familiar with digital banking.',
+          description: 'Transfers broken into micro-steps: Who to → How much → Confirm. One question per screen reduces errors.',
         },
         {
           title: 'Layered security without friction',
-          description: 'The app supports both password and PIN login, with TOTP-based confirmation for high-value transactions. Security tiers are matched to transaction risk — satisfying Bangladesh Bank guidelines without blocking everyday low-risk actions.',
+          description: 'Password and PIN login, with TOTP for high-value transactions. Security matched to risk — Bangladesh Bank compliant.',
         },
         {
           title: 'Pre-login guest dashboard',
-          description: 'Non-authenticated users see a limited dashboard showcasing core app features. This reduces signup abandonment by letting prospective users understand the product value before committing — critical for a bank with many first-time digital customers.',
+          description: 'Non-authenticated users see a preview dashboard — letting first-time users understand value before signup.',
         },
       ],
       flowGroups: [

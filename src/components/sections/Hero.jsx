@@ -56,8 +56,8 @@ export default function Hero() {
                transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="font-display font-semibold leading-[1.05] tracking-tight text-[clamp(2.1rem,5.1vw,4.6rem)] text-ink-primary"
             >
-              Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-600">Alimoon Nisha</span>.<br/>
-              <span className="text-[clamp(1.4rem,2.8vw,2.2rem)] font-light text-zinc-500 block mt-1 leading-[1.3] tracking-tight">Someone who believes good design should go unnoticed.</span>
+              Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-600 mb-1">Alimoon Nisha</span>.<br/>
+              <span className="text-[clamp(1.2rem,2.5vw,2rem)] font-light text-zinc-500 block mt-2 leading-[1.3] tracking-tight">Someone who believes good design should go unnoticed.</span>
             </motion.h1>
           </div>
 
@@ -72,7 +72,7 @@ export default function Hero() {
           {/* AI Tools */}
           <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
             <div className="h-px w-6 bg-zinc-800/50" />
-            <span className="text-[9px] font-mono font-semibold text-zinc-400 tracking-widest uppercase">
+            <span className="text-[10px] font-mono font-semibold text-zinc-400 tracking-widest uppercase">
               AI · Claude · Antigravity · Cursor · Gemini · ChatGPT
             </span>
           </motion.div>
@@ -117,7 +117,7 @@ export default function Hero() {
                 transition={{ delay: 0.8 + i * 0.1, duration: 0.6, ease: "easeOut" }}
                 className=""
               >
-                <div className="text-ink-faintxl font-display font-bold text-ink-primary mb-1">
+                <div className="text-2xl font-display font-bold text-ink-primary mb-1">
                   {stat.value}
                 </div>
                 <div className="text-xs font-medium text-zinc-900/80 mb-1">{stat.label}</div>

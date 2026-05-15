@@ -16,7 +16,7 @@ export default function FeaturedWork() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-16">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-8">
           <div className="max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -59,22 +59,7 @@ export default function FeaturedWork() {
         </div>
 
         {/* View all CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VP}
-          transition={{ duration: 0.55, ease: EASE, delay: 0.1 }}
-          className="mt-16 flex justify-center"
-        >
-          <a
-            href="#contact"
-            onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }) }}
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-zinc-900 bg-white border border-zinc-100 shadow-sm hover:shadow-md px-8 py-4 rounded-full transition-all duration-300 hover:-translate-y-1"
-          >
-            Request full case studies
-            <span aria-hidden="true" className="group-hover:translate-x-1 transition-transform">→</span>
-          </a>
-        </motion.div>
+     
       </div>
     </section>
   )
