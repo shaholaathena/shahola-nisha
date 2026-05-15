@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import logo from '../../assets/logo.png'
 
 const navLinks = [
   { label: 'Work', href: '#work' },
@@ -51,19 +52,18 @@ export default function Navigation() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
-          {/* Logo */}
           <a
             href="#"
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-            className="flex items-center gap-3 group"
+            className="group"
             aria-label="Go to top"
           >
-            <div className="w-8 h-8 rounded-md bg-zinc-800 flex items-center justify-center text-white text-xs font-semibold font-display tracking-tight group-hover:bg-zinc-500 transition-colors">
-              AN
-            </div>
-            <span className="text-sm font-medium text-ink-primary hidden sm:block tracking-tight">
-              Alimoon Nisha
-            </span>
+            <img
+              src={logo}
+              alt="Alimoon Nisha"
+              className="h-14gi w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ mixBlendMode: 'multiply' }}
+            />
           </a>
 
           {/* Desktop nav */}
