@@ -2,61 +2,73 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { caseStudy } from '../../data/portfolio'
 
+const EASE = [0.22, 1, 0.36, 1]
+const VP = { once: true, margin: '-80px' }
+
 export default function CaseStudyPreview() {
   return (
     <section id="case-study" className="py-28 lg:py-36 border-t border-border-subtle relative overflow-hidden">
       <div
         className="absolute top-0 right-0 w-1/2 h-full pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 60% 70% at 80% 50%, rgba(30,58,120,0.1) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse 60% 70% at 80% 50%, rgba(0,0,0,0.04) 0%, transparent 70%)' }}
         aria-hidden="true"
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center gap-3 mb-3">
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VP}
+              transition={{ duration: 0.5, ease: EASE }}
+              className="flex items-center gap-3 mb-4"
+            >
               <div className="h-px w-6 bg-zinc-800/50" />
               <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">Case Study</span>
+            </motion.div>
+            <div className="overflow-hidden">
+              <motion.h2
+                initial={{ y: 30, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={VP}
+                transition={{ duration: 0.75, ease: EASE, delay: 0.07 }}
+                className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.1]"
+              >
+                Featured deep-dive.
+              </motion.h2>
             </div>
-            <h2 className="font-display text-4xl sm:text-ink-faintxl font-semibold text-ink-primary tracking-tight leading-tight max-w-lg">
-              Featured deep-dive.
-            </h2>
-          </motion.div>
+          </div>
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            transition={{ duration: 0.5, ease: EASE, delay: 0.13 }}
             className="flex items-center gap-3"
           >
             <span className="text-xs font-mono text-ink-muted">{caseStudy.duration} engagement</span>
-            <div className="h-px w-12 bg-white/[0.1]" />
+            <div className="h-px w-12 bg-zinc-200" />
             <span className="text-xs font-mono text-ink-muted">{caseStudy.year}</span>
           </motion.div>
         </div>
 
         {/* Teaser card */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 24, scale: 0.97 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={VP}
+          transition={{ duration: 0.75, ease: EASE, delay: 0.1 }}
           className="card-surface overflow-hidden"
         >
           {/* Hero image */}
-          <div className="relative overflow-hidden bg-[#0f3f2b]" style={{ height: 320 }}>
+          <div className="relative overflow-hidden bg-zinc-900" style={{ height: 320 }}>
             <img
               src="https://shaholanisha.xyz/wp-content/uploads/2026/04/krishi-scaled.png"
               alt="myBKB App screens"
               className="w-full h-full object-cover object-center opacity-80"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0f3f2b]/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/80 to-transparent" />
           </div>
 
           {/* Content */}

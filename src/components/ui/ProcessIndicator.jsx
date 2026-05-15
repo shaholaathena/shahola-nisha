@@ -43,24 +43,24 @@ const icons = {
 export default function ProcessIndicator({ phase, index, isLast = false }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y: 20, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
       className="relative flex flex-col"
     >
       {/* Connector line (desktop) */}
       {!isLast && (
         <div
           className="absolute top-5 left-[50%] hidden lg:block"
-          style={{ width: 'calc(100% - 40px)', height: '1px', background: 'linear-gradient(to right, rgba(59,130,246,0.3), rgba(255,255,255,0.06))', transform: 'translateX(20px)' }}
+          style={{ width: 'calc(100% - 40px)', height: '1px', background: 'linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.03))', transform: 'translateX(20px)' }}
           aria-hidden="true"
         />
       )}
 
       {/* Phase node */}
       <div className="flex flex-col items-center lg:items-start gap-4">
-        <div className="relative z-10 flex items-center justify-center w-10 h-10 rounded-lg border border-border-strong bg-[#07101e] text-white group-hover:text-zinc-300 transition-colors mx-auto lg:mx-0">
+        <div className="relative z-10 flex items-center justify-center w-10 h-10 rounded-lg border border-border-strong bg-zinc-900 text-white group-hover:text-zinc-300 transition-colors mx-auto lg:mx-0">
           {icons[phase.icon]}
         </div>
 

@@ -121,7 +121,7 @@ const SystemMockup = ({ color, accentColor }) => (
       ))
     ))}
     {/* Token swatches at bottom */}
-    {[accentColor, '#60A5FA', '#93C5FD', '#DBEAFE', 'rgba(255,255,255,0.3)', 'rgba(255,255,255,0.15)'].map((c, i) => (
+    {[accentColor, '#6b7280', '#9ca3af', '#d1d5db', 'rgba(255,255,255,0.3)', 'rgba(255,255,255,0.15)'].map((c, i) => (
       <rect key={i} x={16 + i * 20} y="164" width="16" height="10" rx="2" fill={c} opacity="0.7" />
     ))}
   </svg>
@@ -165,7 +165,7 @@ const mockupMap = {
   enterprise: EnterpriseMockup,
 }
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, index = 0 }) {
   const Mockup = mockupMap[project.type] || DashboardMockup
   const navigate = useNavigate()
 
@@ -183,10 +183,10 @@ export default function ProjectCard({ project }) {
   return (
     <motion.article
       onClick={project.link ? handleClick : undefined}
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y: 24, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: index * 0.06 }}
       whileHover={{ y: -5 }}
       className={`group card-surface overflow-hidden h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-zinc-900/5 hover:border-zinc-800/20 ${project.link ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ minHeight: 560 }}

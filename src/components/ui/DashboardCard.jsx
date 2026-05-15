@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 
-const SparkLine = ({ color = '#3B82F6', values = [30, 45, 38, 60, 52, 70, 65, 80] }) => {
+const SparkLine = ({ color = '#6b7280', values = [30, 45, 38, 60, 52, 70, 65, 80] }) => {
   const max = Math.max(...values)
   const min = Math.min(...values)
   const range = max - min || 1
@@ -19,9 +19,9 @@ const SparkLine = ({ color = '#3B82F6', values = [30, 45, 38, 60, 52, 70, 65, 80
 
 const StatusDot = ({ status }) => {
   const colors = {
-    live: 'bg-green-400',
-    review: 'bg-yellow-400',
-    archived: 'bg-[#4a6080]',
+    live: 'bg-zinc-400',
+    review: 'bg-zinc-300',
+    archived: 'bg-zinc-600',
   }
   return (
     <div className={`w-1.5 h-1.5 rounded-full ${colors[status] || colors.archived} ${status === 'live' ? 'animate-pulse' : ''}`} />
@@ -103,7 +103,7 @@ export default function DashboardCard({ className = '' }) {
               <SparkLine values={card.sparkValues} />
             </div>
             <div className="flex items-center gap-1.5">
-              <span className={`text-[10px] font-medium ${card.positive ? 'text-green-400' : 'text-red-400'}`}>
+              <span className={`text-[10px] font-medium ${card.positive ? 'text-zinc-500' : 'text-zinc-400'}`}>
                 {card.delta}
               </span>
               <span className="text-[10px] text-ink-faint">{card.label}</span>

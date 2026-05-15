@@ -14,9 +14,9 @@ export const meta = {
 }
 
 export const stats = [
-  { value: '7+', label: 'Years experience', description: 'UX and product design career' },
+  { value: '8+', label: 'Years experience', description: 'UX and product design career' },
   { value: '2020', label: 'SSL Wireless', description: 'UX Analyst since April' },
-  { value: '12+', label: 'Client highlights', description: 'Banking, NGO, commerce, and health' },
+  { value: '30+', label: 'Client highlights', description: 'Banking, NGO, commerce, and health' },
   
 ]
 
@@ -31,8 +31,8 @@ export const projects = [
     size: 'large',
     impact: 'Nov-Dec 2024',
     description: 'A web banking interface for account overview, fund transfer, beneficiary management, bill payment, statements, and transaction history.',
-    color: '#123c2d',
-    accentColor: '#22c55e',
+    color: '#111111',
+    accentColor: '#6b7280',
     image: 'https://shaholanisha.xyz/wp-content/uploads/2026/01/krishi-banner-3.png',
   },
   {
@@ -45,8 +45,8 @@ export const projects = [
     size: 'medium',
     impact: 'Sep-Nov 2024',
     description: 'A mobile banking experience for managing finances, transferring funds, and paying bills from a smartphone with a simple and intuitive flow.',
-    color: '#0f3f2b',
-    accentColor: '#16a34a',
+    color: '#1a1a1a',
+    accentColor: '#9ca3af',
     image: 'https://shaholanisha.xyz/wp-content/uploads/2026/04/krishi-scaled.png',
     link: '/case-study/bkb-mobile',
     caseStudy: {
@@ -103,8 +103,8 @@ export const projects = [
     size: 'medium',
     impact: 'Sep-Oct 2022',
     description: 'A mobile banking solution for Basic Bank customers to manage finances, transfer funds, and pay bills with a user-friendly app experience.',
-    color: '#063f24',
-    accentColor: '#84cc16',
+    color: '#222222',
+    accentColor: '#6b7280',
     image: 'https://shaholanisha.xyz/wp-content/uploads/2026/01/magpie.png',
   },
   {
@@ -117,8 +117,8 @@ export const projects = [
     size: 'large',
     impact: 'Healthcare workflow',
     description: 'A platform designed to streamline doctor appointment workflows and prescription management for healthcare professionals.',
-    color: '#342c78',
-    accentColor: '#8b5cf6',
+    color: '#1f2937',
+    accentColor: '#9ca3af',
     image: 'https://shaholanisha.xyz/wp-content/uploads/2026/01/ebuddy.png',
   },
   {
@@ -131,8 +131,8 @@ export const projects = [
     size: 'wide',
     impact: 'Work in progress',
     description: 'A social media platform centered around reviews, helping people share experiences, ratings, and opinions across products, services, and entertainment.',
-    color: '#0e5274',
-    accentColor: '#38bdf8',
+    color: '#2d2d2d',
+    accentColor: '#9ca3af',
     image: 'https://shaholanisha.xyz/wp-content/uploads/2026/02/willro.png',
   },
   {
@@ -145,8 +145,8 @@ export const projects = [
     size: 'small',
     impact: 'Legal education',
     description: 'Bangladesh-focused legal education LMS for aspiring lawyers, local businesses, and legal professionals with courses, quizzes, and learning flows.',
-    color: '#1f315f',
-    accentColor: '#5b7bd5',
+    color: '#333333',
+    accentColor: '#6b7280',
     image: 'https://shaholanisha.xyz/wp-content/uploads/2026/02/flavours-of-unity.png',
   },
   {
@@ -159,8 +159,8 @@ export const projects = [
     size: 'large',
     impact: 'Healthcare workflow',
     description: 'A platform designed to streamline doctor appointment workflows and prescription management for healthcare professionals.',
-    color: '#342c78',
-    accentColor: '#8b5cf6',
+    color: '#1f2937',
+    accentColor: '#9ca3af',
     image: easyHealthImg,
   },
 ]
@@ -248,23 +248,15 @@ export const experience = [
     period: 'Apr 2020 - Present',
     location: 'Dhaka, Bangladesh',
     description: 'Designing and improving digital products across banking, healthcare, merchant services, and platform experiences with a focus on research, visual design, and prototyping.',
-    highlights: ['Easy Health', 'Bangladesh Krishi Bank', 'SSLCommerz', 'Merchant and payment products'],
+    highlights: ['Healthcare', 'Internet Banking', 'Banking Apps', 'SSLCommerz', 'Merchants', 'LMS', 'UNDP', 'BAT'],
   },
   {
-    company: 'Client Product Work',
-    role: 'UI/UX Designer',
-    period: '2022 - 2024',
-    location: 'Dhaka, Bangladesh',
-    description: 'Created mobile and web experiences for banking, legal education, social review platforms, and healthcare workflows.',
-    highlights: ['Basic Bank Magpie', 'Legalized LMS', 'Willro', 'Internet banking products'],
-  },
-  {
-    company: 'UX/Product Design Career',
-    role: 'UX Engineer',
-    period: '7+ years',
+    company: 'Streams Tech Ltd.',
+    role: 'UI Engineer',
+    period: 'Apr 2018 - Apr 2020',
     location: 'Bangladesh',
     description: 'Specialized in problem solving, research, visual design, and prototyping for complex digital experiences.',
-    highlights: ['User flows', 'Visual systems', 'Interactive prototypes', 'Product thinking'],
+    highlights: ['User flows', 'Interactive coded prototypes', 'Product thinking'],
   },
 ]
 

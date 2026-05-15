@@ -17,6 +17,7 @@ export default function Hero() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], [0, 80])
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
 
   return (
     <section
@@ -29,7 +30,7 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
-          background: 'radial-gradient(circle 800px at 80% 40%, rgba(59,130,246,0.12) 0%, transparent 60%), radial-gradient(circle 600px at 20% 80%, rgba(139,92,246,0.08) 0%, transparent 60%)',
+          background: 'radial-gradient(circle 800px at 80% 40%, rgba(0,0,0,0.04) 0%, transparent 60%), radial-gradient(circle 600px at 20% 80%, rgba(0,0,0,0.03) 0%, transparent 60%)',
         }}
       />
 
@@ -43,7 +44,7 @@ export default function Hero() {
           <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
             <div className="h-px w-10 bg-zinc-800" />
             <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">
-              UX Analyst · UX Engineer · Product Design
+              UX Analyst · UX Engineer · AI-Assisted Designer
             </span>
           </motion.div>
 
@@ -53,28 +54,35 @@ export default function Hero() {
                initial={{ y: '20%', opacity: 0 }}
                animate={{ y: 0, opacity: 1 }}
                transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display font-semibold leading-[1.05] tracking-tight text-[clamp(2.5rem,5.5vw,5rem)] text-ink-primary"
+              className="font-display font-semibold leading-[1.05] tracking-tight text-[clamp(2.1rem,5.1vw,4.6rem)] text-ink-primary"
             >
-              Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-900">Alimoon Nisha</span>,<br/>
-              a UX Engineer.
+              Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-600">Alimoon Nisha</span>.<br/>
+              <span className="text-[clamp(1.4rem,2.8vw,2.2rem)] font-light text-zinc-500 block mt-1 leading-[1.3] tracking-tight">Someone who believes good design should go unnoticed.</span>
             </motion.h1>
           </div>
 
           {/* Subheading */}
           <motion.p
             variants={fadeUp}
-            className="text-base sm:text-lg text-ink-secondary max-w-xl leading-relaxed mb-10 font-light"
+            className="text-sm sm:text-base text-zinc-500 max-w-xl leading-relaxed mb-8 font-light"
           >
-            Living in Dhaka, Bangladesh. I specialize in problem solving, research,
-            visual design, and prototypes for banking, healthcare, social, and learning products.
+            UX Analyst at SSL Wireless, Dhaka. I design banking, healthcare, payment and enterprise products etc.
           </motion.p>
+
+          {/* AI Tools */}
+          <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
+            <div className="h-px w-6 bg-zinc-800/50" />
+            <span className="text-[9px] font-mono font-semibold text-zinc-400 tracking-widest uppercase">
+              AI · Claude · Antigravity · Cursor · Gemini · ChatGPT
+            </span>
+          </motion.div>
 
           {/* CTAs */}
           <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5 mb-16">
             <a
               href="#work"
               onClick={(e) => { e.preventDefault(); document.querySelector('#work')?.scrollIntoView({ behavior: 'smooth' }) }}
-              className="group relative inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-zinc-900 text-white text-sm font-semibold rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_4px_20px_rgba(37,99,235,0.2)]"
+              className="group relative inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-zinc-900 text-white text-sm font-semibold rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
             >
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
               <span className="relative z-10">View Selected Work</span>
@@ -120,10 +128,8 @@ export default function Hero() {
 
         {/* Right Column - Visual/Image */}
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9, x: 20 }}
-          animate={{ opacity: 1, scale: 1, x: 0 }}
-          transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="col-span-12 lg:col-span-5 mt-16 lg:mt-0 relative hidden md:block lg:w-[85%] lg:ml-4"
+          style={{ y, opacity }}
+          className="col-span-12 lg:col-span-5 mt-16 lg:mt-0 relative hidden md:block lg:w-[78%] lg:ml-auto"
         >
           {/* Container with glowing effect */}
           <motion.div
@@ -134,10 +140,11 @@ export default function Hero() {
              <div className="w-full h-full rounded-[1.5rem] overflow-hidden bg-surface-2 relative noise">
                 {/* Subtle inner gradient behind image */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-zinc-800/10 to-transparent z-0" />
-                <img 
-                  src={heroImg} 
-                  alt="Alimoon Nisha" 
-                  className="w-full h-full object-cover object-center relative z-10 opacity-95 transition-all duration-700 mix-blend-multiply"
+                <motion.img
+                  src={heroImg}
+                  alt="Alimoon Nisha"
+                  style={{ scale: imageScale }}
+                  className="w-full h-full object-cover object-center relative z-10 opacity-95 transition-all duration-700 mix-blend-multiply grayscale-[0.2] hover:grayscale-0"
                 />
              </div>
           </motion.div>
@@ -154,7 +161,7 @@ export default function Hero() {
              className="absolute -bottom-10 -left-10 bg-white/70 backdrop-blur-2xl p-4 rounded-[24px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05),0_0_0_1px_rgba(255,255,255,0.5)_inset,0_0_0_1px_rgba(0,0,0,0.03)] z-20 group"
           >
              <div className="flex items-center gap-3.5 pr-2">
-                <div className="relative w-12 h-12 rounded-[16px] bg-gradient-to-br from-zinc-50 to-white flex items-center justify-center shadow-[0_2px_10px_-3px_rgba(37,99,235,0.2),0_0_0_1px_rgba(255,255,255,1)_inset,0_0_0_1px_rgba(37,99,235,0.05)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                <div className="relative w-12 h-12 rounded-[16px] bg-gradient-to-br from-zinc-50 to-white flex items-center justify-center shadow-[0_2px_10px_-3px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,1)_inset,0_0_0_1px_rgba(0,0,0,0.05)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                   <div className="absolute inset-0 rounded-[16px] bg-zinc-800 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                   <span className="text-zinc-900 font-bold text-lg font-display tracking-tight z-10">UI</span>
                 </div>
@@ -176,7 +183,7 @@ export default function Hero() {
              className="absolute -top-8 -right-8 bg-white/70 backdrop-blur-2xl p-4 rounded-[24px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05),0_0_0_1px_rgba(255,255,255,0.5)_inset,0_0_0_1px_rgba(0,0,0,0.03)] z-20 group"
           >
              <div className="flex items-center gap-3.5 pr-2">
-                <div className="relative w-12 h-12 rounded-[16px] bg-gradient-to-br from-zinc-50 to-white flex items-center justify-center shadow-[0_2px_10px_-3px_rgba(79,70,229,0.2),0_0_0_1px_rgba(255,255,255,1)_inset,0_0_0_1px_rgba(79,70,229,0.05)] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
+                <div className="relative w-12 h-12 rounded-[16px] bg-gradient-to-br from-zinc-50 to-white flex items-center justify-center shadow-[0_2px_10px_-3px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,1)_inset,0_0_0_1px_rgba(0,0,0,0.05)] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
                   <div className="absolute inset-0 rounded-[16px] bg-zinc-800 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                   <span className="text-zinc-900 font-bold text-lg font-display tracking-tight z-10">UX</span>
                 </div>

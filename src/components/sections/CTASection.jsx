@@ -3,13 +3,13 @@ import { meta } from '../../data/portfolio'
 
 export default function CTASection() {
   return (
-    <section id="contact" className="py-28 lg:py-40 border-t border-border-subtle relative overflow-hidden">
+    <section id="contact" className="py-16 lg:py-24 border-t border-border-subtle relative overflow-hidden">
       {/* Background */}
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
-          background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(30,58,120,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.04) 0%, transparent 70%)',
         }}
       />
       <div className="absolute inset-0 bg-grid-subtle opacity-60 pointer-events-none" aria-hidden="true" />
@@ -25,18 +25,18 @@ export default function CTASection() {
         >
           <div className="h-px w-8 bg-zinc-800/40" />
           <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-xs font-medium text-green-400/80 tracking-wide">Based in Dhaka, Bangladesh</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-pulse" />
+            <span className="text-xs font-medium text-zinc-500 tracking-wide">Based in Dhaka, Bangladesh</span>
           </div>
           <div className="h-px w-8 bg-zinc-800/40" />
         </motion.div>
 
         {/* Headline */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
+          initial={{ opacity: 0, scale: 0.97, y: 24 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
         >
           <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl font-semibold text-ink-primary tracking-tight leading-[1.06] mb-6 text-balance">
             Let's connect and create useful products.
@@ -84,20 +84,7 @@ export default function CTASection() {
           </a>
         </motion.div>
 
-        {/* Meta info */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.35 }}
-          className="mt-16 pt-10 border-t border-border-subtle flex flex-wrap items-center justify-center gap-6 text-xs text-ink-faint font-mono"
-        >
-          <span>{meta.location}</span>
-          <div className="w-1 h-1 rounded-full bg-black/[0.1]" aria-hidden="true" />
-          <span>Usually replies within 24h</span>
-          <div className="w-1 h-1 rounded-full bg-black/[0.1]" aria-hidden="true" />
-          <span>NDA available</span>
-        </motion.div>
+
       </div>
     </section>
   )

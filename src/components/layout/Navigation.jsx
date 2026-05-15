@@ -3,9 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const navLinks = [
   { label: 'Work', href: '#work' },
-  { label: 'Craft', href: '#process' },
-  { label: 'Impact', href: '#impact' },
   { label: 'About', href: '#about' },
+  { label: 'Certifications', href: '#certifications' },
 ]
 
 export default function Navigation() {

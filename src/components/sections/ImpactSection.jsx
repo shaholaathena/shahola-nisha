@@ -12,7 +12,7 @@ const MiniBarChart = () => (
         width={9}
         height={h}
         rx="2"
-        fill={i >= 7 ? '#3B82F6' : 'rgba(255,255,255,0.08)'}
+        fill={i >= 7 ? '#1a1a1a' : 'rgba(0,0,0,0.08)'}
         opacity={i >= 7 ? 0.7 : 1}
       />
     ))}

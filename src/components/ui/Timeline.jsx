@@ -6,7 +6,7 @@ export default function Timeline({ items }) {
       {/* Vertical line */}
       <div
         className="absolute left-[7px] top-2 bottom-2 w-px"
-        style={{ background: 'linear-gradient(to bottom, rgba(59,130,246,0.4), rgba(255,255,255,0.06) 80%, transparent)' }}
+        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.04) 80%, transparent)' }}
         aria-hidden="true"
       />
 
