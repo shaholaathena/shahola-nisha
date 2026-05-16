@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { projects } from '../data/portfolio'
@@ -139,6 +139,36 @@ const styleType = [
 export default function CaseStudyPage() {
   const [activeSection, setActiveSection] = useState('cs-cover')
   const [navVisible, setNavVisible] = useState(false)
+  const flowScrollRef = useRef(null)
+  const isDragging = useRef(false)
+  const dragStartX = useRef(0)
+  const dragScrollLeft = useRef(0)
+
+  const handleFlowWheel = useCallback((e) => {
+    if (!flowScrollRef.current) return
+    e.preventDefault()
+    flowScrollRef.current.scrollLeft += e.deltaY * 1.2
+  }, [])
+
+  useEffect(() => {
+    const el = flowScrollRef.current
+    if (!el) return
+    el.addEventListener('wheel', handleFlowWheel, { passive: false })
+    return () => el.removeEventListener('wheel', handleFlowWheel)
+  }, [handleFlowWheel])
+
+  const onDragStart = useCallback((e) => {
+    isDragging.current = true
+    dragStartX.current = e.pageX
+    dragScrollLeft.current = flowScrollRef.current?.scrollLeft ?? 0
+  }, [])
+
+  const onDragMove = useCallback((e) => {
+    if (!isDragging.current || !flowScrollRef.current) return
+    flowScrollRef.current.scrollLeft = dragScrollLeft.current - (e.pageX - dragStartX.current)
+  }, [])
+
+  const onDragEnd = useCallback(() => { isDragging.current = false }, [])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -385,7 +415,7 @@ export default function CaseStudyPage() {
                 transition={{ duration: 0.75, delay: 0.14, ease: EASE }}
                 className="text-base text-ink-secondary leading-[1.75] max-w-[22rem] lg:text-right lg:pt-3"
               >
-                A focused 8-week journey from research to handoff — designed to solve real user problems and deliver impactful solutions.
+                A focused 8-week journey from research to handoff, designed to solve real user problems and deliver impactful solutions.
               </motion.p>
             </div>
 
@@ -532,7 +562,7 @@ export default function CaseStudyPage() {
                 transition={{ duration: 0.75, delay: 0.14, ease: EASE }}
                 className="text-base text-ink-secondary leading-[1.75] max-w-[22rem] lg:text-right"
               >
-                From user research to final handoff, every step is intentional — driven by clarity, collaboration, and impact.
+                From user research to final handoff, every step is intentional, driven by clarity, collaboration, and impact.
               </motion.p>
             </div>
 
@@ -842,6 +872,8 @@ export default function CaseStudyPage() {
                 </div>
               </motion.div>
 
+
+
               {/* Step-by-step flow connector */}
               <motion.div {...fadeUp} className="mb-14">
                 <p className="text-xs font-mono text-ink-muted uppercase tracking-widest mb-5">6-step transfer flow</p>
@@ -854,8 +886,7 @@ export default function CaseStudyPage() {
                       )}
                       <div className="flex sm:flex-col items-center sm:items-start gap-3 sm:gap-3 w-full pr-0 sm:pr-4">
                         {/* Step bubble */}
-                        <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-full shrink-0 border text-xs font-bold font-mono transition-colors
-                          ${i === 4 ? 'bg-ink-primary border-ink-primary text-surface-base' : 'bg-surface-base border-border-default text-ink-muted'}`}>
+                        <div className="relative z-10 flex items-center justify-center w-8 h-8 rounded-full shrink-0 border border-border-default bg-surface-base text-ink-muted text-xs font-bold font-mono transition-colors">
                           {String(s.step).padStart(2, '0')}
                         </div>
                         {/* Vertical line for mobile */}
@@ -873,8 +904,15 @@ export default function CaseStudyPage() {
               </motion.div>
 
               {/* Real App Flow Screens */}
-              <motion.div {...fadeUp} className="mb-14 relative -mx-6 lg:-mx-10 px-6 lg:px-10 overflow-x-auto hide-scrollbar pb-6">
-                <div className="flex gap-4 min-w-max">
+              <div
+                ref={flowScrollRef}
+                className="mb-14 relative -mx-6 lg:-mx-10 px-6 lg:px-10 overflow-x-auto hide-scrollbar pb-6 cursor-grab active:cursor-grabbing select-none"
+                onMouseDown={onDragStart}
+                onMouseMove={onDragMove}
+                onMouseUp={onDragEnd}
+                onMouseLeave={onDragEnd}
+              >
+                <motion.div {...fadeUp} className="flex gap-4 min-w-max">
                   {[imgFT1, imgFT4, imgFT2, imgFT3, imgFT7, imgFT5, imgFT6, imgFT8].map((imgSrc, idx) => (
                     <div key={idx} className="shrink-0 flex flex-col items-center gap-3">
                       <div className="w-[220px] sm:w-[240px] rounded-[28px] overflow-hidden border-[5px] border-zinc-200 shadow-xl bg-white">
@@ -883,8 +921,8 @@ export default function CaseStudyPage() {
                       <span className="text-xs font-mono text-ink-muted tabular-nums">{String(idx + 1).padStart(2, '0')}</span>
                     </div>
                   ))}
-                </div>
-              </motion.div>
+                </motion.div>
+              </div>
 
               {/* Transfer types */}
               <motion.div {...fadeUp} className="mb-12">
@@ -1313,6 +1351,8 @@ function SectionLabel({ num, label }) {
     </div>
   )
 }
+
+
 
 /* ── Helper: Feature icons ── */
 function FeatureIcon({ name }) {

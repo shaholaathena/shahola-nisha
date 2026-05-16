@@ -183,10 +183,10 @@ export default function ProjectCard({ project, index = 0 }) {
   return (
     <motion.article
       onClick={project.link ? handleClick : undefined}
-      initial={{ opacity: 0, y: 24, scale: 0.97 }}
+      initial={{ opacity: 0, y: 48, scale: 0.96 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: index * 0.06 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: index * 0.14 }}
       whileHover={{ y: -5 }}
       className={`group card-surface overflow-hidden h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:shadow-zinc-900/5 hover:border-zinc-800/20 ${project.link ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ minHeight: 560 }}

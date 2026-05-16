@@ -33,10 +33,10 @@ function AnimatedNumber({ value, suffix, duration = 1.8 }) {
 export default function MetricsCard({ metric, index }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 32, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.65, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
       className="card-surface p-6 sm:p-8 flex flex-col justify-between min-h-[180px] group hover:border-border-strong transition-all duration-300"
     >
       <div className="mb-6">
