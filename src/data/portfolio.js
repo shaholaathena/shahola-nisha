@@ -94,6 +94,72 @@ export const projects = [
     }
   },
   {
+    id: 'merchant-onboarding',
+    title: 'Merchant Onboarding Platform',
+    company: 'SSL Wireless Product',
+    type: 'mobile',
+    year: '2026',
+    tags: ['Merchant Onboarding', 'Bangla QR', 'Multi-bank SaaS', 'Field Agent App', 'Figma'],
+    size: 'medium',
+    impact: 'Live on 4 banks',
+    description: 'A field-agent CRM for onboarding merchants onto Bangla QR, Bangladesh Bank\'s interoperable QR standard — capturing leads, KYC documents, and settlement details, then reskinned per bank client from one shared engine.',
+    color: '#151515',
+    accentColor: '#9ca3af',
+    image: '', // TODO: add hosted hero image URL
+    link: '/case-study/merchant-onboarding',
+    caseStudy: {
+      title: 'Merchant Onboarding Platform — Multi-bank White-label App',
+      company: 'SSL Wireless Product',
+      year: '2026',
+      role: 'UX Designer',
+      duration: 'TBD',
+      tool: 'Figma & AI Tools',
+
+      challenge: 'Onboarding merchants onto Bangla QR — Bangladesh Bank\'s interoperable QR standard — needed a field-agent tool to capture shop info, NID/trade licence, GPS location, and settlement bank details, often with poor connectivity, while still enforcing risk-based limits and reviewer sign-off before a merchant could accept QR payments. The same core engine also had to be re-skinned per bank client without redesigning the flow each time a new bank came on board.',
+      outcome: 'A shared Bangla QR onboarding engine reused across four live bank deployments (including Janata Bank PLC and Southeast Bank) — covering offline-first lead capture, KYC and GPS-verified address collection, risk-tiered settlement limits, and a reviewer-in-the-loop approval workflow — with brand tokens swapped per client instead of rebuilding screens.',
+      phases: ['Research', 'Design System', 'Mobile UI Design', 'Multi-brand Theming', 'Handoff'],
+      metrics: [
+        { label: 'Project duration', value: 'TBD' },
+        { label: 'Banks live', value: '4 (expanding)' },
+        { label: 'Screens delivered', value: 'TBD' },
+        { label: 'Platform', value: 'Mobile (Android & iOS)' },
+      ],
+      keyDecisions: [
+        {
+          title: 'Offline-first lead capture',
+          description: 'Leads save locally and sync automatically so field agents can work without connectivity.',
+        },
+        {
+          title: 'Guided KYC capture with progress tracking',
+          description: 'In-app camera flow for NID and trade licence with explicit upload progress, so agents know exactly what is missing before submission.',
+        },
+        {
+          title: 'Settlement account gating',
+          description: 'Submission is blocked until a valid settlement bank account is added for Bangla QR payouts, enforcing compliance before a merchant goes live.',
+        },
+        {
+          title: 'Risk-tiered transaction limits',
+          description: 'Based on the merchant\'s trade licence, the system suggests a merchant tier (small/medium/large) with a matching monthly ceiling and per-transaction maximum for Bangla QR payments — limits scale with verified risk instead of being fixed for everyone.',
+        },
+        {
+          title: 'Reviewer-in-the-loop approval',
+          description: 'Every lead is sent for review before going live — a reviewer can approve or return it with specific remarks (e.g. blurry NID, incorrect licence expiry), and the field agent fixes and resubmits without losing prior progress.',
+        },
+        {
+          title: 'White-label component architecture',
+          description: 'Identical flows — home, create lead, merchants, error states, splash/login — reskinned per bank via a shared design system, so onboarding a new bank client is a re-theme, not a redesign.',
+        },
+      ],
+      flowGroups: [
+        { label: 'Authentication', items: ['Splash', 'Login', 'Forgot Password', 'Set/Change Password'] },
+        { label: 'Lead Capture', items: ['Create Lead', 'Business Info', 'GPS-verified Address', 'NID & Trade Licence Capture'] },
+        { label: 'Merchant Management', items: ['Lead List & Search', 'Lead Detail & Status', 'Offline Cache & Sync'] },
+        { label: 'KYC & Settlement', items: ['Owner & KYC', 'Settlement Account for QR Payouts', 'Merchant Tier & Transaction Limits'] },
+        { label: 'Review & Bangla QR Approval', items: ['Send for Review', 'Reviewer Approve / Return', 'Fix & Resubmit', 'Bangla QR Generation', 'Submission Success'] },
+      ],
+    }
+  },
+  {
     id: 'basic-bank',
     title: 'Basic Bank - Magpie Financial Services',
     company: 'Basic Bank',

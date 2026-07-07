@@ -7,7 +7,22 @@
       "Bash(npx vite *)",
       "Bash(grep -n \"green\\\\|blue\\\\|purple\\\\|violet\\\\|indigo\\\\|sky\\\\|teal\\\\|cyan\\\\|emerald\\\\|lime\\\\|orange\\\\|red\\\\|pink\\\\|yellow\\\\|amber\\\\|#[0-9a-fA-F]\\\\{3,6\\\\}\" \"/Users/shaholanisha/Downloads/My Portfolio Website/src/pages/CaseStudyPage.jsx\")",
       "WebFetch(domain:www.coursera.org)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(grep -rnoE '#[0-9a-fA-F]{3,6}' components pages data)",
+      "mcp__Figma__get_metadata",
+      "Bash(jq -r .[0].text /Users/sslux/.claude/projects/-Users-sslux-Documents-shahola-nisha/62f5d01d-b136-4268-a4ec-bcb685d6e8e3/tool-results/mcp-Figma-get_metadata-1783410565093.txt)",
+      "Bash(grep -oE '<text id=\"[^\"]*\" name=\"[^\"]{15,}\"')",
+      "Bash(node -e \"require\\('@babel/core'\\)\")",
+      "Bash(npx eslint *)",
+      "Bash(node --check src/data/portfolio.js)",
+      "Bash(lsof -ti:5173)",
+      "Bash(xargs kill -9)",
+      "Bash(node --check /Users/sslux/Documents/shahola-nisha/src/data/portfolio.js)",
+      "Bash(jq -r .[0].text /Users/sslux/.claude/projects/-Users-sslux-Documents-shahola-nisha/62f5d01d-b136-4268-a4ec-bcb685d6e8e3/tool-results/mcp-Figma-get_metadata-1783412190823.txt)",
+      "Bash(grep -oE '<text id=\"[^\"]*\" name=\"[^\"]{12,}\"')",
+      "mcp__Figma__get_screenshot",
+      "Bash(jq -r .[0].text /Users/sslux/.claude/projects/-Users-sslux-Documents-shahola-nisha/62f5d01d-b136-4268-a4ec-bcb685d6e8e3/tool-results/mcp-Figma-get_metadata-1783410809952.txt)",
+      "Bash(git add *)"
     ]
   }
 }

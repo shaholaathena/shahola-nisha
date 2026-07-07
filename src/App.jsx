@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import Home from './pages/Home'
 import CaseStudyPage from './pages/CaseStudyPage'
+import MerchantOnboardingCaseStudyPage from './pages/MerchantOnboardingCaseStudyPage'
 
 const pageVariants = {
   initial: { opacity: 0, filter: 'blur(6px)' },
@@ -24,6 +25,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="/case-study/bkb-mobile" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
+        <Route path="/case-study/merchant-onboarding" element={<PageWrapper><MerchantOnboardingCaseStudyPage /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
   )
