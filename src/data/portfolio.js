@@ -105,7 +105,8 @@ export const projects = [
     description: 'A white-label merchant app for Bangla QR — merchants sign up through a guided create-lead onboarding, then accept payments on Bangladesh Bank\'s interoperable QR (select store, enter amount, scan & pay), with transactions and profile — reskinned per bank client from one shared engine.',
     color: '#151515',
     accentColor: '#9ca3af',
-    image: '', // TODO: add hosted hero image URL
+    image: '',
+    coverFan: true, // render the 5-bank fanned mockup as the card cover
     link: '/case-study/merchant-onboarding',
     caseStudy: {
       title: 'Merchant App — Multi-bank White-label (Bangla QR)',

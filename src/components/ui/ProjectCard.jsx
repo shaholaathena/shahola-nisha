@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
+import MerchantCoverFan from './MerchantCoverFan'
 
 const DashboardMockup = ({ color, accentColor }) => (
   <svg viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" aria-hidden="true">
@@ -196,12 +197,14 @@ export default function ProjectCard({ project, index = 0 }) {
         className="relative overflow-hidden flex-shrink-0"
         style={{
           height: 420,
-          background: project.color,
+          background: project.coverFan ? 'linear-gradient(160deg, #f8fafc 0%, #e9edf3 100%)' : project.color,
         }}
       >
         <div className="w-full h-full transform group-hover:scale-105 group-hover:rotate-1 transition-transform duration-700 ease-out">
-          {project.image ? (
-            <img src={project.image} alt={project.title} className="w-full h-full object-cover object-center" />
+          {project.coverFan ? (
+            <MerchantCoverFan />
+          ) : project.image ? (
+            <img src={project.image} alt={project.title} className={`w-full h-full object-cover ${project.imagePosition === 'top' ? 'object-top' : 'object-center'}`} />
           ) : (
             <Mockup color={project.color} accentColor={project.accentColor} />
           )}
