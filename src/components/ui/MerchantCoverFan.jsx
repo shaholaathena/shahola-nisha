@@ -1,15 +1,29 @@
+// Card cover for the SSL Merchant Acquiring Platform case study.
+// Fans one home screen per bank client — the cover states the thesis at a
+// glance: same product, different brand.
 import { projects } from '../../data/portfolio'
 
 const banks = projects.find((p) => p.id === 'merchant-onboarding')?.caseStudy?.banks ?? []
 
-// Bank home screens from src/assets/merchant/ (sebl-home, ncc-home, …)
-const homeModules = import.meta.glob('../../assets/merchant/*-home.{png,jpg,jpeg,webp}', {
+const screenModules = import.meta.glob('../../assets/merchant/*.{png,jpg,jpeg,webp}', {
   eager: true,
   import: 'default',
 })
-const homeByName = Object.fromEntries(
-  Object.entries(homeModules).map(([path, url]) => [path.split('/').pop().replace(/\.[^.]+$/, ''), url])
+const byName = Object.fromEntries(
+  Object.entries(screenModules).map(([path, url]) => [path.split('/').pop().replace(/\.[^.]+$/, ''), url])
 )
+
+// Screen gate — mirror the case-study page: only vetted screens render.
+const APPROVED_SCREENS = new Set([
+  'ssl-merchant-home',
+  'jbl-home',
+  'sebl-home',
+  'ncc-home',
+  'rupali-home',
+  'sdbl-home',
+])
+const pick = (file) => (file && APPROVED_SCREENS.has(file) ? byName[file] : undefined)
+const resolve = (file, fallback) => pick(file) || pick(fallback)
 
 function MiniPhone({ src, accent, width }) {
   const bezel = Math.max(4, Math.round(width * 0.028))
@@ -39,12 +53,21 @@ function MiniPhone({ src, accent, width }) {
   )
 }
 
+// Put the reference build at the front of the fan; the rest fan out around it.
+// Count-agnostic, so adding a bank client needs no change here.
+function fanOrder(list) {
+  const heroIdx = list.findIndex((b) => b.status === 'Reference')
+  if (heroIdx < 0) return list
+  const rest = list.filter((_, i) => i !== heroIdx)
+  const mid = Math.floor(rest.length / 2)
+  return [...rest.slice(0, mid), list[heroIdx], ...rest.slice(mid)]
+}
+
 export default function MerchantCoverFan() {
-  // center JBL so it sits at the front of the fan; others fan out around it
-  const rest = banks.filter((b) => b.code !== 'JBL')
-  const jbl = banks.find((b) => b.code === 'JBL')
-  const order = jbl && rest.length === 4 ? [rest[0], rest[1], jbl, rest[2], rest[3]] : banks
+  const order = fanOrder(banks)
   const mid = (order.length - 1) / 2
+  // Tighten the spread as the roster grows so the fan keeps its footprint.
+  const step = order.length > 5 ? 38 : 46
 
   return (
     <div className="w-full h-full flex items-center justify-center overflow-hidden">
@@ -52,7 +75,7 @@ export default function MerchantCoverFan() {
         {order.map((b, i) => {
           const off = i - mid
           const angle = off * 8
-          const tx = off * 46
+          const tx = off * step
           const ty = Math.abs(off) * 14
           const z = order.length - Math.abs(off)
           return (
@@ -65,7 +88,7 @@ export default function MerchantCoverFan() {
                 transformOrigin: '50% 100%',
               }}
             >
-              <MiniPhone src={homeByName[`${b.code.toLowerCase()}-home`]} accent={b.accent} width={128} />
+              <MiniPhone src={resolve(b.screen, `${b.code.toLowerCase()}-home`)} accent={b.accent} width={128} />
             </div>
           )
         })}

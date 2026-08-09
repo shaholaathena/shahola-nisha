@@ -56,7 +56,7 @@ export default function Hero() {
           <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
             <div className="h-px w-10 bg-zinc-800" />
             <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">
-              UX Analyst · UX Engineer · AI-Assisted Designer
+              UX Analyst · UX Engineer · UX Designer · AI-enthusiast
             </span>
           </motion.div>
 
@@ -98,9 +98,12 @@ export default function Hero() {
           <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
             <div className="h-px w-6 bg-zinc-800/50" />
             <span className="text-[10px] font-mono font-semibold text-zinc-400 tracking-widest uppercase">
-              AI · Claude · Antigravity · Cursor · Gemini · ChatGPT
+              AI · Claude · Antigravity · Cursor · Gemini · ChatGPT 
             </span>
           </motion.div>
+
+             
+
 
           {/* CTAs — magnetic buttons */}
           <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5 mb-16">

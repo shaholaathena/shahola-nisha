@@ -22,7 +22,31 @@
       "Bash(grep -oE '<text id=\"[^\"]*\" name=\"[^\"]{12,}\"')",
       "mcp__Figma__get_screenshot",
       "Bash(jq -r .[0].text /Users/sslux/.claude/projects/-Users-sslux-Documents-shahola-nisha/62f5d01d-b136-4268-a4ec-bcb685d6e8e3/tool-results/mcp-Figma-get_metadata-1783410809952.txt)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git config *)",
+      "Bash(git push *)",
+      "mcp__Figma__get_design_context",
+      "Bash(git reset *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git fetch *)",
+      "Bash(node -e \"console.log\\(JSON.stringify\\(require\\('./package.json'\\).scripts,null,2\\)\\)\")",
+      "Bash(grep -iE '\\\\.\\(png|jpg|jpeg|webp\\)$')",
+      "WebFetch(domain:claude.ai)",
+      "Bash(cp dist/assets/ssl-merchant-*.png dist/assets/jbl-crm-*.png src/assets/merchant/ && ls -1 src/assets/merchant/*.png | wc -l && ls -1 src/assets/merchant/ssl-merchant-*.png src/assets/merchant/jbl-crm-*.png)",
+      "Bash(sed -n '/outcomeIntro/,/^      learnings/p' src/data/portfolio.js)",
+      "Bash(sed -n '/learnings: \\\\[/,/\\\\],/p' src/data/portfolio.js)",
+      "Bash(awk 'NR>=111 && NR<=375 && /—/ {printf \"%d: %s\\\\n\", NR, $0}' src/data/portfolio.js)",
+      "Bash(awk 'NR>=111 && NR<=375 && /—/' src/data/portfolio.js)",
+      "Bash(python3 /private/tmp/claude-501/-Users-sslux-Documents-shahola-nisha/ba651801-356a-43da-b56e-1d3e67293869/scratchpad/dedash.py)",
+      "Bash(awk 'NR>=96 && NR<=380' src/data/portfolio.js)",
+      "Bash(awk -F: '$1>=96 && $1<=380')",
+      "Bash(awk -F: '{print $1\":\"$2\": \"substr\\($0, index\\($0,$3\\)\\)}')",
+      "Bash(awk 'NR>=139 && NR<=290 {print NR\": \"$0}' src/pages/MerchantOnboardingCaseStudyPage.jsx)",
+      "Bash(grep -nE \"^[0-9]+: *\\\\}$|HeroSystem|Brand switcher\")",
+      "Bash(python3 /private/tmp/claude-501/-Users-sslux-Documents-shahola-nisha/ba651801-356a-43da-b56e-1d3e67293869/scratchpad/hero.py)",
+      "Bash(grep -n \"Phone src={resolve\\(s.file, s.fallback\\)} width={200}\" -B 6 -A 3 src/pages/MerchantOnboardingCaseStudyPage.jsx)",
+      "WebFetch(domain:play.google.com)"
     ]
   }
 }
