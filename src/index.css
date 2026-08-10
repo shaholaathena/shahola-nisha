@@ -3,6 +3,7 @@
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-hand: 'Caveat', 'Segoe Print', cursive;
 
   --color-surface-base: #ffffff;
   --color-surface-1: #f8fafc;
@@ -119,6 +120,11 @@
 /* ── Typography utilities ── */
 .font-display {
   font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+}
+
+/* Hand-lettered annotations in the hero sketch. */
+.font-hand {
+  font-family: 'Caveat', 'Segoe Print', cursive;
 }
 
 .text-balance {
