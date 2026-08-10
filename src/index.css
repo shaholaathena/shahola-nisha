@@ -62,6 +62,16 @@
   }
 }
 
+/* ── Custom cursor ──
+   Hide the native pointer only once Cursor.jsx activates (fine-pointer devices
+   add .has-custom-cursor to <html>), so a JS failure leaves the cursor intact. */
+.has-custom-cursor,
+.has-custom-cursor a,
+.has-custom-cursor button,
+.has-custom-cursor [role="button"] {
+  cursor: none;
+}
+
 /* ── Scrollbar utilities ── */
 .hide-scrollbar {
   scrollbar-width: none;       /* Firefox */

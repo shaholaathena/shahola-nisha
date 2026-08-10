@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Home from './pages/Home'
 import CaseStudyPage from './pages/CaseStudyPage'
 import MerchantOnboardingCaseStudyPage from './pages/MerchantOnboardingCaseStudyPage'
+import Cursor from './components/ui/Cursor'
 
 const pageVariants = {
   initial: { opacity: 0, filter: 'blur(6px)' },
@@ -34,6 +35,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
+      <Cursor />
       <AnimatedRoutes />
     </BrowserRouter>
   )

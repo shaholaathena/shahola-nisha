@@ -1,9 +1,10 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { projects } from '../data/portfolio'
 import Footer from '../components/layout/Footer'
 import ScrollProgress from '../components/layout/ScrollProgress'
+import RevealLines from '../components/ui/RevealLines'
 import logo from '../assets/logo.png'
 
 const project = projects.find(p => p.id === 'merchant-onboarding')
@@ -556,6 +557,130 @@ function FlowRow({ flow }) {
   )
 }
 
+/* ── useMediaQuery: SSR-safe, reactive. Used to gate the pinned horizontal flow
+   to desktop only — small screens keep the tap-driven FlowRow. ── */
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  )
+  useEffect(() => {
+    const m = window.matchMedia(query)
+    const on = () => setMatches(m.matches)
+    on()
+    m.addEventListener('change', on)
+    return () => m.removeEventListener('change', on)
+  }, [query])
+  return matches
+}
+
+/* ── HorizontalFlow: the payment flow as a pinned, cinematic side-scroll —
+   robin-noguier style. One full-viewport slide per step; vertical scroll drives
+   horizontal travel while the section is pinned.
+
+   The measurement trap the old filmstrip fell into (comment on FlowRow) is
+   avoided here by DECOUPLING the two quantities:
+     • how LONG the pin lasts  → the outer section height (n × 100vh), a fixed
+       value that never depends on child widths.
+     • how FAR the track moves → measured live from the DOM (scrollWidth minus
+       viewport), re-measured on resize and after assets settle.
+   Because travel is measured rather than derived from the height, the indicator
+   and the last slide always land exactly, on any screen size.
+
+   Desktop + full motion only. Otherwise it returns the tested FlowRow so touch
+   users and reduced-motion users get the reliable interactive row instead. ── */
+function HorizontalFlow({ flow }) {
+  const reduce = useReducedMotion()
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
+  const targetRef = useRef(null)
+  const trackRef = useRef(null)
+  const [distance, setDistance] = useState(0)
+
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ['start start', 'end end'],
+  })
+  const xRaw = useTransform(scrollYProgress, [0, 1], [0, -distance])
+  const x = useSpring(xRaw, { stiffness: 90, damping: 26, mass: 0.4 })
+  const progressWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+
+  useLayoutEffect(() => {
+    if (!isDesktop || reduce) return
+    const measure = () => {
+      const track = trackRef.current
+      if (track) setDistance(Math.max(0, track.scrollWidth - window.innerWidth))
+    }
+    measure()
+    const settle = setTimeout(measure, 400)
+    const ro = new ResizeObserver(measure)
+    if (trackRef.current) ro.observe(trackRef.current)
+    window.addEventListener('resize', measure)
+    return () => {
+      clearTimeout(settle)
+      ro.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [isDesktop, reduce, flow])
+
+  if (!isDesktop || reduce) {
+    return (
+      <div className="max-w-6xl mx-auto px-6 lg:px-10 pb-16 lg:pb-20">
+        <FlowRow flow={flow} />
+      </div>
+    )
+  }
+
+  return (
+    <section ref={targetRef} style={{ height: `${flow.length * 100}vh` }} className="relative">
+      <div className="sticky top-0 h-screen overflow-hidden flex items-center bg-surface-base">
+        <motion.div ref={trackRef} style={{ x }} className="flex items-center will-change-transform">
+          {flow.map((s, i) => {
+            const src = resolve(s.file, s.fallback)
+            return (
+              <article key={s.file} className="w-screen shrink-0 h-screen flex items-center">
+                <div className="mx-auto grid w-full max-w-6xl grid-cols-12 items-center gap-10 lg:gap-14 px-6 lg:px-10">
+                  <div className="col-span-5 flex justify-center">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.94, filter: 'blur(6px)' }}
+                      whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                      viewport={{ once: false, amount: 0.5 }}
+                      transition={{ duration: 0.7, ease: EASE }}
+                    >
+                      <Phone src={src} width={300} alt={s.title} />
+                    </motion.div>
+                  </div>
+                  <div className="col-span-7 max-w-xl">
+                    <div className="flex items-baseline gap-4 mb-5">
+                      <span className="font-display text-6xl font-bold text-zinc-200 tabular-nums leading-none">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-zinc-400">{s.step}</span>
+                    </div>
+                    <h3 className="font-display text-3xl sm:text-4xl xl:text-5xl font-bold text-ink-primary tracking-tight leading-[1.05] mb-6">
+                      {s.title}
+                    </h3>
+                    <p className="text-[1.1rem] text-ink-secondary leading-relaxed mb-4">{s.hint}</p>
+                    <p className="text-[13px] text-ink-muted leading-relaxed border-l-2 border-zinc-200 pl-4">{s.why}</p>
+                  </div>
+                </div>
+              </article>
+            )
+          })}
+        </motion.div>
+
+        {/* progress rail + hint, fixed within the pinned viewport */}
+        <div className="pointer-events-none absolute bottom-9 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3">
+          <span className="text-[10px] font-mono uppercase tracking-[0.24em] text-zinc-400">
+            Scroll to walk the flow →
+          </span>
+          <div className="h-0.5 w-44 overflow-hidden rounded-full bg-zinc-200">
+            <motion.div className="h-full bg-zinc-800" style={{ width: progressWidth }} />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function MerchantOnboardingCaseStudyPage() {
   const [activeSection, setActiveSection] = useState('cs-cover')
   const [navVisible, setNavVisible] = useState(false)
@@ -646,15 +771,14 @@ export default function MerchantOnboardingCaseStudyPage() {
                   <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-zinc-600">Bangla QR · Fintech</span>
                 </motion.div>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  transition={{ duration: 1, delay: 0.08, ease: EASE }}
+                <RevealLines
+                  as="h1"
+                  trigger="mount"
+                  delay={0.12}
+                  lines={['Bangla QR', 'Merchant App']}
                   className="font-display font-bold text-ink-primary tracking-tight leading-[1.02] mb-6"
                   style={{ fontSize: 'clamp(2.5rem, 5.4vw, 4.25rem)' }}
-                >
-                  {cs.title}
-                </motion.h1>
+                />
 
                 <motion.p
                   initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -791,17 +915,24 @@ export default function MerchantOnboardingCaseStudyPage() {
 
         {/* ══════════ 04 THE FLOW ══════════ */}
         <section id="cs-flow" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-16 lg:py-20">
-            <Reveal className="max-w-2xl">
-              <Eyebrow num="04" label="The flow" />
-              <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink-primary tracking-tight leading-[1.1] mb-5">
-                Take a payment
-              </h2>
-              <p className="text-[1.05rem] text-ink-secondary leading-relaxed">{cs.flowIntro}</p>
-            </Reveal>
-            <div className="mt-10">
-              <FlowRow flow={cs.flow} />
+          <div className="max-w-6xl mx-auto px-6 lg:px-10 pt-16 lg:pt-20">
+            <div className="max-w-2xl">
+              <Reveal><Eyebrow num="04" label="The flow" /></Reveal>
+              <RevealLines
+                as="h2"
+                trigger="inview"
+                lines={['Take a payment']}
+                className="font-display text-3xl sm:text-4xl font-bold text-ink-primary tracking-tight leading-[1.1] mb-5"
+              />
+              <Reveal delay={0.12}>
+                <p className="text-[1.05rem] text-ink-secondary leading-relaxed">{cs.flowIntro}</p>
+              </Reveal>
             </div>
+          </div>
+          {/* Signature moment: the five steps as a pinned horizontal walk (desktop),
+              falling back to the interactive FlowRow on touch / reduced motion. */}
+          <div className="mt-4 lg:mt-0">
+            <HorizontalFlow flow={cs.flow} />
           </div>
         </section>
 
