@@ -1,266 +1,169 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { stats } from '../../data/portfolio'
+import { useRef, useState } from 'react'
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import heroImg from '../../assets/hero.png'
 import MagneticButton from '../ui/MagneticButton'
 
-const EASE_OUT_EXPO = [0.16, 1, 0.3, 1]
-const EASE_IN_OUT_CIRC = [0.76, 0, 0.24, 1]
+const EASE = [0.16, 1, 0.3, 1]
 
-const stagger = {
-  animate: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
-}
-
-const fadeUp = {
-  initial: { opacity: 0, y: 28 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE_OUT_EXPO } },
-}
-
-// Per-line text reveal: text slides up from behind overflow-hidden mask
-const lineReveal = (delay = 0) => ({
-  initial: { y: '105%' },
-  animate: { y: 0, transition: { duration: 0.9, delay, ease: EASE_OUT_EXPO } },
-})
+const modes = [
+  { label: 'PRODUCT', title: 'products', accent: 'people', copy: 'Turning complicated requirements into products people can understand.' },
+  { label: 'SYSTEMS', title: 'systems', accent: 'that scale', copy: 'Designing reusable foundations that stay coherent as products grow.' },
+  { label: 'INTERACTION', title: 'interactions', accent: 'that matter', copy: 'Using motion, hierarchy and feedback to make digital experiences feel obvious.' },
+]
 
 export default function Hero() {
+  const [active, setActive] = useState(0)
   const ref = useRef(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], [0, 80])
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const springX = useSpring(mouseX, { stiffness: 90, damping: 20 })
+  const springY = useSpring(mouseY, { stiffness: 90, damping: 20 })
+  const imageX = useTransform(springX, [-500, 500], [-18, 18])
+  const imageY = useTransform(springY, [-500, 500], [-12, 12])
+  const glowX = useTransform(springX, [-500, 500], ['25%', '75%'])
+  const glowY = useTransform(springY, [-500, 500], ['25%', '70%'])
+  const mode = modes[active]
+
+  const handlePointerMove = (event) => {
+    const rect = ref.current?.getBoundingClientRect()
+    if (!rect) return
+    mouseX.set(event.clientX - (rect.left + rect.width / 2))
+    mouseY.set(event.clientY - (rect.top + rect.height / 2))
+  }
 
   return (
     <section
       id="hero"
       ref={ref}
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-grid-subtle pt-24 pb-20"
+      onPointerMove={handlePointerMove}
+      className="relative min-h-[100svh] overflow-hidden bg-[#f4f3ef] text-[#111]"
     >
-      {/* Ambient gradients */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          background:
-            'radial-gradient(circle 800px at 80% 40%, rgba(0,0,0,0.04) 0%, transparent 60%), radial-gradient(circle 600px at 20% 80%, rgba(0,0,0,0.03) 0%, transparent 60%)',
-        }}
-      />
-
+      {/* A responsive field of light follows the cursor. */}
       <motion.div
-        style={{ y, opacity }}
-        className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 w-full lg:grid lg:grid-cols-12 lg:gap-16 items-center"
-      >
-        {/* Left Column */}
-        <motion.div variants={stagger} initial="initial" animate="animate" className="col-span-12 lg:col-span-7 pt-10">
+        className="pointer-events-none absolute inset-0 opacity-80"
+        style={{ background: `radial-gradient(600px circle at ${glowX} ${glowY}, rgba(210,199,255,.55), transparent 65%)` }}
+      />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.035] bg-grid-subtle" />
 
-          {/* Eyebrow */}
-          <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
-            <div className="h-px w-10 bg-zinc-800" />
-            <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">
-              UX Analyst · UX Engineer · UX Designer · AI-enthusiast
-            </span>
-          </motion.div>
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1500px] flex-col px-6 pb-8 pt-28 lg:px-12 lg:pt-32">
+        <div className="grid flex-1 items-center gap-10 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_430px]">
+          <div className="max-w-[980px]">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: .7, ease: EASE }}
+              className="mb-8 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[.28em] text-zinc-500"
+            >
+              <span className="h-px w-8 bg-black/30" />
+              Shahola · Product / UX / Interaction
+            </motion.p>
 
-          {/* Headline — per-line mask reveal */}
-          <div className="mb-6">
-            <h1 className="font-display font-semibold leading-[1.05] tracking-tight text-[clamp(2.1rem,5.1vw,4.6rem)] text-ink-primary">
-              <div className="overflow-hidden">
-                <motion.span
-                  className="block"
-                  {...lineReveal(0.25)}
+            <div className="overflow-hidden">
+              <motion.h1
+                initial={{ y: '105%' }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1, delay: .1, ease: EASE }}
+                className="font-display text-[clamp(4.2rem,10.7vw,10.5rem)] font-medium leading-[.78] tracking-[-.075em]"
+              >
+                I design
+              </motion.h1>
+            </div>
+
+            <div className="overflow-hidden">
+              <motion.div
+                key={mode.title}
+                initial={{ y: '100%', opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: .7, ease: EASE }}
+                className="font-display text-[clamp(4.2rem,10.7vw,10.5rem)] font-medium leading-[.78] tracking-[-.075em]"
+              >
+                <span className="text-zinc-400">{mode.title}</span>
+                <span className="ml-3 font-serif italic text-[#876cf0]">{mode.accent}.</span>
+              </motion.div>
+            </div>
+
+            <motion.p
+              key={mode.copy}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: .45, ease: EASE }}
+              className="mt-9 max-w-xl text-sm leading-7 text-zinc-600 sm:text-base"
+            >
+              {mode.copy}
+            </motion.p>
+
+            <div className="mt-9 flex flex-wrap items-center gap-2">
+              {modes.map((item, index) => (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={() => setActive(index)}
+                  className={`relative overflow-hidden rounded-full border px-4 py-2 text-[9px] font-semibold tracking-[.18em] transition-all duration-300 ${active === index ? 'border-black bg-black text-white' : 'border-black/15 bg-white/40 text-zinc-500 hover:border-black/35 hover:text-black'}`}
                 >
-                  Hi, I'm{' '}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-900 to-zinc-600">
-                    Alimoon Nisha
-                  </span>
-                  .
-                </motion.span>
-              </div>
-              <div className="overflow-hidden mt-2">
-                <motion.span
-                  className="block text-[clamp(1.2rem,2.5vw,2rem)] font-light text-zinc-500 leading-[1.3] tracking-tight"
-                  {...lineReveal(0.4)}
+                  {active === index && <motion.span layoutId="hero-mode" className="absolute inset-0 bg-black" />}
+                  <span className="relative z-10">{item.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-10 flex flex-wrap items-center gap-5">
+              <MagneticButton strength={0.22}>
+                <a
+                  href="#work"
+                  onClick={(e) => { e.preventDefault(); document.querySelector('#work')?.scrollIntoView({ behavior: 'smooth' }) }}
+                  className="group inline-flex items-center gap-3 rounded-full bg-black px-6 py-3.5 text-xs font-semibold text-white transition-transform active:scale-95"
                 >
-                  Someone who believes good design should go unnoticed.
-                </motion.span>
-              </div>
-            </h1>
+                  Explore the work
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
+                </a>
+              </MagneticButton>
+              <span className="text-[10px] uppercase tracking-[.16em] text-zinc-400">Scroll to enter the work</span>
+            </div>
           </div>
 
-          {/* Subheading */}
-          <motion.p
-            variants={fadeUp}
-            className="text-sm sm:text-base text-zinc-500 max-w-xl leading-relaxed mb-8 font-light"
-          >
-            UX Analyst at SSL Wireless, Dhaka. I design banking, healthcare, payment and enterprise products etc.
-          </motion.p>
-
-          {/* AI Tools */}
-          <motion.div variants={fadeUp} className="flex items-center gap-3 mb-8">
-            <div className="h-px w-6 bg-zinc-800/50" />
-            <span className="text-[10px] font-mono font-semibold text-zinc-400 tracking-widest uppercase">
-              AI · Claude · Antigravity · Cursor · Gemini · ChatGPT 
-            </span>
-          </motion.div>
-
-             
-
-
-          {/* CTAs — magnetic buttons */}
-          <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5 mb-16">
-            <MagneticButton strength={0.3}>
-              <a
-                href="#work"
-                onClick={(e) => {
-                  e.preventDefault()
-                  document.querySelector('#work')?.scrollIntoView({ behavior: 'smooth' })
-                }}
-                className="group relative inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-zinc-900 text-white text-sm font-semibold rounded-full overflow-hidden transition-all active:scale-95 shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
-              >
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-                <span className="relative z-10">View Selected Work</span>
-                <motion.span
-                  initial={{ x: 0 }}
-                  whileHover={{ x: 4 }}
-                  className="relative z-10 transition-transform"
-                  aria-hidden="true"
-                >
-                  →
-                </motion.span>
-              </a>
-            </MagneticButton>
-
-            <MagneticButton strength={0.25}>
-              <a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault()
-                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
-                }}
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-semibold text-ink-primary border border-border-strong rounded-full hover:bg-surface-1 transition-all duration-300"
-              >
-                Get in touch
-              </a>
-            </MagneticButton>
-          </motion.div>
-
-          {/* Stats row */}
-          <motion.div
-            variants={fadeUp}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-6 border-t border-border-subtle"
-          >
-            {stats.map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 15, scale: 0.96 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 0.8 + i * 0.1, duration: 0.6, ease: 'easeOut' }}
-              >
-                <div className="text-2xl font-display font-bold text-ink-primary mb-1">{stat.value}</div>
-                <div className="text-xs font-medium text-zinc-900/80 mb-1">{stat.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
-
-        {/* Right Column — image with mask reveal */}
-        <motion.div
-          style={{ y, opacity }}
-          className="col-span-12 lg:col-span-5 mt-16 lg:mt-0 relative hidden md:block lg:w-[78%] lg:ml-auto"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1.0, delay: 0.15, ease: EASE_OUT_EXPO }}
-          >
+          <div className="relative hidden h-[620px] lg:block">
             <motion.div
-              animate={{ y: [-10, 10, -10] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative z-10 w-full aspect-[4/5] rounded-[2rem] card-surface overflow-hidden glow-zinc-md border border-border-default p-2"
+              style={{ x: imageX, y: imageY }}
+              initial={{ opacity: 0, scale: .92, rotate: 2 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ duration: 1.1, delay: .25, ease: EASE }}
+              className="absolute right-0 top-1/2 w-[300px] -translate-y-1/2 xl:w-[350px]"
             >
-              <div className="w-full h-full rounded-[1.5rem] overflow-hidden bg-surface-2 relative noise">
-                <div className="absolute inset-0 bg-gradient-to-tr from-zinc-800/10 to-transparent z-0" />
-                <motion.img
-                  src={heroImg}
-                  alt="Alimoon Nisha"
-                  style={{ scale: imageScale }}
-                  className="w-full h-full object-cover object-center relative z-10 opacity-95 transition-all duration-700 mix-blend-multiply grayscale-[0.2] hover:grayscale-0"
-                />
-                {/* Mask that wipes up to reveal the image */}
-                <motion.div
-                  className="absolute inset-0 z-20 bg-zinc-100"
-                  initial={{ scaleY: 1 }}
-                  animate={{ scaleY: 0 }}
-                  transition={{ duration: 1.1, delay: 0.35, ease: EASE_IN_OUT_CIRC }}
-                  style={{ transformOrigin: 'bottom' }}
-                  aria-hidden="true"
-                />
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[180px_180px_24px_24px] bg-[#ddd9d2] shadow-[0_30px_90px_rgba(35,25,70,.16)]">
+                <img src={heroImg} alt="Shahola" className="h-full w-full object-cover object-center grayscale" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#111]/45 via-transparent to-white/10 mix-blend-multiply" />
               </div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: .7, delay: .8, ease: EASE }}
+                className="absolute -left-20 top-20 rounded-full border border-black/10 bg-[#f4f3ef]/80 px-4 py-2 backdrop-blur-md"
+              >
+                <span className="text-[9px] font-semibold uppercase tracking-[.18em]">Based in Dhaka · 2026</span>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -bottom-5 -left-14 flex h-24 w-24 items-center justify-center rounded-full bg-[#876cf0] text-center text-[9px] font-semibold uppercase leading-4 tracking-[.14em] text-white shadow-xl"
+              >
+                <span>8+ years<br />making<br />interfaces</span>
+              </motion.div>
             </motion.div>
-          </motion.div>
 
-          {/* Floating UI badge — bottom left */}
-          <motion.div
-            animate={{ y: [0, -12, 0] }}
-            transition={{ y: { duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 } }}
-            whileHover={{ scale: 1.05, y: -5, cursor: 'grab' }}
-            whileTap={{ scale: 0.95, cursor: 'grabbing' }}
-            drag
-            dragConstraints={{ left: -20, right: 20, top: -20, bottom: 20 }}
-            dragElastic={0.2}
-            className="absolute -bottom-10 -left-10 bg-white/70 backdrop-blur-2xl p-4 rounded-[24px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05),0_0_0_1px_rgba(255,255,255,0.5)_inset,0_0_0_1px_rgba(0,0,0,0.03)] z-20 group"
-          >
-            <div className="flex items-center gap-3.5 pr-2">
-              <div className="relative w-12 h-12 rounded-[16px] bg-gradient-to-br from-zinc-50 to-white flex items-center justify-center shadow-[0_2px_10px_-3px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,1)_inset,0_0_0_1px_rgba(0,0,0,0.05)] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                <div className="absolute inset-0 rounded-[16px] bg-zinc-800 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <span className="text-zinc-900 font-bold text-lg font-display tracking-tight z-10">UI</span>
-              </div>
-              <div>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mb-0.5">Expertise</p>
-                <p className="text-[15px] text-slate-800 font-bold tracking-tight">User Interface</p>
-              </div>
+            <div className="absolute bottom-0 right-0 w-32 border-t border-black/15 pt-3 text-[9px] uppercase tracking-[.18em] text-zinc-400">
+              Banking · Fintech<br />Systems · Platforms
             </div>
-          </motion.div>
+          </div>
+        </div>
 
-          {/* Floating UX badge — top right */}
-          <motion.div
-            animate={{ y: [0, 15, 0] }}
-            transition={{ y: { duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 0.5 } }}
-            whileHover={{ scale: 1.05, y: -5, cursor: 'grab' }}
-            whileTap={{ scale: 0.95, cursor: 'grabbing' }}
-            drag
-            dragConstraints={{ left: -20, right: 20, top: -20, bottom: 20 }}
-            dragElastic={0.2}
-            className="absolute -top-8 -right-8 bg-white/70 backdrop-blur-2xl p-4 rounded-[24px] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05),0_0_0_1px_rgba(255,255,255,0.5)_inset,0_0_0_1px_rgba(0,0,0,0.03)] z-20 group"
-          >
-            <div className="flex items-center gap-3.5 pr-2">
-              <div className="relative w-12 h-12 rounded-[16px] bg-gradient-to-br from-zinc-50 to-white flex items-center justify-center shadow-[0_2px_10px_-3px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,1)_inset,0_0_0_1px_rgba(0,0,0,0.05)] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300">
-                <div className="absolute inset-0 rounded-[16px] bg-zinc-800 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <span className="text-zinc-900 font-bold text-lg font-display tracking-tight z-10">UX</span>
-              </div>
-              <div>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] mb-0.5">Research</p>
-                <p className="text-[15px] text-slate-800 font-bold tracking-tight">User Experience</p>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        aria-hidden="true"
-      >
-        <p className="text-[10px] tracking-widest text-ink-muted uppercase font-medium">Scroll</p>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-px h-8 bg-gradient-to-b from-zinc-800/60 to-transparent"
-        />
-      </motion.div>
+        <div className="mt-10 flex items-end justify-between border-t border-black/10 pt-4 text-[9px] uppercase tracking-[.2em] text-zinc-400">
+          <span>Scroll</span>
+          <span>01 — Introduction</span>
+          <motion.span animate={{ x: [0, 7, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>↓</motion.span>
+        </div>
+      </div>
     </section>
   )
 }
