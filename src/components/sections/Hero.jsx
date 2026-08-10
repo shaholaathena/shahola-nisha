@@ -1,145 +1,95 @@
-import { useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { stats } from '../../data/portfolio'
 
-const EASE = [0.16, 1, 0.3, 1]
-
-const modes = {
-  product: {
-    label: 'PRODUCT',
-    eyebrow: '01 / PRODUCT DESIGN',
-    title: <>I make complex<br /><em>products feel clear.</em></>,
-    copy: 'Banking, fintech and digital platforms designed around how people actually move through them.',
-  },
-  systems: {
-    label: 'SYSTEMS',
-    eyebrow: '02 / DESIGN SYSTEMS',
-    title: <>I build systems<br /><em>that stay coherent.</em></>,
-    copy: 'Tokens, components and patterns that let multiple products grow without losing their identity.',
-  },
-  interaction: {
-    label: 'INTERACTION',
-    eyebrow: '03 / INTERACTION DESIGN',
-    title: <>I design the<br /><em>space between screens.</em></>,
-    copy: 'Motion, feedback and behavior used to make interfaces easier to understand and nicer to use.',
-  },
-}
-
-const flowItems = [
-  { label: 'Amount', value: '৳ 25,000', type: 'field' },
-  { label: 'To', value: 'NCC Bank •••• 4821', type: 'field' },
-  { label: 'Review', value: 'Ready to send', type: 'action' },
+const projects = [
+  { id: '01', name: 'Bangla QR', type: 'Merchant / Payments', color: '#dcefe9' },
+  { id: '02', name: 'Krishi Bank', type: 'Internet Banking', color: '#e8e0f5' },
+  { id: '03', name: 'Design Systems', type: 'Multi-bank / Platforms', color: '#f1e2d1' },
 ]
 
 export default function Hero() {
-  const ref = useRef(null)
-  const [mode, setMode] = useState('product')
-  const [activeFlow, setActiveFlow] = useState(0)
   const pointerX = useMotionValue(0)
   const pointerY = useMotionValue(0)
-  const objectX = useSpring(useTransform(pointerX, [-800, 800], [-14, 14]), { stiffness: 80, damping: 20 })
-  const objectY = useSpring(useTransform(pointerY, [-600, 600], [-10, 10]), { stiffness: 80, damping: 20 })
-  const content = modes[mode]
+  const x = useSpring(pointerX, { stiffness: 70, damping: 18 })
+  const y = useSpring(pointerY, { stiffness: 70, damping: 18 })
+  const previewX = useTransform(x, [-600, 600], [-18, 18])
+  const previewY = useTransform(y, [-400, 400], [-10, 10])
 
   const handlePointerMove = (event) => {
     pointerX.set(event.clientX - window.innerWidth / 2)
     pointerY.set(event.clientY - window.innerHeight / 2)
   }
 
-  const scrollToWork = () => document.querySelector('#work')?.scrollIntoView({ behavior: 'smooth' })
+  const enterWork = () => document.querySelector('#work')?.scrollIntoView({ behavior: 'smooth' })
 
   return (
-    <section ref={ref} id="hero" onPointerMove={handlePointerMove} className="relative min-h-screen overflow-hidden bg-[#f3f0e9] text-[#111]">
-      <div className="pointer-events-none absolute inset-0 opacity-[.035] bg-grid-subtle" />
-      <div className="pointer-events-none absolute -right-[12vw] top-[4vh] select-none font-display text-[34vw] font-semibold leading-none tracking-[-.12em] text-black/[.025]" aria-hidden="true">01</div>
-
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1700px] flex-col px-6 pb-7 pt-28 lg:px-12 lg:pt-32">
-        <header className="flex items-center justify-between border-b border-black/10 pb-5 text-[10px] font-semibold uppercase tracking-[.22em] text-black/45">
-          <span>Shahola Nisha</span>
-          <span className="hidden md:block">Product Designer / UX Engineer</span>
-          <span>Dhaka / 2026</span>
+    <section id="hero" onPointerMove={handlePointerMove} className="relative min-h-screen overflow-hidden bg-[#f7f6f2] text-[#111]">
+      <div className="mx-auto flex min-h-screen max-w-[1540px] flex-col px-6 pb-6 pt-7 sm:px-8 lg:px-12">
+        <header className="flex items-center justify-between border-b border-black/10 pb-5 text-[10px] font-semibold uppercase tracking-[0.2em]">
+          <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className="font-display text-lg font-semibold normal-case tracking-[-0.04em]">Shahola.</a>
+          <div className="hidden gap-8 text-black/45 md:flex">
+            <a href="#work" className="transition-colors hover:text-black">Work</a>
+            <a href="#about" className="transition-colors hover:text-black">About</a>
+            <a href="#contact" className="transition-colors hover:text-black">Say hello</a>
+          </div>
+          <span className="text-black/40">Dhaka, Bangladesh</span>
         </header>
 
-        <div className="grid flex-1 items-center gap-14 py-14 lg:grid-cols-[minmax(0,1fr)_480px] lg:gap-16 lg:py-10">
-          <div className="max-w-[980px]">
-            <motion.p key={content.eyebrow} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .45, ease: EASE }} className="mb-7 text-[10px] font-semibold uppercase tracking-[.26em] text-black/40">{content.eyebrow}</motion.p>
+        <div className="flex flex-1 flex-col justify-center py-16 lg:py-20">
+          <div className="grid items-start gap-14 lg:grid-cols-[1.05fr_.95fr] lg:gap-24">
+            <div>
+              <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-8 text-xs font-medium uppercase tracking-[0.22em] text-black/45">
+                Product designer · UX engineer · since 2018
+              </motion.p>
 
-            <motion.h1 key={mode} initial={{ opacity: 0, y: 35 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .75, ease: EASE }} className="font-display text-[clamp(4rem,8.1vw,9rem)] font-medium leading-[.83] tracking-[-.085em]">
-              {content.title}
-            </motion.h1>
+              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.08 }} className="max-w-[920px] font-display text-[clamp(4.8rem,10.2vw,10.5rem)] font-medium leading-[0.79] tracking-[-0.085em]">
+                I’m Shahola.
+              </motion.h1>
 
-            <div className="mt-10 flex max-w-2xl flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
-              <motion.p key={`${mode}-copy`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .4, delay: .1 }} className="max-w-md text-[15px] leading-7 text-black/55">{content.copy}</motion.p>
-              <button onClick={scrollToWork} className="group flex shrink-0 items-center gap-3 text-[10px] font-semibold uppercase tracking-[.18em]">
-                <span className="flex h-11 w-11 items-center justify-center rounded-full border border-black/20 transition-all duration-300 group-hover:bg-black group-hover:text-white">↓</span>
-                <span className="border-b border-black/20 pb-1 group-hover:border-black">Enter the work</span>
-              </button>
+              <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.18 }} className="mt-10 max-w-[760px] font-display text-[clamp(2rem,4vw,4.3rem)] font-medium leading-[0.98] tracking-[-0.055em]">
+                I design digital products, mostly the <span className="font-serif italic">complicated ones.</span>
+              </motion.div>
+
+              <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="mt-10 max-w-[560px] text-[15px] leading-7 text-black/55">
+                I started by designing interfaces in 2018. Somewhere along the way, I became obsessed with understanding why products work — and why they sometimes don’t. Today I work across banking, fintech and enterprise products, turning messy requirements into experiences that make sense.
+              </motion.p>
+
+              <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} onClick={enterWork} className="group mt-10 inline-flex items-center gap-3 border-b border-black pb-2 text-xs font-semibold uppercase tracking-[0.16em]">
+                See what I’ve made <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
+              </motion.button>
             </div>
-          </div>
 
-          <div className="relative mx-auto w-full max-w-[480px] lg:mr-2">
-            <motion.div style={{ x: objectX, y: objectY }} className="relative">
-              <div className="mb-3 flex items-end justify-between px-1">
-                <span className="text-[9px] font-semibold uppercase tracking-[.2em] text-black/35">Live interface / 001</span>
-                <span className="flex items-center gap-2 text-[9px] uppercase tracking-[.16em] text-black/35"><i className="h-1.5 w-1.5 rounded-full bg-[#6e56d8]" /> Interactive</span>
-              </div>
-
-              <motion.div layout className="relative overflow-hidden border border-black/12 bg-[#ebe8e0] shadow-[0_30px_90px_rgba(20,20,20,.12)]">
-                <div className="flex items-center justify-between border-b border-black/10 px-5 py-4">
-                  <span className="text-sm font-semibold tracking-tight">Transfer</span>
-                  <span className="text-[9px] uppercase tracking-[.18em] text-black/35">Merchant / Bank</span>
+            <div className="relative min-h-[430px] lg:mt-16">
+              <motion.div style={{ x: previewX, y: previewY }} className="relative ml-auto w-full max-w-[560px]">
+                <div className="mb-5 flex items-end justify-between border-b border-black/10 pb-3">
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/40">Selected work</span>
+                  <span className="text-[10px] text-black/35">Hover a project</span>
                 </div>
 
-                <div className="p-5 sm:p-7">
-                  <div className="mb-7 flex items-end justify-between">
-                    <div>
-                      <p className="mb-2 text-[9px] uppercase tracking-[.18em] text-black/35">Send money</p>
-                      <p className="font-display text-4xl tracking-[-.04em]">৳ 25,000</p>
-                    </div>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white text-sm">↗</div>
-                  </div>
+                <div>
+                  {projects.map((project) => (
+                    <a key={project.id} href="#work" className="group relative flex items-center justify-between border-b border-black/10 py-8 transition-all duration-300 hover:px-4" onClick={(e) => { e.preventDefault(); enterWork() }}>
+                      <div className="flex items-baseline gap-5">
+                        <span className="font-mono text-[10px] text-black/30">{project.id}</span>
+                        <span className="font-display text-[clamp(2rem,3.5vw,3.6rem)] font-medium tracking-[-0.05em] transition-transform duration-300 group-hover:translate-x-2">{project.name}</span>
+                      </div>
+                      <span className="max-w-[110px] text-right text-[9px] uppercase leading-4 tracking-[0.16em] text-black/35 group-hover:text-black/60">{project.type}</span>
+                      <motion.span className="pointer-events-none absolute right-24 top-1/2 h-24 w-32 -translate-y-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ backgroundColor: project.color }} />
+                    </a>
+                  ))}
+                </div>
 
-                  <div className="space-y-2">
-                    {flowItems.map((item, index) => (
-                      <button key={item.label} onClick={() => setActiveFlow(index)} className={`group flex w-full items-center justify-between border px-4 py-4 text-left transition-all duration-300 ${activeFlow === index ? 'border-black bg-white' : 'border-black/8 bg-[#f5f2eb] hover:border-black/20'}`}>
-                        <span>
-                          <span className="block text-[9px] uppercase tracking-[.16em] text-black/35">{item.label}</span>
-                          <span className="mt-1 block text-sm font-medium">{item.value}</span>
-                        </span>
-                        <span className={`text-xs transition-transform duration-300 ${activeFlow === index ? 'translate-x-0 text-black' : '-translate-x-1 text-black/20 group-hover:translate-x-0'}`}>→</span>
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="mt-5 flex items-center justify-between border-t border-black/10 pt-5">
-                    <span className="text-[9px] uppercase tracking-[.16em] text-black/35">Designed for clarity</span>
-                    <span className="font-mono text-[9px] text-black/40">0{activeFlow + 1} / 03</span>
-                  </div>
+                <div className="mt-8 flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-black/35">
+                  <span>Banking · Payments · Systems</span><span>01—03</span>
                 </div>
               </motion.div>
-
-              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} className="absolute -bottom-5 -left-5 border border-black/10 bg-black px-5 py-4 text-white shadow-xl">
-                <span className="block text-[8px] uppercase tracking-[.2em] text-white/45">Experience</span>
-                <span className="mt-1 block text-sm font-medium">8+ years / interfaces</span>
-              </motion.div>
-
-              <div className="absolute -right-8 top-12 hidden w-24 border-t border-black/15 pt-3 text-[8px] uppercase leading-5 tracking-[.17em] text-black/35 sm:block">Banking<br />Fintech<br />Platforms</div>
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-5 border-t border-black/10 pt-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap items-center gap-5">
-            {Object.entries(modes).map(([key, item], index) => (
-              <button key={key} onClick={() => setMode(key)} className={`flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[.18em] transition-colors ${mode === key ? 'text-black' : 'text-black/30 hover:text-black/70'}`}>
-                <span className={`h-1.5 w-1.5 rounded-full ${mode === key ? 'bg-[#6e56d8]' : 'border border-black/25'}`} />
-                0{index + 1} / {item.label}
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-7 text-[9px] uppercase tracking-[.18em] text-black/35">
-            {stats.slice(0, 3).map((stat) => <span key={stat.label}><strong className="text-black/70">{stat.value}</strong> {stat.label}</span>)}
-          </div>
+        <div className="flex flex-col gap-3 border-t border-black/10 pt-4 text-[9px] uppercase tracking-[0.2em] text-black/35 sm:flex-row sm:items-center sm:justify-between">
+          <span>Design · Systems · Code</span>
+          <span>Make complicated things make sense.</span>
+          <span>Scroll ↓</span>
         </div>
       </div>
     </section>
