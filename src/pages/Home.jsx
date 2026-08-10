@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import logo from '../assets/logo.png'
 import hero from '../assets/hero2.png'
 import krishi from '../assets/home-bkb.png'
 import mybkb from '../assets/mybkb app.png'
@@ -8,153 +7,46 @@ import easyHealth from '../assets/easy-health.jpg'
 import ecopia from '../assets/ecopia.jpg'
 
 const projects = [
-  {
-    number: '01',
-    title: 'Magpie — Internet Banking',
-    type: 'Designed for Basic Bank',
-    description: 'A complete internet banking solution covering fund transfer, account management, bills, cards and more.',
-    image: krishi,
-    href: '/case-study/bkb-mobile',
-    accent: 'text-[#6756d9]',
-    className: 'md:col-span-7',
-  },
-  {
-    number: '02',
-    title: 'Bangla QR Merchant App',
-    type: 'One app. Multiple banks.',
-    description: 'A unified merchant experience for QR payments across multiple banks and MFS.',
-    image: merchant,
-    href: '/case-study/merchant-onboarding',
-    accent: 'text-[#e86b39]',
-    className: 'md:col-span-5',
-  },
-  {
-    number: '03',
-    title: 'myBKB',
-    type: 'Mobile Banking App',
-    description: 'A simpler way to manage everyday banking, from transfers and recharge to account activity.',
-    image: mybkb,
-    href: '/case-study/bkb-mobile',
-    accent: 'text-[#34865f]',
-    className: 'md:col-span-5',
-  },
-  {
-    number: '04',
-    title: 'Easy Health',
-    type: 'Healthcare Platform',
-    description: 'A digital healthcare experience designed to make patient services easier to navigate and use.',
-    image: easyHealth,
-    href: '#contact',
-    accent: 'text-[#4e73d8]',
-    className: 'md:col-span-7',
-  },
-  {
-    number: '05',
-    title: 'Ecopia',
-    type: 'Digital Product',
-    description: 'A product experience focused on clearer information, intuitive interaction and useful digital workflows.',
-    image: ecopia,
-    href: '#contact',
-    accent: 'text-[#c05a45]',
-    className: 'md:col-span-12',
-  },
+  { number: '01', title: 'Magpie — Internet Banking', type: 'Internet Banking', description: 'A complete internet banking solution covering fund transfer, account management, bills, cards and more.', image: krishi, href: '/case-study/bkb-mobile', accent: '#6756d9' },
+  { number: '02', title: 'Bangla QR Merchant App', type: 'Fintech · Multi-bank', description: 'A unified merchant experience for QR payments across multiple banks and MFS.', image: merchant, href: '/case-study/merchant-onboarding', accent: '#e86b39' },
+  { number: '03', title: 'myBKB', type: 'Mobile Banking App', description: 'A simpler way to manage everyday banking, from transfers and recharge to account activity.', image: mybkb, href: '/case-study/bkb-mobile', accent: '#34865f' },
+  { number: '04', title: 'Easy Health', type: 'Healthcare Platform', description: 'A digital healthcare experience designed to make patient services easier to navigate and use.', image: easyHealth, href: '#contact', accent: '#4e73d8' },
+  { number: '05', title: 'Ecopia', type: 'Digital Product', description: 'A product experience focused on clearer information, intuitive interaction and useful digital workflows.', image: ecopia, href: '#contact', accent: '#c05a45' },
 ]
 
-function Tile({ children, className = '', id }) {
-  return <section id={id} className={`relative overflow-hidden rounded-[28px] border border-black/[0.07] bg-[#faf9f6] ${className}`}>{children}</section>
+function Surface({ children, className = '', id }) {
+  return <section id={id} className={`overflow-hidden rounded-[30px] border border-black/[0.07] bg-[#faf9f6] ${className}`}>{children}</section>
 }
 
 function ContactTile({ href, label, value, icon }) {
-  return (
-    <motion.a href={href} className="group flex min-h-[150px] flex-col justify-between rounded-[28px] border border-black/[.07] bg-[#faf9f6] p-6" whileHover={{ y: -4 }} transition={{ duration: .25 }}>
-      <div className="flex items-center justify-between">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#eeeaff] text-lg text-[#6254d9]">{icon}</span>
-        <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
-      </div>
-      <div><p className="text-sm font-medium">{label}</p><p className="mt-1 truncate text-xs text-black/45">{value}</p></div>
-    </motion.a>
-  )
+  return <motion.a href={href} className="group flex min-h-[120px] flex-col justify-between rounded-[30px] border border-black/[.07] bg-[#faf9f6] p-5 sm:min-h-[140px]" whileHover={{ y: -3 }} transition={{ duration: .25 }}><div className="flex items-center justify-between"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#eeeaff] text-sm text-[#6254d9]">{icon}</span><span className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1">↗</span></div><div><p className="text-sm font-medium">{label}</p><p className="mt-1 truncate text-xs text-black/45">{value}</p></div></motion.a>
 }
 
-function ProjectTile({ project }) {
-  return (
-    <motion.a href={project.href} className={`group relative min-h-[360px] overflow-hidden rounded-[28px] border border-black/[.07] bg-[#faf9f6] ${project.className}`} whileHover={{ y: -4 }} transition={{ duration: .3 }}>
-      <div className="absolute left-6 top-6 z-20">
-        <p className={`text-xs font-semibold ${project.accent}`}>{project.number}</p>
-        <h3 className="mt-5 max-w-[280px] font-display text-[clamp(1.8rem,3vw,2.7rem)] font-medium leading-[.98] tracking-[-.06em]">{project.title}</h3>
-        <p className={`mt-3 text-sm font-medium ${project.accent}`}>{project.type}</p>
-        <p className="mt-3 max-w-[290px] text-sm leading-5 text-black/50">{project.description}</p>
-      </div>
-      <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2 text-xs font-medium underline underline-offset-4">View project <span>↗</span></div>
-      <motion.img src={project.image} alt={project.title} className="absolute bottom-[-4%] right-[-7%] h-[78%] w-[66%] object-contain object-right-bottom drop-shadow-[0_24px_35px_rgba(0,0,0,.12)]" whileHover={{ scale: 1.045, x: -5, y: -6 }} transition={{ duration: .55, ease: [0.22,1,0.36,1] }} />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/[.025]" />
-    </motion.a>
-  )
+function ProjectTile({ project, large = false }) {
+  return <motion.a href={project.href} className={`group relative block min-h-[360px] overflow-hidden rounded-[30px] border border-black/[.07] bg-[#faf9f6] ${large ? 'lg:min-h-[430px]' : 'lg:min-h-[350px]'}`} whileHover={{ y: -3 }} transition={{ duration: .25 }}>
+    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+    <div className="absolute left-6 top-6 z-20 sm:left-8 sm:top-8"><p className="text-xs font-semibold" style={{ color: project.accent }}>{project.number}</p><h3 className="mt-5 max-w-[310px] font-display text-[clamp(2rem,3.2vw,3.6rem)] font-medium leading-[.94] tracking-[-.065em] text-[#12182d]">{project.title}</h3><p className="mt-3 text-sm font-medium" style={{ color: project.accent }}>{project.type}</p><p className="mt-3 max-w-[320px] text-sm leading-6 text-black/50">{project.description}</p></div>
+    <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2 border-b border-black/50 pb-1 text-xs font-medium sm:left-8 sm:bottom-8">View project <span>↗</span></div>
+    <motion.img src={project.image} alt={project.title} className={`absolute bottom-[-3%] right-[-6%] w-[62%] object-contain object-right-bottom drop-shadow-[0_24px_35px_rgba(0,0,0,.12)] ${large ? 'h-[82%]' : 'h-[76%]'}`} whileHover={{ scale: 1.045, x: -5, y: -6 }} transition={{ duration: .55, ease: [0.22,1,0.36,1] }} />
+  </motion.a>
+}
+
+function IntroTile() {
+  return <Surface id="about" className="min-h-[390px] lg:min-h-[430px]"><div className="grid h-full min-h-[390px] grid-cols-1 sm:grid-cols-[42%_58%] lg:min-h-[430px]"><div className="relative flex min-h-[250px] items-end justify-center overflow-hidden bg-[#f0edf9] sm:min-h-0"><div className="absolute left-1/2 top-10 h-36 w-36 -translate-x-1/2 rounded-full bg-[#ddd4ff] sm:top-1/2 sm:-translate-y-1/2" /><img src={hero} alt="Shahola Nisha" className="relative z-10 h-[88%] w-auto max-w-[90%] object-contain object-bottom mix-blend-multiply" /></div><div className="flex flex-col justify-center p-7 sm:p-8 lg:p-10"><p className="text-xs uppercase tracking-[.18em] text-black/40">Hello, I’m</p><h1 className="mt-3 font-display text-[clamp(3rem,5.5vw,5.6rem)] font-medium leading-[.86] tracking-[-.07em] text-[#11172d]">Shahola<br />Nisha<span className="text-[#6756d9]">.</span></h1><p className="mt-5 text-xs font-semibold uppercase tracking-[.12em] text-[#6756d9]">Product Designer / UX Engineer</p><p className="mt-5 max-w-md text-sm leading-6 text-black/55">I design digital products for complex systems — where clarity, intuition and human needs come first.</p><div className="mt-6 flex flex-wrap gap-2 text-[10px] uppercase tracking-[.14em] text-black/45"><span className="rounded-full border border-black/10 px-3 py-1.5">Dhaka · Bangladesh</span><span className="rounded-full border border-black/10 px-3 py-1.5">8+ years</span></div></div></div></Surface>
 }
 
 export default function Home() {
-  return (
-    <div className="min-h-screen bg-[#eeece8] text-[#14182a] antialiased">
-      <header className="sticky top-0 z-50 px-4 pt-4 sm:px-6">
-        <div className="mx-auto flex max-w-[1180px] items-center justify-between">
-          <a href="#top" className="flex h-11 w-11 items-center justify-center rounded-full bg-white/85 text-base font-bold shadow-sm backdrop-blur-xl">SN<span className="text-[#6756d9]">.</span></a>
-          <nav className="flex items-center gap-1 rounded-full border border-black/[.05] bg-white/85 p-1 shadow-sm backdrop-blur-xl">
-            {['All','About','Work','Experience','Contact'].map((item, i) => <a key={item} href={item === 'All' ? '#top' : `#${item.toLowerCase()}`} className={`rounded-full px-4 py-2 text-[12px] transition-colors ${i === 0 ? 'bg-white shadow-sm' : 'hover:bg-white/80'}`}>{item}</a>)}
-          </nav>
-          <a href="#contact" className="hidden rounded-full bg-white/85 px-4 py-2 text-[12px] shadow-sm backdrop-blur-xl sm:block">~ Smooth scroll</a>
-        </div>
-      </header>
+  return <div className="min-h-screen bg-[#eeece8] text-[#14182a] antialiased">
+    <header className="sticky top-0 z-50 px-4 pt-4 sm:px-6"><div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4"><a href="#top" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/85 text-base font-bold shadow-sm backdrop-blur-xl">SN<span className="text-[#6756d9]">.</span></a><nav className="hidden items-center gap-1 rounded-full border border-black/[.05] bg-white/85 p-1 shadow-sm backdrop-blur-xl sm:flex">{[['All','#top'],['About','#about'],['Work','#work'],['Experience','#experience'],['Contact','#contact']].map(([item,href],i)=><a key={item} href={href} className={`rounded-full px-4 py-2 text-[12px] transition-colors ${i===0?'bg-white shadow-sm':'hover:bg-white/80'}`}>{item}</a>)}</nav><a href="#contact" className="rounded-full bg-white/85 px-4 py-2 text-[12px] shadow-sm backdrop-blur-xl">~ Smooth scroll</a></div></header>
+    <main id="top" className="mx-auto max-w-[1180px] px-4 pb-10 pt-5 sm:px-6 sm:pt-6">
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-12"><div className="lg:col-span-8"><IntroTile /></div><div className="grid grid-cols-2 gap-4 lg:col-span-4 lg:grid-cols-1"><ContactTile href="mailto:snisha.athena@gmail.com" label="Let’s connect" value="snisha.athena@gmail.com" icon="✉" /><ContactTile href="https://www.linkedin.com/in/shahola-nisha/" label="LinkedIn" value="/in/shahola-nisha" icon="in" /><Surface className="col-span-2 min-h-[150px] p-5 lg:col-span-1 sm:p-6"><div className="grid h-full grid-cols-3 divide-x divide-black/[.08]"><div className="flex flex-col justify-between px-2 first:pl-0"><span>◉</span><div><strong className="font-display text-3xl tracking-[-.06em]">8+</strong><p className="mt-1 text-[11px] text-black/45">Years experience</p></div></div><div className="flex flex-col justify-between px-4"><span>◇</span><div><strong className="font-display text-3xl tracking-[-.06em]">30+</strong><p className="mt-1 text-[11px] text-black/45">Products designed</p></div></div><div className="flex flex-col justify-between px-4 pr-0"><span>♡</span><div><strong className="font-display text-xl leading-none tracking-[-.05em]">Problem<br />solver</strong><p className="mt-2 text-[11px] text-black/45">By nature</p></div></div></div></Surface></div></section>
 
-      <main id="top" className="mx-auto max-w-[1180px] px-4 pb-8 pt-4 sm:px-6 sm:pt-6">
-        <div className="grid auto-rows-[150px] grid-cols-1 gap-4 md:grid-cols-12">
-          <Tile id="about" className="min-h-[360px] md:col-span-7 md:row-span-2">
-            <div className="flex h-full flex-col sm:flex-row">
-              <div className="relative flex min-h-[240px] w-full items-end justify-center overflow-hidden sm:w-[47%]">
-                <div className="absolute left-10 top-12 h-36 w-36 rounded-full bg-[#e5ddff]" />
-                <img src={hero} alt="Shahola Nisha" className="relative z-10 h-[88%] w-auto max-w-full object-contain object-bottom mix-blend-multiply" />
-              </div>
-              <div className="flex flex-1 flex-col justify-center p-7 sm:p-8">
-                <p className="text-sm text-black/45">Heyyy 👋</p>
-                <h1 className="mt-2 font-display text-[clamp(2.3rem,4vw,4rem)] font-medium leading-[.92] tracking-[-.065em]">I’m Shahola Nisha<span className="text-[#6756d9]">.</span></h1>
-                <p className="mt-4 text-sm font-semibold uppercase tracking-[.08em] text-[#6756d9]">Product Designer / UX Engineer</p>
-                <p className="mt-5 max-w-md text-sm leading-6 text-black/55">I design digital products for complex systems — where clarity, intuition and human needs come first.</p>
-                <p className="mt-5 text-xs text-black/45">⌖ Based in Dhaka, Bangladesh</p>
-              </div>
-            </div>
-          </Tile>
+      <section id="work" className="mt-16"><div className="mb-5 flex items-end justify-between border-b border-black/10 pb-4"><div><p className="text-[10px] font-medium uppercase tracking-[.18em] text-black/40">Selected work</p><h2 className="mt-2 font-display text-5xl font-medium tracking-[-.07em] text-[#11172d] sm:text-7xl">Things I’ve made.</h2></div><span className="hidden pb-1 text-xs text-black/35 sm:block">05 projects · product design</span></div><div className="grid grid-cols-1 gap-4 lg:grid-cols-12"><div className="lg:col-span-7"><ProjectTile project={projects[0]} large /></div><div className="lg:col-span-5"><ProjectTile project={projects[1]} large /></div><div className="lg:col-span-4"><ProjectTile project={projects[2]} /></div><div className="lg:col-span-4"><ProjectTile project={projects[3]} /></div><div className="lg:col-span-4"><ProjectTile project={projects[4]} /></div></div></section>
 
-          <ContactTile href="mailto:snisha.athena@gmail.com" label="Let’s connect" value="snisha.athena@gmail.com" icon="✉" />
-          <ContactTile href="https://www.linkedin.com/in/shahola-nisha/" label="LinkedIn" value="/in/shahola-nisha" icon="in" />
+      <section className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2"><Surface id="experience" className="min-h-[300px] p-7 sm:p-9"><p className="text-[10px] uppercase tracking-[.18em] text-black/40">About / Experience</p><h3 className="mt-12 max-w-xl font-display text-4xl font-medium leading-[.94] tracking-[-.065em] text-[#11172d] sm:text-5xl">From building interfaces to designing the experience behind them.</h3><p className="mt-6 max-w-xl text-sm leading-6 text-black/50">I started designing interfaces in 2018. Since then, I’ve worked across banking, fintech, healthcare, LMS and enterprise products — moving closer to product thinking with every project.</p></Surface><Surface className="min-h-[300px] bg-[#e4e0fb] p-7 sm:p-9"><p className="text-[10px] uppercase tracking-[.18em] text-black/40">What I bring</p><div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-7 text-sm text-[#12182d] sm:grid-cols-3">{['Product design','UX & interaction','Design systems','Prototyping','Front-end','Complex workflows'].map((item,i)=><div key={item} className="border-t border-black/10 pt-3"><span className="mr-2 text-xs text-black/35">0{i+1}</span>{item}</div>)}</div><p className="mt-12 max-w-md font-display text-2xl font-medium leading-tight tracking-[-.045em] text-[#12182d]">I like products that are complicated underneath — but feel obvious on the surface.</p></Surface></section>
 
-          <Tile className="min-h-[150px] md:col-span-5 md:row-span-1">
-            <div className="grid h-full grid-cols-3 divide-x divide-black/[.08] p-6">
-              <div className="flex flex-col justify-between px-2 first:pl-0"><span>◉</span><div><strong className="font-display text-3xl tracking-[-.06em]">7+</strong><p className="mt-1 text-[11px] text-black/45">Years experience</p></div></div>
-              <div className="flex flex-col justify-between px-5"><span>◇</span><div><strong className="font-display text-3xl tracking-[-.06em]">30+</strong><p className="mt-1 text-[11px] text-black/45">Products designed</p></div></div>
-              <div className="flex flex-col justify-between px-5 pr-0"><span>♡</span><div><strong className="font-display text-xl tracking-[-.05em]">Problem solver</strong><p className="mt-1 text-[11px] text-black/45">By nature</p></div></div>
-            </div>
-          </Tile>
-
-          <div id="work" className="col-span-full flex items-end justify-between px-1 pb-2 pt-8">
-            <div><p className="text-[10px] font-medium uppercase tracking-[.18em] text-black/40">Selected work</p><h2 className="mt-2 font-display text-4xl font-medium tracking-[-.06em] sm:text-6xl">Things I’ve made.</h2></div>
-            <span className="hidden pb-1 text-xs text-black/35 sm:block">05 projects · product design</span>
-          </div>
-
-          {projects.map(project => <ProjectTile key={project.number} project={project} />)}
-
-          <Tile id="experience" className="min-h-[270px] p-7 md:col-span-5 sm:p-8">
-            <p className="text-[10px] uppercase tracking-[.18em] text-black/40">About / Experience</p>
-            <h3 className="mt-5 max-w-md font-display text-4xl font-medium leading-[.95] tracking-[-.06em]">From building interfaces to designing the experience behind them.</h3>
-            <div className="mt-7 flex items-center gap-3 text-xs text-black/55"><span className="rounded-full bg-[#eeeaff] px-3 py-1.5">UI Engineer</span><span>→</span><span className="rounded-full bg-[#eeeaff] px-3 py-1.5">UX Engineer</span><span>→</span><span className="rounded-full bg-[#eeeaff] px-3 py-1.5">Product Designer</span></div>
-          </Tile>
-
-          <Tile className="min-h-[270px] bg-[#171b2b] p-7 text-white md:col-span-7 sm:p-8">
-            <div className="flex h-full flex-col justify-between"><div><p className="text-[10px] uppercase tracking-[.18em] text-white/40">What I do</p><h3 className="mt-5 font-display text-4xl font-medium tracking-[-.06em]">Make complicated<br /><span className="text-[#b5a8ff]">things feel simple.</span></h3></div><div className="flex flex-wrap gap-2 text-xs text-white/70"><span className="rounded-full border border-white/10 px-3 py-2">UX / UI Design</span><span className="rounded-full border border-white/10 px-3 py-2">Interaction</span><span className="rounded-full border border-white/10 px-3 py-2">Prototyping</span><span className="rounded-full border border-white/10 px-3 py-2">Product Thinking</span></div></div>
-          </Tile>
-
-          <section id="contact" className="rounded-[28px] bg-[#dcd4ff] p-8 md:col-span-12 sm:p-12"><div className="flex flex-col justify-between gap-8 sm:flex-row sm:items-end"><div><p className="text-[10px] uppercase tracking-[.18em] text-black/45">Have a project in mind?</p><h2 className="mt-3 max-w-3xl font-display text-[clamp(3rem,6vw,6rem)] font-medium leading-[.9] tracking-[-.07em]">Let’s build something<br />meaningful together.</h2></div><a href="mailto:snisha.athena@gmail.com" className="group shrink-0 rounded-full bg-[#171b2b] px-6 py-4 text-sm text-white transition-transform hover:-translate-y-1">Say hello <span className="ml-2 transition-transform group-hover:translate-x-1">↗</span></a></div></section>
-        </div>
-      </main>
-      <footer className="mx-auto flex max-w-[1180px] justify-between px-4 pb-8 pt-4 text-[10px] uppercase tracking-[.15em] text-black/35 sm:px-6"><span>© {new Date().getFullYear()} Shahola Nisha</span><span>Designed & coded with intention.</span></footer>
-    </div>
-  )
+      <section id="contact" className="mt-4 overflow-hidden rounded-[30px] bg-[#11172d] p-8 text-white sm:p-12"><div className="flex flex-col justify-between gap-10 sm:flex-row sm:items-end"><div><p className="text-[10px] uppercase tracking-[.18em] text-white/45">Have a complex problem?</p><h2 className="mt-4 font-display text-[clamp(3.4rem,7vw,7rem)] font-medium leading-[.86] tracking-[-.075em]">Let’s make it<br /><span className="italic">make sense.</span></h2></div><a href="mailto:snisha.athena@gmail.com" className="group shrink-0 rounded-full bg-white px-6 py-4 text-sm text-[#11172d] transition-transform hover:-translate-y-1">Say hello <span className="ml-2 transition-transform group-hover:translate-x-1">↗</span></a></div></section>
+    </main>
+    <footer className="mx-auto flex max-w-[1180px] justify-between px-4 pb-8 pt-2 text-[10px] uppercase tracking-[.15em] text-black/35 sm:px-6"><span>© {new Date().getFullYear()} Shahola Nisha</span><span>Designed & coded with intention.</span></footer>
+  </div>
 }
