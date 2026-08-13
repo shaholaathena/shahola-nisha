@@ -1,13 +1,20 @@
 import { motion } from 'framer-motion'
 import { projects } from '../../data/portfolio'
-import { basicBankProject } from '../../data/basicBankProject'
 import ProjectCard from '../ui/ProjectCard'
 
 const EASE = [0.22, 1, 0.36, 1]
 const VP = { once: true, margin: '-80px' }
 
 export default function FeaturedWork() {
-  const featuredProjects = [basicBankProject, ...projects]
+  // Keep the original portfolio project list as the single source of truth.
+  // The existing Basic Bank card is the correct Magpie project/cover; only add
+  // its case-study link here instead of injecting a second Basic Bank card.
+  const featuredProjects = projects
+    .filter((project, index, all) => index === all.findIndex((item) => item.id === project.id))
+    .map((project) => project.id === 'basic-bank'
+      ? { ...project, link: '/case-study/basic-bank-magpie' }
+      : project)
+
   return (
     <section id="work" className="py-32 lg:py-40 relative bg-surface-1">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
