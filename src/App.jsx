@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import CaseStudyPage from './pages/CaseStudyPage'
 import MerchantOnboardingCaseStudyPage from './pages/MerchantOnboardingCaseStudyPage'
 import BasicBankMagpieCaseStudyPage from './pages/BasicBankMagpieCaseStudyPage'
+import PintexClonePage from './pages/PintexClonePage'
 
 const pageVariants = {
   initial: { opacity: 0, filter: 'blur(6px)' },
@@ -18,6 +19,7 @@ function AnimatedRoutes() {
     <Route path="/case-study/bkb-mobile" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
     <Route path="/case-study/merchant-onboarding" element={<PageWrapper><MerchantOnboardingCaseStudyPage /></PageWrapper>} />
     <Route path="/case-study/basic-bank-magpie" element={<PageWrapper><BasicBankMagpieCaseStudyPage /></PageWrapper>} />
+    <Route path="/pintex-clone" element={<PintexClonePage />} />
   </Routes></AnimatePresence>
 }
 export default function App() { return <BrowserRouter><AnimatedRoutes /></BrowserRouter> }
