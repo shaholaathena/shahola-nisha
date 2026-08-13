@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import '../styles/pintex-clone.css'
 
 const DEMO_URL = 'https://jthemes.net/themes/html/pintex/files/demo-11.html'
 
