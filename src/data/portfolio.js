@@ -370,6 +370,208 @@ export const projects = [
     }
   },
   {
+    id: 'zcommerz',
+    title: 'ZCOMMERZ — Online Store Builder',
+    company: 'SSL Wireless',
+    type: 'dashboard',
+    year: '',
+    tags: ['E-commerce', 'SaaS Onboarding', 'Web App', 'Payments', 'Designed & Built'],
+    size: 'large',
+    impact: 'Designed & coded',
+    description: 'A build-your-own online store platform for Bangladeshi SMBs — sign up, set up payments and delivery, and launch a payment-ready shop in a single guided flow.',
+    color: '#101828',
+    accentColor: '#6366f1',
+    image: '',
+    link: '/case-study/zcommerz',
+    caseStudy: {
+      title: 'ZCOMMERZ',
+      subtitle: 'Onboarding is the product',
+      company: 'SSL Wireless',
+      year: '[NEEDS: year built]',
+      role: 'Lead UX/UI Designer · Front-end build',
+      platform: 'Web',
+      tool: 'Figma · Bootstrap 5 · JavaScript',
+
+      // ── Hero. The h1 renders `title`; this is the line under it. ──
+      heroSub: 'ZCOMMERZ lets a shop owner in Bangladesh build a real online store in minutes — pick a ready-made design, add products one by one or in bulk, and take bKash, cards, and cash on delivery, all without a developer. The whole product turns on one number: how fast someone with no technical skill goes from signing up to a live, selling store.',
+
+      // ── Three-beat summary for a skimmer. ──
+      tldr: [
+        { label: 'Problem', text: 'A small shop owner who wants to sell online has to stitch together a website, a payment gateway, and a courier — each its own account, its own setup — and then design and stock the site itself. Most never get past step one.' },
+        { label: 'Approach', text: 'Collapse the whole thing into one fast path: an OTP sign-up, a guided setup for payments and delivery, a ready-made storefront to pick from, and simple or bulk product upload — with the store URL generated for them.' },
+        { label: 'Result', text: 'A shop owner goes from a phone number to a live, selling store in minutes. I designed the flow and built the front-end.' },
+      ],
+
+      overview: 'ZCOMMERZ is a self-serve platform that turns a phone number into a live online store in minutes. A merchant signs up with an OTP, moves through a guided setup for identity, delivery and payments, picks a ready-made storefront design, and adds products — one at a time or in bulk — to go live at their own URL. I owned the UX for onboarding, the dashboard, and the store-building flow, and coded the front-end.',
+      overviewSpecs: [
+        { label: 'Role', value: 'Lead UX/UI · Front-end' },
+        { label: 'Scope', value: 'Onboarding · Dashboard · Storefront' },
+        { label: 'Platform', value: 'Responsive web' },
+        { label: 'Built with', value: 'Figma · Bootstrap 5 · JS' },
+      ],
+
+      nda: 'The product is publicly demoable. Screens in this case study use masked placeholder data — phone numbers, emails, and merchant names are synthetic, and payment/settlement identifiers are not shown.',
+
+      // ── The problem is merchant-side: a non-technical seller. ──
+      problem: 'Selling online in Bangladesh is not one decision, it is three. A shop owner needs a storefront, a way to take digital payments — bKash, cards, cash on delivery — and a courier to move the goods. Each is a separate signup with its own onboarding, and any one of them stalling means no sale. For a non-technical seller, that gap is where the whole idea dies.',
+      solution: 'So ZCOMMERZ makes it one decision. A single sign-up and a guided setup wire up the storefront, the payment rails, and the delivery partners together, so the merchant finishes with a shop that can actually take money — not a to-do list of accounts still to create.',
+      designChallenge: 'How do you compress everything it takes to launch an online store — design, payments, KYC, logistics, a product catalogue — into something a non-technical shop owner finishes in minutes, on a phone, without help?',
+
+      // ── The constraints that shaped the work. Verifiable from the product. ──
+      frictions: [
+        {
+          stat: 'Min',
+          title: 'A store in minutes, not weeks',
+          description: 'Building an online store normally means design, theming, and catalogue setup. Ready-made storefront demos and bulk product upload compress that into a single session.',
+        },
+        {
+          stat: '0',
+          title: 'Zero technical setup',
+          description: 'The audience is shop owners, not developers. The store URL is auto-generated, gateways connect with a toggle, and nothing asks the merchant to configure infrastructure.',
+        },
+        {
+          stat: 'Trust',
+          title: 'Money on the line',
+          description: 'A merchant is about to route real payments through this. Bank-grade security and clear settlement framing had to be present from the sign-up screen, not buried in settings.',
+        },
+      ],
+
+      // ── The onboarding journey — the star of the case study. Drives a
+      //    browser-frame walkthrough: screen, what it does, why. ──
+      journeyIntro: 'The path from a phone number to a live store. Each screen does one job, and the order is deliberate — identity before logistics before money, so trust is built before anything consequential is asked.',
+      journey: [
+        {
+          file: 'zc-signup',
+          step: 'Sign up',
+          title: 'Start with a phone number',
+          hint: 'One field — a phone number — an OTP, and a three-day free trial. Social proof and “bank-grade security” sit right beside the form.',
+          why: 'The lowest-commitment start possible. No password, no billing, no long form. The reassurance is placed where hesitation happens: next to the button.',
+        },
+        {
+          file: 'zc-setup-identity',
+          step: 'Identity',
+          title: 'Who the store is',
+          hint: 'Name, category, logo — and the store URL generates itself from the name as they type.',
+          why: 'The auto-generated URL removes the single most technical decision a new seller faces, and makes the store feel real before any of the hard setup begins.',
+        },
+        {
+          file: 'zc-setup-logistics',
+          step: 'Delivery',
+          title: 'How goods move',
+          hint: 'Default delivery rates for inside and outside Dhaka, and courier partners connected in place. Skippable — it can be finished later from the dashboard.',
+          why: 'Logistics comes before payments because it is the lighter lift, and letting it be deferred means a merchant is never blocked here on their way to going live.',
+        },
+        {
+          file: 'zc-setup-payments',
+          step: 'Payments',
+          title: 'How money arrives',
+          hint: 'Bangla QR, the SSLCOMMERZ gateway for cards and MFS, and cash on delivery — each a clear opt-in with settlement framing.',
+          why: 'This is the consequential step, so it comes once identity and delivery have built momentum. Every rail is a deliberate choice, not a default the merchant discovers later.',
+        },
+        {
+          file: 'zc-setup-plan',
+          step: 'Launch',
+          title: 'Pick a plan, go live',
+          hint: 'Choose a plan and the store publishes. The trial means the plan decision does not block launch.',
+          why: 'The commitment ask lands last — after the merchant has already built something and can see what they are paying for.',
+        },
+      ],
+
+      // ── The store-building flow — the "build in a minute" half. Same
+      //    browser-frame walkthrough as the onboarding journey. ──
+      buildFlowIntro: 'Onboarding gets the merchant an account with live payment rails. Building the actual storefront is the second half — and the part that has to feel like minutes, not a web project. This is where “like Shopify, but in a minute” has to be true.',
+      buildFlow: [
+        {
+          file: 'zc-dashboard',
+          step: 'Dashboard',
+          title: 'One place to run the shop',
+          hint: 'Orders, products, and store settings in a single view. Building the storefront starts from here.',
+          why: 'The merchant lands somewhere that already feels like a running business, not an empty configuration screen.',
+        },
+        {
+          file: 'zc-pick-demo',
+          step: 'Pick a demo',
+          title: 'Start from a ready-made store',
+          hint: 'Choose a demo storefront from the dashboard and the whole site is themed instantly — no page-building from scratch.',
+          why: 'Starting from a finished-looking store is what turns weeks of design into a one-click decision. The seller edits, they don’t build.',
+        },
+        {
+          file: 'zc-add-product',
+          step: 'Add products',
+          title: 'One at a time, or all at once',
+          hint: 'Add a single product through a simple form, or bulk-upload an entire catalogue in one go.',
+          why: 'A five-item boutique and a five-hundred-item wholesaler have opposite needs. Supporting both means neither is forced into the wrong tool.',
+        },
+        {
+          file: 'zc-storefront',
+          step: 'Go live',
+          title: 'A real store, in minutes',
+          hint: 'Demo picked, products in, payments connected — the storefront is live at the auto-generated URL.',
+          why: '“Ready” means a customer can land on it and buy, not that setup is technically complete.',
+        },
+      ],
+
+      // ── Payments & ecosystem — ties back to the Merchant case study. ──
+      paymentsIntro: 'A storefront is only useful if it can take money the way Bangladeshi customers actually pay. ZCOMMERZ wires the merchant into the full local stack in the setup step, so “launch” means “can accept a payment,” not “looks finished.”',
+      paymentRails: [
+        { name: 'Bangla QR', role: 'Interoperable QR', detail: 'The country’s single QR standard — one code any bank or wallet app can scan. The same rail behind the SSL Merchant platform.' },
+        { name: 'SSLCOMMERZ', role: 'Cards & MFS gateway', detail: 'Cards, net banking, and mobile financial services through one gateway integration.' },
+        { name: 'Cash on delivery', role: 'Offline settlement', detail: 'Still how much of Bangladesh buys, so it is a first-class option, not an afterthought.' },
+        { name: 'Courier partners', role: 'Fulfilment', detail: 'Delivery integrations so the merchant books pickup from the same dashboard that took the order.' },
+      ],
+
+      // ── Decisions worth defending. ──
+      keyDecisions: [
+        {
+          tag: 'Store building',
+          title: 'Start from a demo, not a blank canvas',
+          description: 'A non-technical seller can’t design a store from nothing. Shipping ready-made storefront demos turns store design into pick-and-edit — the decision that makes “a store in minutes” actually true.',
+        },
+        {
+          tag: 'Catalogue',
+          title: 'Simple and bulk product upload',
+          description: 'A boutique adds a handful of items by hand; a wholesaler has hundreds. Supporting both a simple form and bulk upload means the catalogue step fits either without compromise.',
+        },
+        {
+          tag: 'Onboarding',
+          title: 'A wizard, not one long form',
+          description: 'Setup could fit on one page — and would be abandoned. Labelled steps make a heavy KYC-and-payments process feel finite, and the store URL is generated so the seller never faces a domain decision.',
+        },
+      ],
+
+      // ── Designed AND built — the UX-Engineer angle. ──
+      buildIntro: 'I did not hand this off as a spec. I designed the flow in Figma and then built the front-end, so the decisions above survived contact with real code instead of being renegotiated in handoff.',
+      buildPoints: [
+        'Designed the onboarding, dashboard, and storefront in Figma.',
+        'Built the responsive front-end in Bootstrap 5 and vanilla JavaScript.',
+        'Owned the flow end to end — the shipped product matches the design because the same person made both.',
+      ],
+
+      // ── Outcome. Numbers gated until confirmed — nothing invented. ──
+      outcomeIntro: 'ZCOMMERZ ships as a live, self-serve product: a shop owner can sign up and stand up a payment-ready store without ever talking to sales.',
+      outcomePoints: [
+        'A merchant goes from a phone number to a live, selling store in minutes — sign up, set up, pick a demo, add products, go live.',
+        'Ready-made storefront demos and simple-or-bulk product upload turn store-building from a web project into a single session.',
+        'Payments, delivery, and storefront are wired up together — launch means the store can actually take money.',
+        'Designed and front-end-built by one person, so the shipped product holds the design intent.',
+        '[NEEDS: real outcome — e.g. merchants onboarded, stores live, or time-to-launch. Replace or delete.]',
+      ],
+
+      learnings: [
+        'Onboarding was the product, not a preamble to it. The four-step setup was where the hardest and most valuable design decisions lived.',
+        'Sequencing is a design tool. Moving the money step behind identity and delivery changed how much trust the merchant had by the time it mattered.',
+        'Designing and building it myself kept the intent intact — nothing got lost or quietly simplified in a handoff.',
+      ],
+
+      metrics: [
+        { label: 'Time to live', value: 'Minutes' },
+        { label: 'Storefront', value: 'Ready-made demos' },
+        { label: 'Payments', value: 'Bangla QR + SSLCOMMERZ' },
+        { label: 'My role', value: 'Design + build' },
+      ],
+    }
+  },
+  {
     id: 'basic-bank',
     title: 'Basic Bank - Magpie Financial Services',
     company: 'Basic Bank',

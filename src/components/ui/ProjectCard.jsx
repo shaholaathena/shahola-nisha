@@ -219,9 +219,11 @@ export default function ProjectCard({ project, index = 0 }) {
           aria-hidden="true"
         />
         {/* Year badge */}
-        <div className="absolute top-3 right-3 px-2 py-1 text-[10px] font-medium text-white/80 bg-black/40 backdrop-blur-md rounded-md border border-white/10 shadow-sm">
-          {project.year}
-        </div>
+        {project.year && (
+          <div className="absolute top-3 right-3 px-2 py-1 text-[10px] font-medium text-white/80 bg-black/40 backdrop-blur-md rounded-md border border-white/10 shadow-sm">
+            {project.year}
+          </div>
+        )}
       </div>
 
       {/* Content */}

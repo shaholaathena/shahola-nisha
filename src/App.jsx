@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Home from './pages/Home'
 import CaseStudyPage from './pages/CaseStudyPage'
 import MerchantOnboardingCaseStudyPage from './pages/MerchantOnboardingCaseStudyPage'
+import ZCommerzCaseStudyPage from './pages/ZCommerzCaseStudyPage'
 
 const pageVariants = {
   initial: { opacity: 0, filter: 'blur(6px)' },
@@ -26,6 +27,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
         <Route path="/case-study/bkb-mobile" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
         <Route path="/case-study/merchant-onboarding" element={<PageWrapper><MerchantOnboardingCaseStudyPage /></PageWrapper>} />
+        <Route path="/case-study/zcommerz" element={<PageWrapper><ZCommerzCaseStudyPage /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
   )
