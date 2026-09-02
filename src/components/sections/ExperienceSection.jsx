@@ -1,107 +1,129 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { experience } from '../../data/portfolio'
 
 const EASE = [0.22, 1, 0.36, 1]
-const VP = { once: true, margin: '-80px' }
+const VP = { once: true, margin: '-15%' }
+
+/* Capabilities grouped by where they sit in the work, so the list reads as a
+   practice rather than a keyword dump. The third column is the differentiator. */
+const CAPABILITIES = [
+  {
+    group: 'Research & definition',
+    items: ['User research', 'Stakeholder interviews', 'Journey mapping', 'Information architecture', 'Flow design'],
+  },
+  {
+    group: 'Design & systems',
+    items: ['Interface design', 'Design systems', 'Design tokens', 'Prototyping', 'Usability review', 'Accessibility'],
+  },
+  {
+    group: 'Build',
+    items: ['HTML & CSS', 'JavaScript', 'React', 'Tailwind', 'Framer Motion', 'Design-to-code handoff'],
+  },
+]
+
+function Reveal({ children, delay = 0, className = '' }) {
+  const reduce = useReducedMotion()
+  if (reduce) return <div className={className}>{children}</div>
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 24, filter: 'blur(5px)' }}
+      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      viewport={VP}
+      transition={{ duration: 0.8, delay, ease: EASE }}
+    >
+      {children}
+    </motion.div>
+  )
+}
 
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="py-16 lg:py-24 border-t border-border-subtle bg-surface-base">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+    <section id="experience" className="relative bg-surface-base py-24 lg:py-36">
+      <div className="mx-auto max-w-[1320px] px-6 lg:px-10">
 
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-8">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VP}
-              transition={{ duration: 0.5, ease: EASE }}
-              className="flex items-center gap-3 mb-4"
-            >
-              <div className="h-px w-6 bg-zinc-800/50" />
-              <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">Career</span>
-            </motion.div>
-            <div className="overflow-hidden">
-              <motion.h2
-                initial={{ y: 30, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={VP}
-                transition={{ duration: 0.75, ease: EASE, delay: 0.07 }}
-                className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.1]"
-              >
-                Experience.
-              </motion.h2>
-            </div>
+        {/* ── Masthead ── */}
+        <Reveal className="mb-14 lg:mb-20">
+          <div className="flex items-end justify-between border-t border-ink-primary pt-4">
+            <span className="font-mono text-[11px] uppercase tracking-[0.24em] tabular-nums text-ink-muted">
+              Practice
+            </span>
+            <span className="hidden font-mono text-[11px] uppercase tracking-[0.24em] text-ink-muted sm:block">
+              Experience &amp; capabilities
+            </span>
           </div>
-          <motion.a
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VP}
-            transition={{ duration: 0.5, ease: EASE, delay: 0.14 }}
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault()
-              document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
-            }}
-            className="text-sm font-medium text-zinc-400 hover:text-zinc-700 transition-colors self-end sm:self-auto"
-          >
-            Request full CV →
-          </motion.a>
-        </div>
+        </Reveal>
 
-        {/* Experience rows */}
-        <div className="divide-y divide-zinc-100">
-          {experience.map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 18, scale: 0.97 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={VP}
-              transition={{ duration: 0.6, delay: i * 0.1, ease: EASE }}
-              className="py-10 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 lg:gap-24 items-start group"
-            >
-              <div>
-                {/* Role + Company */}
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
-                  <span className="font-display text-xl sm:text-2xl font-semibold text-zinc-900 tracking-tight">
-                    {item.role}
-                  </span>
-                  <span className="text-zinc-300">at</span>
-                  <span className="font-display text-xl sm:text-2xl font-light text-zinc-500 tracking-tight">
-                    {item.company}
+        {/* ── Experience, set as records rather than a timeline graphic ── */}
+        <div className="border-t border-border-default">
+          {experience.map((role, i) => (
+            <Reveal key={role.company} delay={i * 0.08}>
+              <article className="grid grid-cols-12 gap-x-4 gap-y-4 border-b border-border-default py-9 sm:gap-x-8 lg:py-12">
+                {/* period */}
+                <div className="col-span-12 sm:col-span-3">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums text-ink-muted">
+                    {role.period}
                   </span>
                 </div>
 
-                {/* Description */}
-                <p className="text-sm text-zinc-500 leading-relaxed max-w-2xl mb-5">
-                  {item.description}
-                </p>
+                {/* company + role */}
+                <div className="col-span-12 sm:col-span-5">
+                  <h3 className="font-display text-[clamp(1.6rem,3.2vw,2.6rem)] font-medium leading-[1.02] tracking-[-0.02em] text-ink-primary">
+                    {role.company}
+                  </h3>
+                  <p className="mt-2 text-[14px] font-semibold text-accent">{role.role}</p>
+                  <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-muted">
+                    {role.location}
+                  </p>
+                </div>
 
-                {/* Highlights */}
-                {item.highlights && (
-                  <div className="flex flex-wrap gap-2">
-                    {item.highlights.map((h) => (
-                      <span
-                        key={h}
-                        className="text-[11px] font-medium text-zinc-500 bg-zinc-50 border border-zinc-100 px-3 py-1 rounded-full"
-                      >
+                {/* detail */}
+                <div className="col-span-12 sm:col-span-4">
+                  <p className="text-[14px] leading-relaxed text-ink-secondary">{role.description}</p>
+                  <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-1.5">
+                    {role.highlights.map((h) => (
+                      <li key={h} className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-muted">
                         {h}
-                      </span>
+                      </li>
                     ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Period + Location */}
-              <div className="lg:text-right flex-shrink-0 flex lg:flex-col gap-3 lg:gap-1.5">
-                <span className="text-sm font-mono text-zinc-400">{item.period}</span>
-                <span className="text-sm text-zinc-400">{item.location}</span>
-              </div>
-            </motion.div>
+                  </ul>
+                </div>
+              </article>
+            </Reveal>
           ))}
         </div>
 
+        {/* ── Capabilities ── */}
+        <div className="mt-20 lg:mt-28">
+          <Reveal>
+            <div className="mb-10 flex items-center gap-4">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink-muted">
+                What I do
+              </span>
+              <span className="h-px flex-1 bg-border-default" />
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-3">
+            {CAPABILITIES.map((c, i) => (
+              <Reveal key={c.group} delay={i * 0.1}>
+                <div>
+                  <h3 className="font-display text-[1.35rem] font-medium leading-tight tracking-tight text-ink-primary">
+                    {c.group}
+                  </h3>
+                  <span className="mt-4 mb-4 block h-px w-10 bg-accent" />
+                  <ul className="space-y-2">
+                    {c.items.map((item) => (
+                      <li key={item} className="text-[14px] leading-snug text-ink-secondary">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )

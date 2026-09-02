@@ -1,22 +1,35 @@
 @import "tailwindcss";
 
 @theme {
+  /* ── Type: characterful grotesque display · Inter body · mono for data.
+     Mono is load-bearing here, not decorative: receipts, statements and
+     transaction IDs are monospaced in the world this work lives in. ── */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --color-surface-base: #ffffff;
-  --color-surface-1: #f8fafc;
-  --color-surface-2: #f1f5f9;
-  --color-surface-3: #e2e8f0;
-  --color-surface-hover: #f1f5f9;
+  /* ── Palette: bank security / cheque stock, not magazine cream ── */
+  --color-paper: #eef1ea;
+  --color-surface-base: #eef1ea;
+  --color-surface-1: #e6eae0;
+  --color-surface-2: #dbe1d3;
+  --color-surface-3: #c9d1be;
+  --color-card: #f6f8f2;
 
-  --color-ink-primary: #0f172a;
-  --color-ink-secondary: #475569;
-  --color-ink-muted: #94a3b8;
-  --color-border-subtle: rgba(0 0 0 / 0.05);
-  --color-border-default: rgba(0 0 0 / 0.1);
-  --color-border-strong: rgba(0 0 0 / 0.15);
-  --color-border-accent: rgba(0 0 0 / 0.25);
+  --color-ink-primary: #12150f;
+  --color-ink-secondary: #4a5043;
+  --color-ink-muted: #868d7b;
+
+  --color-border-subtle: rgba(18 21 15 / 0.08);
+  --color-border-default: rgba(18 21 15 / 0.15);
+  --color-border-strong: rgba(18 21 15 / 0.22);
+  --color-border-accent: rgba(18 21 15 / 0.34);
+
+  /* intaglio green — the ink banknotes and cheques are printed in */
+  --color-accent: #0d5c3c;
+  --color-accent-hover: #094a30;
+  --color-accent-ink: #073d27;
+  --color-accent-soft: rgba(13 92 60 / 0.12);
 }
 
 @layer base {
@@ -33,15 +46,15 @@
 
   body {
     margin: 0;
-    background-color: #ffffff;
-    color: #000000;
+    background-color: #eef1ea;
+    color: #12150f;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
   }
 
   ::selection {
-    background-color: rgba(0, 0, 0, 0.1);
-    color: #000000;
+    background-color: rgba(13, 92, 60, 0.18);
+    color: #12150f;
   }
 
   ::-webkit-scrollbar {
@@ -49,16 +62,16 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #ffffff;
+    background: #eef1ea;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(18, 21, 15, 0.20);
     border-radius: 2px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(18, 21, 15, 0.34);
   }
 }
 
@@ -86,14 +99,14 @@
 
 /* ── Card light effect ── */
 .card-surface {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f6f8f2;
+  border: 1px solid rgba(18, 21, 15, 0.10);
   border-radius: 12px;
 }
 
 .card-surface-elevated {
-  background: #f8fafc;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #e6eae0;
+  border: 1px solid rgba(18, 21, 15, 0.14);
   border-radius: 12px;
 }
 
@@ -108,7 +121,7 @@
 
 /* ── Typography utilities ── */
 .font-display {
-  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  font-family: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
 }
 
 .text-balance {

@@ -4,6 +4,8 @@ import Home from './pages/Home'
 import CaseStudyPage from './pages/CaseStudyPage'
 import MerchantOnboardingCaseStudyPage from './pages/MerchantOnboardingCaseStudyPage'
 import ZCommerzCaseStudyPage from './pages/ZCommerzCaseStudyPage'
+import Cursor from './components/ui/Cursor'
+import Grain from './components/ui/Grain'
 
 const pageVariants = {
   initial: { opacity: 0, filter: 'blur(6px)' },
@@ -36,6 +38,8 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
+      <Grain />
+      <Cursor />
       <AnimatedRoutes />
     </BrowserRouter>
   )

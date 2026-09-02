@@ -1,152 +1,164 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 const EASE = [0.22, 1, 0.36, 1]
+const VP = { once: true, margin: '-15%' }
 
-const bioStagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0 } },
-}
-
-const bioItem = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.65, ease: EASE } },
-}
-
-const gridStagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0.1 } },
-}
-
-const gridItem = {
-  hidden: { opacity: 0, y: 20, scale: 0.97 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.55, ease: EASE } },
-}
-
-const INTERESTS = [
+/* Principles drawn from the actual case studies rather than invented for the
+   page — each names a decision that shipped, so the section reads as evidence
+   of thinking rather than a values statement. */
+const PRINCIPLES = [
   {
-    id: 'music',
-    label: 'Music',
-    headline: 'Alt-rock & nostalgic playlists',
-    detail: 'Evanescence · Radiohead · and more in rotation',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
-      </svg>
-    ),
+    title: 'One decision per screen',
+    body: 'A transfer is not one task, it is three questions. Who, how much, confirm. Splitting them cost an extra tap and removed a whole class of error.',
+    source: 'myBKB — Bangladesh Krishi Bank',
   },
   {
-    id: 'reads',
-    label: 'Reads',
-    headline: 'Stories that stay with me',
-    detail: 'Harry Potter · Pather Panchali · among favorites',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-      </svg>
-    ),
+    title: 'Separate what changes from what never does',
+    body: 'Five banks ship the same merchant app under five brands. That only holds because components bind to meaning, never to a colour. The rule matters more than any component.',
+    source: 'Bangla QR Merchant Platform',
   },
   {
-    id: 'art',
-    label: 'Hobbies',
-    headline: 'Sketching ideas & amateur art',
-    detail: 'Coffee, pen & paper',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 19l7-7 3 3-7 7-3-3z" />
-        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
-        <path d="M2 2l7.586 7.586" /><circle cx="11" cy="11" r="2" />
-      </svg>
-    ),
-  },
-  {
-    id: 'location',
-    label: 'Based in',
-    headline: 'Dhaka, Bangladesh',
-    detail: 'GMT+6 · Open to remote',
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
-      </svg>
-    ),
+    title: 'Sequence is a design tool',
+    body: 'Setting up payments is the step a shop owner is most likely to abandon. Putting it after identity and delivery meant it arrived once there was momentum to spend.',
+    source: 'ZCOMMERZ',
   },
 ]
 
+/* Real institutions the work has shipped into. Substance in place of decoration. */
+const CLIENTS = [
+  'Bangladesh Krishi Bank', 'Southeast Bank', 'NCC Bank', 'Rupali Bank',
+  'Janata Bank', 'Basic Bank', 'SSLCOMMERZ', 'UNDP', 'BAT', 'Easy Health', 'Willro',
+]
+
+function Reveal({ children, delay = 0, className = '' }) {
+  const reduce = useReducedMotion()
+  if (reduce) return <div className={className}>{children}</div>
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={VP}
+      transition={{ duration: 0.8, delay, ease: EASE }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 export default function AboutSection() {
   return (
-    <section id="about" className="py-16 lg:py-24 border-t border-border-subtle bg-surface-base">
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 items-center">
+    <section id="about" className="relative bg-surface-1 py-24 lg:py-36">
+      <div className="mx-auto max-w-[1320px] px-6 lg:px-10">
 
-          {/* ── Left: Bio ── */}
-          <motion.div
-            variants={bioStagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
-            className="lg:col-span-5"
-          >
-            <motion.div variants={bioItem} className="flex items-center gap-3 mb-4">
-              <div className="h-px w-6 bg-zinc-800/50" />
-              <span className="text-xs font-semibold text-zinc-500 tracking-widest uppercase">Who I am</span>
-            </motion.div>
+        <Reveal className="mb-14 lg:mb-20">
+          <div className="flex items-end justify-between border-t border-ink-primary pt-4">
+            <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink-muted">
+              About
+            </span>
+            <span className="hidden font-mono text-[11px] uppercase tracking-[0.24em] text-ink-muted sm:block">
+              Dhaka · Since 2018
+            </span>
+          </div>
+        </Reveal>
 
-            <div className="overflow-hidden mb-8">
-              <motion.h2
-                variants={bioItem}
-                className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink-primary tracking-tight leading-[1.1]"
-              >
-                Curious by nature.
-              </motion.h2>
+        {/* Statement — full measure, no competing image */}
+        <Reveal>
+          <h2 className="max-w-[18ch] font-display text-[clamp(2.1rem,6vw,4.75rem)] font-medium leading-[1.02] tracking-[-0.03em] text-ink-primary">
+            I design for people stepping into digital money for the{' '}
+            <em className="not-italic font-semibold text-accent decoration-accent/30 underline underline-offset-[6px]">first time</em>.
+          </h2>
+        </Reveal>
+
+        <div className="mt-14 grid grid-cols-12 gap-y-12 lg:mt-20 lg:gap-x-12">
+          <Reveal delay={0.08} className="col-span-12 lg:col-span-7">
+            <div className="grid max-w-3xl grid-cols-1 gap-x-10 gap-y-5 sm:grid-cols-2">
+              <p className="text-[15px] leading-relaxed text-ink-secondary">
+                Eight years in, most of my work has been in places where a mistake
+                costs someone real money — a farmer moving funds in rural Bangladesh,
+                a shopkeeper taking their first digital payment. That raises the bar
+                on clarity in a way a marketing site never does.
+              </p>
+              <p className="text-[15px] leading-relaxed text-ink-secondary">
+                I work across research, flows, interface and design systems, and I
+                write front-end code. Being able to build what I draw means fewer
+                decisions get quietly renegotiated between the file and the release.
+              </p>
             </div>
 
-            <motion.p variants={bioItem} className="text-base text-zinc-500 leading-relaxed mb-5">
-              UX Analyst at SSL Wireless — I design banking, healthcare, and enterprise products for people stepping into digital finance for the very first time. Making the unfamiliar feel obvious is the work.
-            </motion.p>
-
-            <motion.p variants={bioItem} className="text-[14px] text-zinc-400 leading-relaxed mb-5">
-              The same attention I give to a good story or a late-night sketch is what I bring to every screen I ship.
-            </motion.p>
-
-            <motion.div variants={bioItem} className="mt-5">
-              <span className="text-[9px] font-mono font-semibold text-zinc-400 tracking-widest uppercase block mb-3">AI in my workflow</span>
-              <div className="flex flex-wrap gap-2">
-                {['Claude', 'Antigravity', 'Cursor', 'Gemini', 'ChatGPT'].map(tool => (
-                  <span key={tool} className="text-[11px] font-medium text-zinc-500 bg-zinc-50 border border-zinc-100 px-3 py-1 rounded-full">
-                    {tool}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* ── Right: Interests ── */}
-          <motion.div
-            variants={gridStagger}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
-            className="lg:col-span-7 grid grid-cols-2 gap-x-10 gap-y-12"
-          >
-            {INTERESTS.map((item) => (
-              <motion.div key={item.id} variants={gridItem}>
-                <div className="text-zinc-200 mb-4 select-none">
-                  {item.icon}
+            <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border-default pt-7 sm:grid-cols-4">
+              {[
+                ['Based in', 'Dhaka, BD'],
+                ['Now', 'UX Analyst, SSL Wireless'],
+                ['Focus', 'Fintech · Payments'],
+                ['Also', 'Front-end build'],
+              ].map(([k, v]) => (
+                <div key={k}>
+                  <dt className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-muted">{k}</dt>
+                  <dd className="mt-1.5 text-[13px] font-semibold leading-snug text-ink-primary">{v}</dd>
                 </div>
+              ))}
+            </dl>
+          </Reveal>
 
-                <span className="text-[9px] font-mono font-semibold text-zinc-400 tracking-widest uppercase">
-                  {item.label}
-                </span>
-                <div className="w-5 h-[1.5px] bg-zinc-200 mt-1.5 mb-3 rounded-full" />
+          {/* Client index — the column that used to hold a redundant portrait */}
+          <Reveal delay={0.16} className="col-span-12 lg:col-span-4 lg:col-start-9">
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-muted">
+                Shipped into
+              </span>
+              <span className="h-px flex-1 bg-border-default" />
+            </div>
+            <ul className="mt-5 flex flex-col">
+              {CLIENTS.map((c) => (
+                <li
+                  key={c}
+                  className="border-b border-border-subtle py-2.5 text-[14px] leading-snug text-ink-secondary"
+                >
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
 
-                <p className="text-[15px] font-semibold text-ink-primary leading-snug mb-1.5">
-                  {item.headline}
-                </p>
-                <p className="text-[12.5px] text-zinc-400 leading-snug">{item.detail}</p>
-              </motion.div>
+        {/* ══ Approach ══ */}
+        <div id="think" className="mt-24 lg:mt-36">
+          <Reveal className="mb-12 lg:mb-16">
+            <div className="flex items-end justify-between border-t border-ink-primary pt-4">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink-muted">
+                Approach
+              </span>
+              <span className="hidden font-mono text-[11px] uppercase tracking-[0.24em] text-ink-muted sm:block">
+                Three rules that held
+              </span>
+            </div>
+          </Reveal>
+
+          <Reveal>
+            <p className="mb-14 max-w-2xl font-display text-[clamp(1.35rem,2.6vw,2rem)] font-normal leading-[1.22] tracking-[-0.015em] text-ink-primary">
+              I don&rsquo;t have a six-step process. I have a handful of rules that
+              survived contact with real products.
+            </p>
+          </Reveal>
+
+          <div className="border-t border-border-default">
+            {PRINCIPLES.map((p, i) => (
+              <Reveal key={p.title} delay={i * 0.08}>
+                <article className="grid grid-cols-12 gap-x-4 gap-y-3 border-b border-border-default py-9 sm:gap-x-8 lg:py-12">
+                  <h3 className="col-span-12 font-display text-[clamp(1.5rem,3vw,2.35rem)] font-medium leading-[1.06] tracking-[-0.02em] text-ink-primary sm:col-span-6">
+                    {p.title}
+                  </h3>
+                  <div className="col-span-12 sm:col-span-6">
+                    <p className="max-w-prose text-[15px] leading-relaxed text-ink-secondary">{p.body}</p>
+                    <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-muted">
+                      {p.source}
+                    </p>
+                  </div>
+                </article>
+              </Reveal>
             ))}
-          </motion.div>
-
+          </div>
         </div>
       </div>
     </section>

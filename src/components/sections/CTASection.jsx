@@ -1,95 +1,117 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { meta } from '../../data/portfolio'
-import MagneticButton from '../ui/MagneticButton'
+
+const EASE = [0.22, 1, 0.36, 1]
+const VP = { once: true, margin: '-15%' }
+
+/* Deliberately no email address here: publishing one on a public page is the
+   user's call, not a default. Add a `meta.email` and a row below to include it. */
+const CHANNELS = [
+  { label: 'LinkedIn', value: 'in/shahola-nisha', href: meta.linkedin },
+  { label: 'Dribbble', value: 'dribbble.com/shahola', href: meta.dribbble },
+]
 
 export default function CTASection() {
+  const reduce = useReducedMotion()
+
   return (
-    <section id="contact" className="py-16 lg:py-24 border-t border-border-subtle relative overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.04) 0%, transparent 70%)',
-        }}
-      />
-      <div className="absolute inset-0 bg-grid-subtle opacity-60 pointer-events-none" aria-hidden="true" />
+    <section id="contact" className="relative overflow-hidden bg-ink-primary py-24 text-paper lg:py-36">
+      <div className="mx-auto max-w-[1320px] px-6 lg:px-10">
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-10 text-center">
-        {/* Eyebrow */}
+        {/* ── Masthead ── */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center justify-center gap-3 mb-10"
+          initial={reduce ? false : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={VP}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="flex items-end justify-between border-t border-paper/30 pt-4"
         >
-          <div className="h-px w-8 bg-zinc-800/40" />
-          <div className="flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-pulse" />
-            <span className="text-xs font-medium text-zinc-500 tracking-wide">Based in Dhaka, Bangladesh</span>
-          </div>
-          <div className="h-px w-8 bg-zinc-800/40" />
+          <span className="font-mono text-[11px] uppercase tracking-[0.24em] tabular-nums text-paper/50">
+            Contact
+          </span>
+          <span className="hidden font-mono text-[11px] uppercase tracking-[0.24em] text-paper/50 sm:block">
+            Open to new work
+          </span>
         </motion.div>
 
-        {/* Headline */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.97, y: 24 }}
-          whileInView={{ opacity: 1, scale: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
-        >
-          <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl font-semibold text-ink-primary tracking-tight leading-[1.06] mb-6 text-balance">
-            Let's connect and create useful products.
-          </h2>
-        </motion.div>
+        {/* ── The statement ── */}
+        <div className="mt-16 lg:mt-24">
+          <motion.h2
+            initial={reduce ? false : { opacity: 0, y: 30, filter: 'blur(6px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={VP}
+            transition={{ duration: 1, ease: EASE }}
+            className="max-w-[14ch] font-display text-[clamp(2.75rem,10vw,8rem)] font-semibold leading-[0.9] tracking-[-0.035em]"
+          >
+            Let&rsquo;s make something{' '}
+            <em className="not-italic font-semibold text-accent decoration-accent/30 underline underline-offset-[6px]">worth using</em>.
+          </motion.h2>
+        </div>
 
-        {/* Subtext */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-base sm:text-lg text-ink-muted mb-12 max-w-2xl mx-auto leading-relaxed"
-        >
-          I design clear, thoughtful experiences for mobile banking, healthcare, education, social platforms,
-          and web applications through research, visual design, and prototyping.
-        </motion.p>
+        {/* ── Channels + action ── */}
+        <div className="mt-16 grid grid-cols-12 gap-y-12 border-t border-paper/20 pt-10 lg:mt-24 lg:gap-x-12">
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <MagneticButton strength={0.3}>
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
+            className="col-span-12 lg:col-span-5"
+          >
+            <p className="max-w-md text-[16px] leading-relaxed text-paper/70">
+              I&rsquo;m a UX Analyst at SSL Wireless in Dhaka, working across banking,
+              payments and platform products. If you&rsquo;re building something where
+              clarity actually matters, I&rsquo;d like to hear about it.
+            </p>
+
             <a
               href={meta.linkedin}
               target="_blank"
-              rel="noreferrer"
-              className="group inline-flex items-center gap-3 px-7 py-3.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-medium rounded-md transition-all duration-200 hover:shadow-xl hover:shadow-zinc-800/25 min-w-[200px] justify-center"
+              rel="noopener noreferrer"
+              className="group relative mt-9 inline-flex items-center gap-3 overflow-hidden rounded-full bg-paper px-8 py-4 text-sm font-semibold text-ink-primary transition-transform active:scale-95"
             >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M1 5L8 9.5L15 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-              Connect on LinkedIn
+              <span className="absolute inset-0 translate-y-full bg-accent transition-transform duration-500 ease-out group-hover:translate-y-0" />
+              <span className="relative z-10 transition-colors duration-300 group-hover:text-paper">
+                Start a conversation
+              </span>
+              <span className="relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:text-paper" aria-hidden="true">↗</span>
             </a>
-          </MagneticButton>
-          <MagneticButton strength={0.25}>
-            <a
-              href="#work"
-              onClick={(e) => { e.preventDefault(); document.querySelector('#work')?.scrollIntoView({ behavior: 'smooth' }) }}
-              className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium text-ink-secondary border border-border-strong rounded-md hover:border-border-strong hover:text-ink-primary transition-all duration-200"
-            >
-              Browse work first
-            </a>
-          </MagneticButton>
-        </motion.div>
+          </motion.div>
 
+          {/* Channel index */}
+          <motion.dl
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VP}
+            transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
+            className="col-span-12 lg:col-span-6 lg:col-start-7"
+          >
+            {CHANNELS.map((c) => (
+              <a
+                key={c.label}
+                href={c.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-baseline justify-between gap-6 border-b border-paper/15 py-5 transition-colors hover:border-accent"
+              >
+                <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper/50">
+                  {c.label}
+                </dt>
+                <dd className="flex items-baseline gap-3 font-display text-[1.15rem] font-medium tracking-tight text-paper transition-colors group-hover:text-accent sm:text-[1.4rem]">
+                  {c.value}
+                  <span className="text-accent opacity-40 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" aria-hidden="true">↗</span>
+                </dd>
+              </a>
+            ))}
 
+            <div className="flex items-baseline justify-between gap-6 border-b border-paper/15 py-5">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper/50">Based in</span>
+              <span className="font-display text-[1.15rem] font-medium tracking-tight text-paper sm:text-[1.4rem]">
+                {meta.location}
+              </span>
+            </div>
+          </motion.dl>
+        </div>
       </div>
     </section>
   )

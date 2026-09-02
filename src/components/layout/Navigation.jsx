@@ -12,9 +12,19 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('')
   const [mobileOpen, setMobileOpen] = useState(false)
+  // The hero carries its own editorial nav on a dark scene. This light header
+  // stays out of the way until the hero has been scrolled past, so the two
+  // navigations never overlap or fight for the same corner.
+  const [pastHero, setPastHero] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40)
+      const hero = document.getElementById('hero')
+      const threshold = hero ? hero.offsetHeight - 90 : window.innerHeight * 0.85
+      setPastHero(window.scrollY > threshold)
+    }
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -42,10 +52,13 @@ export default function Navigation() {
   return (
     <>
       <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        initial={false}
+        animate={pastHero ? { y: 0, opacity: 1 } : { y: -72, opacity: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        aria-hidden={!pastHero}
+        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 ${
+          pastHero ? '' : 'pointer-events-none'
+        } ${
           scrolled
             ? 'bg-surface-base/90 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_28px_rgba(0,0,0,0.07)]'
             : 'bg-transparent shadow-none'
