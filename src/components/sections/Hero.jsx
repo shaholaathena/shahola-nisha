@@ -19,10 +19,10 @@ const NAV = [
    stops being wallpaper and starts reading as a designer's artifact: the
    metaphor is stated once, quietly, in the vocabulary of a spec. */
 const NOTES = [
-  { key: 'moon', label: 'Vision', top: '17%', right: '4%', align: 'right' },
-  { key: 'mtn', label: 'Complexity', top: '46%', right: '4%', align: 'right' },
-  { key: 'city', label: 'Products', top: '61%', right: '4%', align: 'right' },
-  { key: 'sea', label: 'Impact', top: '79%', right: '4%', align: 'right' },
+  // One annotation per object actually in the scene. Pointing a label at empty
+  // sky would be decoration, so the list grows and shrinks with NightScene.
+  { key: 'moon', label: 'Vision', top: '42%', right: '20%' },
+  { key: 'city', label: 'Clarity', top: '68%', right: '28%' },
 ]
 
 function Annotation({ label, top, right }) {
@@ -60,11 +60,7 @@ export default function Hero() {
         .from('[data-layer="sky"]', { opacity: 0, duration: 1.6 }, 0)
         .from('[data-layer="moon"]', { opacity: 0, y: 46, scale: 0.94, duration: 2.0 }, 0.15)
         .from('[data-layer="stars"]', { opacity: 0, duration: 2.0 }, 0.3)
-        .from('[data-layer="mtn-back"]', { opacity: 0, y: 30, duration: 1.5 }, 0.35)
-        .from('[data-layer="mtn-fore"]', { opacity: 0, y: 34, duration: 1.5 }, 0.45)
-        .from('[data-layer="city"]', { opacity: 0, y: 24, duration: 1.4 }, 0.6)
-        .from(['[data-layer="sea"]', '[data-layer="reflection"]'], { opacity: 0, duration: 1.6 }, 0.7)
-        .from('[data-layer="foreground"]', { opacity: 0, y: 24, duration: 1.2 }, 0.8)
+        .from('[data-layer="city"]', { opacity: 0, y: 14, duration: 1.9 }, 0.4)
         .from('[data-nav]', { opacity: 0, y: -10, duration: 0.8, stagger: 0.05 }, 0.5)
         .from('[data-eyebrow]', { opacity: 0, y: 14, duration: 0.8 }, 0.85)
         .from('[data-line]', { opacity: 0, yPercent: 108, duration: 1.05, stagger: 0.09 }, 0.95)
@@ -107,14 +103,13 @@ export default function Hero() {
             .to('[data-layer="stars"]', { yPercent: 12, opacity: 0.45 }, 0)
             .to('[data-layer="moon"]', { yPercent: 30, scale: 1.05 }, 0)
             .to('[data-layer="clouds"]', { yPercent: 20 }, 0)
-            .to('[data-layer="mtn-back"]', { yPercent: 24 }, 0)
-            .to('[data-layer="mtn-fore"]', { yPercent: 36 }, 0)
-            .to('[data-layer="city"]', { yPercent: 48 }, 0)
-            .to('[data-layer="city-lights"]', { opacity: 1.6 }, 0)
-            .to('[data-layer="sea"]', { yPercent: 26 }, 0)
-            .to('[data-layer="reflection"]', { yPercent: 14, opacity: 0.7 }, 0)
-            .to('[data-layer="reflected-stars"]', { yPercent: 8, opacity: 0.4 }, 0)
-            .to('[data-layer="foreground"]', { yPercent: 66 }, 0)
+            .to('[data-layer="glow"]', { yPercent: 10, opacity: 0.6 }, 0)
+            /* The city is full-bleed now, so it gets a SMALL drift. A large one
+               would haul its masked top edge down into the frame and expose the
+               fade as a band. Its windows still brighten as the scene advances,
+               which is the one beat of the old version worth keeping. */
+            .to('[data-layer="city"]', { yPercent: 8 }, 0)
+            .to('[data-layer="city-lights"]', { opacity: 0.9 }, 0)
             .to('[data-copy]', { yPercent: -34, opacity: 0, ease: 'power1.in' }, 0)
             .to('[data-note]', { opacity: 0, ease: 'power1.in' }, 0)
 
@@ -213,8 +208,8 @@ export default function Hero() {
       </nav>
 
       {/* ── Scene annotations ── */}
-      {NOTES.map((n) => (
-        <Annotation key={n.key} {...n} />
+      {NOTES.map(({ key, ...note }) => (
+        <Annotation key={key} {...note} />
       ))}
 
       {/* ── Left rail: scroll affordance + place ── */}
@@ -287,6 +282,13 @@ export default function Hero() {
         data-rail
         className="absolute bottom-9 right-6 z-20 hidden text-right lg:right-10 lg:block"
       >
+        {/* The city sits behind this corner, so the HUD carries a scrim of its
+            own — local, so the skyline stays lit everywhere else. */}
+        <div
+          className="pointer-events-none absolute -inset-x-8 -bottom-6 -top-4 -z-10"
+          aria-hidden="true"
+          style={{ background: 'radial-gradient(ellipse 100% 100% at 78% 60%, rgba(5,8,26,0.78) 0%, rgba(5,8,26,0.42) 52%, transparent 82%)' }}
+        />
         <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#8f96b8]">
           23.8103° N, 90.4125° E
         </p>
@@ -295,12 +297,6 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* ── Transition into the light page below ── */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-16"
-        style={{ background: 'linear-gradient(to bottom, transparent, #eef1ea)' }}
-        aria-hidden="true"
-      />
     </section>
   )
 }
