@@ -2,11 +2,33 @@ import { useRef, useLayoutEffect } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NightScene from '../hero/NightScene'
+import NeonTicker from '../hero/NeonTicker'
 
 gsap.registerPlugin(ScrollTrigger)
 
-/* Editorial nav. Numbered because these ARE an ordered route through the
-   portfolio, not decoration — the order is the argument. */
+/* ─────────────────────────────────────────────────────────────────────────────
+   Hero.
+
+   The scene is a night city. NightScene builds the place and mounts
+   ProcessWindows inside its city layer — those light real windows in the
+   artwork to walk through her six process phases, so they have to move with it.
+   NeonTicker states the facts, and this file orchestrates the whole.
+
+   Two things were REMOVED from the earlier version rather than restyled, and
+   the omissions matter as much as the additions:
+
+     · The "Vision" / "Clarity" redline annotations. Once the traces label
+       arrivals with real states, a second annotation vocabulary pointing
+       abstract nouns at scenery only competed with it.
+     · The bottom-right coordinates HUD, which said what the ticker now says.
+
+   Motion budget. Every ambient loop lives in CSS (NightScene, NeonTicker) so
+   this timeline owns only the orchestrated moments: one entrance, one scroll
+   push, and pointer response. Continuous motion is transform/opacity only; the
+   two exceptions — the headline's width axis and its chromatic split — run once
+   on entrance and then never again.
+   ───────────────────────────────────────────────────────────────────────────── */
+
 const NAV = [
   { n: '01', label: 'Home', href: '#hero' },
   { n: '02', label: 'Work', href: '#work' },
@@ -15,81 +37,106 @@ const NAV = [
   { n: '05', label: 'Contact', href: '#contact' },
 ]
 
-/* Scene annotations, set like design redlines. This is where the landscape
-   stops being wallpaper and starts reading as a designer's artifact: the
-   metaphor is stated once, quietly, in the vocabulary of a spec. */
-const NOTES = [
-  // One annotation per object actually in the scene. Pointing a label at empty
-  // sky would be decoration, so the list grows and shrinks with NightScene.
-  { key: 'moon', label: 'Vision', top: '42%', right: '20%' },
-  { key: 'city', label: 'Clarity', top: '68%', right: '28%' },
+/* The thesis, broken by hand. "clear" is the hinge of the sentence and gets the
+   hot accent; the full stop is cyan because it is the arrival — the same colour
+   the settlement traces use when something lands. */
+const HEADLINE = [
+  { plain: 'I turn complex' },
+  { plain: 'problems into' },
+  { plain: '', accent: 'clear', tail: ' experiences', stop: true },
 ]
-
-function Annotation({ label, top, right }) {
-  return (
-    <div
-      data-note
-      className="pointer-events-none absolute hidden items-center gap-3 xl:flex"
-      style={{ top, right }}
-    >
-      <span className="h-px w-10 bg-[rgba(190,182,240,0.45)]" />
-      <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#b9b2e6]">{label}</span>
-    </div>
-  )
-}
 
 export default function Hero() {
   const root = useRef(null)
+  const cta = useRef(null)
 
   useLayoutEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia()
 
-      /* ── Entrance. One orchestrated sequence: the world settles, then the
-            argument arrives. Long, soft easing — this is establishing a shot,
-            not demoing a technique.
+      /* ══ ENTRANCE ═══════════════════════════════════════════════════════════
+            One establishing shot: the void resolves into a place, the place
+            switches on, then the argument arrives. Long soft easing — this is a
+            camera settling, not a demo reel.
 
-            Note the failsafe below: every tween here is a `.from()`, which
-            parks the element at opacity 0 until the timeline runs. If it never
-            runs — reduced motion, a background tab with throttled rAF, a stalled
-            main thread — the hero would render blank. Content must never depend
-            on an animation to become visible, so we force the end state. ── */
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            Every tween is a `.from()`, which parks its target at opacity 0 until
+            the timeline runs. If it never runs — reduced motion, a throttled
+            background tab, a stalled main thread — the hero would render blank,
+            so the end state is forced below. Content must never depend on an
+            animation to become visible. ══ */
       const intro = gsap.timeline({ defaults: { ease: 'power3.out' }, paused: reduced })
-      intro
-        .from('[data-layer="sky"]', { opacity: 0, duration: 1.6 }, 0)
-        .from('[data-layer="moon"]', { opacity: 0, y: 46, scale: 0.94, duration: 2.0 }, 0.15)
-        .from('[data-layer="stars"]', { opacity: 0, duration: 2.0 }, 0.3)
-        .from('[data-layer="city"]', { opacity: 0, y: 14, duration: 1.9 }, 0.4)
-        .from('[data-nav]', { opacity: 0, y: -10, duration: 0.8, stagger: 0.05 }, 0.5)
-        .from('[data-eyebrow]', { opacity: 0, y: 14, duration: 0.8 }, 0.85)
-        .from('[data-line]', { opacity: 0, yPercent: 108, duration: 1.05, stagger: 0.09 }, 0.95)
-        .from('[data-sub]', { opacity: 0, y: 16, duration: 0.9 }, 1.35)
-        .from('[data-cta]', { opacity: 0, y: 16, duration: 0.9 }, 1.5)
-        .from('[data-rail]', { opacity: 0, duration: 1 }, 1.5)
-        .from('[data-note]', { opacity: 0, x: 18, duration: 0.9, stagger: 0.12 }, 1.6)
 
-      // Reduced motion: skip straight to the composed frame.
+      /* Retimed to roughly half its original length. The first version put the
+         headline's first line at 1.45s and did not finish the copy until 3.3s —
+         three seconds before the page's own argument could be read. Nobody
+         waits that out. The whole sequence now lands by ~1.6s, with the
+         headline complete at ~1.25s, and the establishing beats compress into
+         the space before it rather than delaying it. */
+      intro
+        .from('[data-layer="sky"]', { opacity: 0, duration: 0.7 }, 0)
+        .from('[data-layer="stars"]', { opacity: 0, duration: 1.0 }, 0.1)
+        .from('[data-layer="twinkle"]', { opacity: 0, duration: 1.0 }, 0.2)
+        /* Before the city, so the horizon builds back to front: the range is
+           already there when the skyline rises in front of it. */
+        .from('[data-layer="mountains"]', { opacity: 0, duration: 0.9 }, 0.1)
+        .from('[data-layer="city"]', { opacity: 0, y: 12, duration: 0.9 }, 0.12)
+
+        /* The sweep. A neon bar runs up the city once and the windows appear to
+           light as it passes — the moment the place switches on. */
+        .set('[data-layer="scan"]', { opacity: 1 }, 0.25)
+        .fromTo('[data-layer="scan"]',
+          { top: '100%' },
+          { top: '-38%', duration: 0.75, ease: 'power2.inOut' }, 0.25)
+        .set('[data-layer="scan"]', { opacity: 0 }, 1.0)
+
+        .from('[data-layer="city-neon"]', { opacity: 0, duration: 0.7 }, 0.5)
+        .from('[data-layer="shafts"]', { opacity: 0, duration: 0.9 }, 0.6)
+        /* The comet layer has to be up well before the first comet crosses at
+           ~1.8s, or that crossing is spent fading in and nobody sees it. */
+        .from('[data-layer="comet"]', { opacity: 0, duration: 0.7 }, 0.5)
+        .from('[data-layer="moon"]', { opacity: 0, y: 26, scale: 0.96, duration: 1.1 }, 0.2)
+
+        .from('[data-nav]', { opacity: 0, y: -8, duration: 0.5, stagger: 0.04 }, 0.35)
+        .from('[data-eyebrow]', { opacity: 0, y: 10, duration: 0.5 }, 0.45)
+
+        /* The thesis. Lines clip up out of their own mask, the width axis opens
+           from compressed to normal, and a chromatic split resolves to zero —
+           three properties, one gesture, once. A headline that keeps glitching
+           is a headline nobody finishes reading. */
+        .from('[data-line]', { yPercent: 112, duration: 0.62, stagger: 0.06 }, 0.5)
+        .fromTo('[data-headline]',
+          { '--hero-wdth': 78, '--hero-gx': 7 },
+          { '--hero-wdth': 100, '--hero-gx': 0, duration: 0.73, ease: 'power2.out' }, 0.52)
+
+        .from('[data-sub]', { opacity: 0, y: 12, duration: 0.6 }, 0.8)
+        .from('[data-cta]', { opacity: 0, y: 12, duration: 0.6 }, 0.9)
+        .from('[data-rail]', { opacity: 0, duration: 0.65 }, 0.95)
+        .from('[data-ticker]', { opacity: 0, y: 14, duration: 0.6 }, 1.0)
+
+      // Reduced motion: straight to the composed frame.
       if (reduced) intro.progress(1)
 
-      // Failsafe for a throttled or stalled ticker — timers keep running even
-      // when requestAnimationFrame does not, so the hero always resolves.
+      /* Failsafe for a throttled or stalled ticker. Timers keep running when
+         requestAnimationFrame does not, so the hero always resolves. */
       const failsafe = setTimeout(() => {
         if (intro.progress() < 0.99) intro.progress(1)
-      }, 4000)
+      }, 2600)
 
-      /* ── Scroll choreography. Layer speeds are ordered by depth: sky barely
-            moves, foreground moves most. The city brightens as it comes forward,
-            and the reflection drifts against the sky so the water reads as a
-            surface rather than a mirror. ── */
       mm.add(
         {
           motion: '(prefers-reduced-motion: no-preference)',
-          desktop: '(min-width: 768px) and (prefers-reduced-motion: no-preference)',
+          pointer: '(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)',
         },
         (context) => {
           if (!context.conditions.motion) return
 
+          /* ══ SCROLL: a camera push into the city ════════════════════════════
+                A push, not a drift: the city grows and drops while the sky
+                recedes, so the frame reads as moving INTO the scene. The city's
+                own travel stays small — a large one would haul its masked top
+                edge down and expose the fade as a band. ══ */
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: root.current,
@@ -99,29 +146,79 @@ export default function Hero() {
             },
           })
 
-          tl.to('[data-layer="sky"]', { yPercent: 6 }, 0)
-            .to('[data-layer="stars"]', { yPercent: 12, opacity: 0.45 }, 0)
-            .to('[data-layer="moon"]', { yPercent: 30, scale: 1.05 }, 0)
-            .to('[data-layer="clouds"]', { yPercent: 20 }, 0)
-            .to('[data-layer="glow"]', { yPercent: 10, opacity: 0.6 }, 0)
-            /* The city is full-bleed now, so it gets a SMALL drift. A large one
-               would haul its masked top edge down into the frame and expose the
-               fade as a band. Its windows still brighten as the scene advances,
-               which is the one beat of the old version worth keeping. */
-            .to('[data-layer="city"]', { yPercent: 8 }, 0)
+          tl.to('[data-layer="sky"]', { yPercent: 5, scale: 1.04 }, 0)
+            .to('[data-layer="stars"]', { yPercent: 10, opacity: 0.4 }, 0)
+            .to('[data-layer="moon"]', { yPercent: 34, scale: 1.06 }, 0)
+            .to('[data-layer="clouds"]', { yPercent: 18 }, 0)
+            /* Least travel of anything on the horizon, and it hazes out as the
+               city comes forward — distance behaving like distance. */
+            .to('[data-layer="mountains"]', { yPercent: 4, opacity: 0.55 }, 0)
+            .to('[data-layer="city"]', { yPercent: 7, scale: 1.1 }, 0)
+            /* The city brightens as you move into it — the one beat carried over
+               from every earlier version of this scene. */
             .to('[data-layer="city-lights"]', { opacity: 0.9 }, 0)
-            .to('[data-copy]', { yPercent: -34, opacity: 0, ease: 'power1.in' }, 0)
-            .to('[data-note]', { opacity: 0, ease: 'power1.in' }, 0)
+            .to('[data-layer="city-neon"]', { opacity: 1.3 }, 0)
+            .to('[data-layer="shafts"]', { opacity: 1.4, yPercent: 6 }, 0)
+            .to('[data-layer="glow"]', { yPercent: 8, opacity: 0.65 }, 0)
+            .to('[data-copy]', { yPercent: -32, opacity: 0, ease: 'power1.in' }, 0)
+            .to('[data-ticker]', { yPercent: 100, opacity: 0, ease: 'power1.in' }, 0)
 
-          /* Slow ambient drift on the moon's orbit — ~40s, below the threshold
-             where it reads as animation and above where it reads as static. */
-          gsap.to('[data-layer="orbit"]', {
-            rotation: 360,
-            duration: 240,
-            repeat: -1,
-            ease: 'none',
-            transformOrigin: '50% 50%',
-          })
+          /* ══ POINTER: the frame answers the cursor ═══════════════════════════
+                Layers offset by depth and in opposite directions across the
+                horizon, so moving the mouse looks THROUGH the scene rather than
+                sliding a picture. `quickTo` rewrites one existing tween instead
+                of creating one per mousemove — the difference is a hundred
+                tweens a second versus none.
+
+                Fine pointers on wide screens only: touch has no hover state to
+                answer, and this should never compete with a scroll gesture. ══ */
+          if (!context.conditions.pointer) return
+
+          const depth = [
+            ['[data-layer="stars"]', 10],
+            ['[data-layer="clouds"]', 16],
+            ['[data-layer="mountains"]', 8],
+            ['[data-layer="moon"]', 22],
+            ['[data-layer="shafts"]', -14],
+            ['[data-layer="city"]', -20],
+          ]
+          const setters = depth.map(([sel, amount]) => ({
+            x: gsap.quickTo(sel, 'x', { duration: 0.9, ease: 'power3.out' }),
+            y: gsap.quickTo(sel, 'y', { duration: 0.9, ease: 'power3.out' }),
+            amount,
+          }))
+
+          const onMove = (e) => {
+            const nx = e.clientX / window.innerWidth - 0.5
+            const ny = e.clientY / window.innerHeight - 0.5
+            setters.forEach(({ x, y, amount }) => {
+              x(nx * amount)
+              y(ny * amount * 0.5)
+            })
+          }
+          window.addEventListener('mousemove', onMove, { passive: true })
+
+          /* The call to action leans toward the cursor — a few pixels only, and
+             only within its own bounds. Enough to register as responsive; not
+             enough to move the target away from someone aiming at it. */
+          const btn = cta.current
+          const toX = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3.out' })
+          const toY = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3.out' })
+
+          const onBtnMove = (e) => {
+            const r = btn.getBoundingClientRect()
+            toX(((e.clientX - (r.left + r.width / 2)) / r.width) * 14)
+            toY(((e.clientY - (r.top + r.height / 2)) / r.height) * 10)
+          }
+          const onBtnLeave = () => { toX(0); toY(0) }
+          btn.addEventListener('mousemove', onBtnMove)
+          btn.addEventListener('mouseleave', onBtnLeave)
+
+          return () => {
+            window.removeEventListener('mousemove', onMove)
+            btn.removeEventListener('mousemove', onBtnMove)
+            btn.removeEventListener('mouseleave', onBtnLeave)
+          }
         }
       )
 
@@ -140,24 +237,24 @@ export default function Hero() {
     <section
       id="hero"
       ref={root}
-      className="relative min-h-[100svh] w-full overflow-hidden bg-[#05081a] text-[#e9ecfa]"
+      className="relative min-h-[100svh] w-full overflow-hidden bg-hero-void text-hero-ink"
     >
       <NightScene />
 
-      {/* Directional scrim. The landscape is the atmosphere, but the argument
-          has to win: this keeps the type on a dark field regardless of what the
-          city lights are doing behind it, and biases the composition left so
-          the copy reads first and the scene reads second. */}
+      {/* Directional scrim. The city is the atmosphere; the argument has to win.
+          This keeps the type on a dark field whatever the neons are doing behind
+          it, and biases the composition left so the copy reads first. */}
       <div
         className="pointer-events-none absolute inset-0 z-10"
         aria-hidden="true"
         style={{
           background:
-            'linear-gradient(100deg, rgba(5,8,26,0.94) 0%, rgba(5,8,26,0.82) 26%, rgba(5,8,26,0.45) 48%, rgba(5,8,26,0.08) 68%, transparent 84%)',
+            'linear-gradient(100deg, rgba(5,7,15,0.94) 0%, rgba(5,7,15,0.82) 26%, rgba(5,7,15,0.44) 48%, rgba(5,7,15,0.08) 68%, transparent 84%)',
         }}
       />
 
-      {/* ── Editorial nav ── */}
+      {/* ── Nav. The numbers stay because they are indices into an ordered route
+             through the work, and mono is the register this site reads data in. ── */}
       <nav
         className="absolute inset-x-0 top-0 z-30 mx-auto flex max-w-[1440px] items-start justify-between px-6 pt-7 lg:px-10 lg:pt-9"
         aria-label="Primary"
@@ -166,9 +263,10 @@ export default function Hero() {
           href="#hero"
           onClick={(e) => go(e, '#hero')}
           data-nav
-          className="font-display text-[1.6rem] font-semibold leading-none tracking-tight text-[#f2f4ff]"
+          className="font-display text-[1.6rem] font-semibold leading-none tracking-tight text-white"
+          style={{ textShadow: '0 0 18px rgba(255,46,136,0.45)' }}
         >
-          A<span className="text-[#a99cf0]">.</span>
+          A<span className="text-hero-magenta">.</span>
         </a>
 
         <ul className="hidden items-start gap-7 md:flex lg:gap-10">
@@ -177,74 +275,78 @@ export default function Hero() {
               <a
                 href={item.href}
                 onClick={(e) => go(e, item.href)}
-                className="group block text-center"
+                className="hero-navlink group block text-center"
                 aria-current={i === 0 ? 'page' : undefined}
               >
-                <span className="block font-mono text-[9px] tabular-nums text-[#a99cf0]/70 transition-colors group-hover:text-[#a99cf0]">
+                <span className="block font-mono text-[9px] tabular-nums text-hero-cyan/60 transition-colors duration-200 group-hover:text-hero-cyan">
                   {item.n}
                 </span>
-                <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#c3c9e6] transition-colors group-hover:text-white lg:text-[11px]">
+                <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#c3c9e6] transition-colors duration-200 group-hover:text-white lg:text-[11px]">
                   {item.label}
                 </span>
                 <span
-                  className={`mx-auto mt-1.5 block h-px bg-[#a99cf0] transition-all duration-300 ${
-                    i === 0 ? 'w-5' : 'w-0 group-hover:w-5'
-                  }`}
+                  className="hero-underline mx-auto mt-1.5 block h-[1.5px] w-5 bg-hero-magenta"
+                  style={{ boxShadow: '0 0 10px rgba(255,46,136,0.8)' }}
                 />
               </a>
             </li>
           ))}
         </ul>
 
-        {/* compact entry point on small screens */}
         <a
           href="#work"
           onClick={(e) => go(e, '#work')}
           data-nav
-          className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#c3c9e6] underline decoration-[#a99cf0]/50 underline-offset-[6px] md:hidden"
+          className="font-mono text-[10px] uppercase tracking-[0.2em] text-hero-cyan underline decoration-hero-cyan/40 underline-offset-[6px] md:hidden"
         >
           Work
         </a>
       </nav>
 
-      {/* ── Scene annotations ── */}
-      {NOTES.map(({ key, ...note }) => (
-        <Annotation key={key} {...note} />
-      ))}
-
-      {/* ── Left rail: scroll affordance + place ── */}
+      {/* ── Left rail, raised clear of the ticker ── */}
       <div
         data-rail
-        className="absolute bottom-10 left-6 z-20 hidden flex-col items-center gap-4 lg:left-10 lg:flex"
+        className="absolute bottom-20 left-6 z-20 hidden flex-col items-center gap-4 lg:left-10 lg:flex"
       >
-        <span className="h-16 w-px bg-gradient-to-b from-transparent to-[#a99cf0]/60" />
-        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#8f96b8] [writing-mode:vertical-rl]">
+        <span className="h-16 w-px bg-gradient-to-b from-transparent to-hero-cyan/70" />
+        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-hero-mute [writing-mode:vertical-rl]">
           Scroll
         </span>
       </div>
 
       {/* ── The argument ── */}
-      <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-[1440px] items-center px-6 pb-24 pt-28 lg:px-10">
+      <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-[1440px] items-center px-6 pb-32 pt-28 lg:px-10">
         <div data-copy className="w-full max-w-[46rem]">
 
           <div data-eyebrow className="mb-6 flex items-center gap-3">
-            <span className="text-[#a99cf0]">✳</span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#a99cf0] sm:text-[11px]">
+            <span
+              className="h-[5px] w-[5px] rotate-45 bg-hero-magenta"
+              style={{ boxShadow: '0 0 12px rgba(255,46,136,0.9)' }}
+            />
+            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-hero-cyan sm:text-[11px]">
               UX / Product Designer
             </span>
           </div>
 
-          <h1 className="font-display font-semibold leading-[1.04] tracking-[-0.03em] text-[clamp(2.3rem,6.2vw,4.9rem)]">
-            {['I turn complex problems', 'into '].map((line, i) => (
-              <span key={i} className="block overflow-hidden">
+          {/* Lines are explicit, not left to wrapping. At this size the browser
+              broke "I turn complex problems" mid-phrase and produced a fourth
+              line, which also meant two visual lines sharing one clip mask and
+              one reveal. Declaring the breaks puts the payoff on its own line
+              and gives the stagger three real units to work with.
+
+              `pb/-mb` on each mask: the mask has to clear descenders — the p in
+              "problems" — without the padding changing the line spacing. */}
+          <h1
+            data-headline
+            className="hero-headline hero-split leading-[1.06] tracking-[-0.03em] text-[clamp(2.3rem,6.2vw,4.9rem)]"
+          >
+            {HEADLINE.map((line, i) => (
+              <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
                 <span data-line className="inline-block">
-                  {line}
-                  {i === 1 && (
-                    <>
-                      <span className="text-[#a99cf0]">clear</span> experiences
-                      <span className="text-[#a99cf0]">.</span>
-                    </>
-                  )}
+                  {line.plain}
+                  {line.accent && <span className="text-hero-magenta">{line.accent}</span>}
+                  {line.tail}
+                  {line.stop && <span className="text-hero-cyan">.</span>}
                 </span>
               </span>
             ))}
@@ -258,45 +360,27 @@ export default function Hero() {
 
           <div data-cta className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
             <a
+              ref={cta}
               href="#work"
               onClick={(e) => go(e, '#work')}
-              className="group inline-flex items-center gap-4"
+              className="group inline-flex items-center gap-4 transition-transform duration-150 active:scale-[0.97]"
             >
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-[#e9ecfa]">
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-hero-ink">
                 Explore my work
               </span>
-              <span className="relative flex h-9 w-9 items-center justify-center rounded-full border border-[#a99cf0]/50 transition-colors duration-300 group-hover:border-[#a99cf0] group-hover:bg-[#a99cf0]/15">
-                <span className="text-[#a99cf0] transition-transform duration-300 group-hover:translate-x-0.5">→</span>
+              <span className="relative flex h-10 w-10 items-center justify-center rounded-full border border-hero-magenta/50 transition-colors duration-200 group-hover:border-hero-magenta group-hover:bg-hero-magenta/15 group-hover:shadow-[0_0_22px_rgba(255,46,136,0.45)]">
+                <span className="text-hero-magenta transition-transform duration-200 group-hover:translate-x-0.5">→</span>
               </span>
             </a>
             <span className="hidden h-8 w-px bg-white/15 sm:block" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#8f96b8]">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-hero-mute">
               8 yrs · Dhaka, BD
             </span>
           </div>
         </div>
       </div>
 
-      {/* ── Coordinates: a quiet HUD note that places the work, not decoration ── */}
-      <div
-        data-rail
-        className="absolute bottom-9 right-6 z-20 hidden text-right lg:right-10 lg:block"
-      >
-        {/* The city sits behind this corner, so the HUD carries a scrim of its
-            own — local, so the skyline stays lit everywhere else. */}
-        <div
-          className="pointer-events-none absolute -inset-x-8 -bottom-6 -top-4 -z-10"
-          aria-hidden="true"
-          style={{ background: 'radial-gradient(ellipse 100% 100% at 78% 60%, rgba(5,8,26,0.78) 0%, rgba(5,8,26,0.42) 52%, transparent 82%)' }}
-        />
-        <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#8f96b8]">
-          23.8103° N, 90.4125° E
-        </p>
-        <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-[#6f7699]">
-          Between ideas and impact
-        </p>
-      </div>
-
+      <NeonTicker />
     </section>
   )
 }

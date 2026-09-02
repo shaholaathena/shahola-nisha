@@ -147,3 +147,155 @@
   border-radius: inherit;
 }
 
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   HERO — neon night city
+   ═════════════════════════════════════════════════════════════════════════════
+   Scoped to the hero on purpose. The rest of the site is cheque-stock paper and
+   intaglio green; the hero is the one place that goes dark and loud, so these
+   tokens are named `hero-*` and nothing outside `#hero` should reach for them.
+
+   The palette is two neons over a near-black void. Two, not three: a third
+   accent turned the skyline to mush every time. Magenta is the hot one and
+   carries the brand; cyan reads as data and settlement. `--color-hero-violet`
+   is the existing site accent, kept as a bridge so the hero still belongs to
+   the same portfolio rather than looking like a different website.
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  --color-hero-void: #05070f;
+  --color-hero-deep: #0a1030;
+  --color-hero-magenta: #ff2e88;
+  --color-hero-cyan: #22e5ff;
+  --color-hero-violet: #a99cf0;
+  --color-hero-ink: #e9ecfa;
+  --color-hero-mute: #8f96b8;
+
+  /* Motion. Authored once here so nothing hand-rolls a cubic-bezier inline. */
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-quint: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* ── Comet. One rare event instead of a field of rain.
+
+      Most of each cycle is spent invisible: the streak travels only between 3%
+      and 15% of its loop, so it crosses in a second or two and then that patch
+      of sky is empty for the rest. That is the point — a thing you catch
+      sometimes reads as a real sky, where forty streaks looping every second
+      read as an effect.
+
+      Three of them share this keyframe, differing only in the variables each
+      one sets. Their durations are 17s, 11s and 23s: pairwise coprime, and none
+      of them a multiple of the process walk's ~10s, so no two events ever lock
+      into a visible rhythm. Negative delays start each one part-way through its
+      own cycle, so the sky is not empty for the first ten seconds and they do
+      not all arrive together.
+
+      Travel is `translate3d` along the element's own X; the corridor's angle
+      lives on a parent wrapper, because a rotate and an animated translate
+      cannot share one transform property.
+
+      The distance comes from `--comet-run`, set on that wrapper, which also
+      sizes it. One number governs both the corridor's length and the travel —
+      the two were separate literals at first, and a corridor that does not
+      match its own travel distance fails silently. ── */
+@keyframes hero-comet {
+  0%, 3%    { transform: translate3d(0, 0, 0); opacity: 0; }
+  5%        { opacity: 1; }
+  12%       { opacity: 1; }
+  15%, 100% { transform: translate3d(var(--comet-run), 0, 0); opacity: 0; }
+}
+
+/* ── Twinkle. The dense star field is a supplied image, so its stars cannot be
+      animated individually; this drives a second, sparse layer of drawn stars
+      on top of it. Per-star min and max opacity, so the layer has bright stars
+      that pulse hard and faint ones that barely move, rather than one uniform
+      blink. Scale moves with it — a real star scintillates in brightness, and a
+      touch of size sells that at 2px better than opacity alone. ── */
+@keyframes hero-twinkle {
+  /* Asymmetric on purpose: a longer hold near the trough, then a quick rise to
+     the peak and a quick fall back. The old symmetric 0-50-100 swell was read
+     as breathing rather than blinking, because nothing in it was fast. */
+  0%, 100% { opacity: var(--tw-min); transform: scale(0.65); }
+  38%      { opacity: var(--tw-min); transform: scale(0.7); }
+  52%      { opacity: var(--tw-max); transform: scale(1.15); }
+  66%      { opacity: var(--tw-min); transform: scale(0.7); }
+}
+
+/* ── Light shafts, breathing. Slow enough to sit below conscious notice. ── */
+@keyframes hero-shaft {
+  0%, 100% { opacity: 0.30; transform: scaleX(1); }
+  50%      { opacity: 0.58; transform: scaleX(1.14); }
+}
+
+/* ── Ticker. Linear, because constant motion should not accelerate. ── */
+@keyframes hero-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.hero-comet      { animation: hero-comet var(--comet-dur) linear infinite var(--comet-delay); }
+.hero-twinkle    { animation: hero-twinkle var(--tw-dur) ease-in-out infinite var(--tw-delay); }
+.hero-shaft      { animation: hero-shaft 11s var(--ease-in-out-quint) infinite; }
+.hero-marquee    { animation: hero-marquee 38s linear infinite; }
+
+/* Ambient loops are atmosphere, never information — so they simply stop. The
+   composed frame has to be complete without any of them. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-comet,
+  .hero-twinkle,
+  .hero-shaft,
+  .hero-marquee { animation: none !important; }
+  .hero-comet { opacity: 0 !important; }
+}
+
+/* ── Registered so they interpolate as numbers rather than flipping between
+      keyframes. Both are driven by GSAP during the hero's entrance only:
+      `--hero-wdth` is Bricolage Grotesque's width axis, `--hero-gx` is the
+      chromatic split offset on the headline. ── */
+@property --hero-wdth {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 100;
+}
+
+@property --hero-gx {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+/* ── The headline. Bricolage is a variable face and this is the one place the
+      site uses its width axis: the type arrives compressed and opens out. Both
+      axes are named explicitly, because setting font-variation-settings for
+      one axis makes `font-weight` unreliable for the other. ── */
+.hero-headline {
+  font-family: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+  font-variation-settings: 'wght' 700, 'wdth' var(--hero-wdth);
+  font-weight: 700;
+}
+
+/* Chromatic split. Paint-only and short-lived — it runs once on entrance and
+   resolves to 0, so it never sits in a continuous animation. */
+.hero-split {
+  text-shadow:
+    calc(var(--hero-gx) * -1px) 0 rgba(255, 46, 136, 0.85),
+    calc(var(--hero-gx) * 1px) 0 rgba(34, 229, 255, 0.85);
+}
+
+/* Neon underline that draws from the left on hover. `transform` only, so it
+   stays on the compositor. */
+.hero-underline {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 200ms var(--ease-out-quint);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-navlink:hover .hero-underline { transform: scaleX(1); }
+}
+.hero-navlink[aria-current='page'] .hero-underline { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-split { text-shadow: none; }
+  .hero-headline { font-variation-settings: 'wght' 700, 'wdth' 100; }
+}
