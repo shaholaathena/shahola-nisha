@@ -1,8 +1,11 @@
 import { useRef, useLayoutEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NightScene from '../hero/NightScene'
 import NeonTicker from '../hero/NeonTicker'
+import logo from '../../assets/logo.png'
+import { meta } from '../../data/portfolio'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -29,26 +32,104 @@ gsap.registerPlugin(ScrollTrigger)
    on entrance and then never again.
    ───────────────────────────────────────────────────────────────────────────── */
 
+/* The nav used to be five in-page anchors. The homepage is now one locked
+   frame with nothing below it, so these are routes: everything that used to be
+   a section further down the scroll lives on /work or /about, and Think and
+   Contact are hash targets on /about that ScrollToTop resolves after the
+   route change. */
 const NAV = [
-  { n: '01', label: 'Home', href: '#hero' },
-  { n: '02', label: 'Work', href: '#work' },
-  { n: '03', label: 'Think', href: '#think' },
-  { n: '04', label: 'About', href: '#about' },
-  { n: '05', label: 'Contact', href: '#contact' },
+  { label: 'Work', to: '/work' },
+  { label: 'About', to: '/about' },
+  { label: 'Contact', to: '/about#contact' },
 ]
 
-/* The thesis, broken by hand. "clear" is the hinge of the sentence and gets the
-   hot accent; the full stop is cyan because it is the arrival — the same colour
-   the settlement traces use when something lands. */
+
+/* The thesis, broken by hand.
+
+   Her wording, unedited. Two journeys stated in parallel: wondering to making
+   is how she works, questions to solutions is what that produces, and the
+   colon is the hinge that makes the second half read as a restatement of the
+   first rather than as a separate claim.
+
+   THREE LINES MAXIMUM, which is a hard constraint and not a preference. It
+   also happens to be the honest break: the colon ends line one, so each half
+   of the parallel gets a line of its own and the arrival gets the third.
+
+   What three lines cost is SIZE, and the trade is worth understanding before
+   anyone edits these words. "From wondering to making:" is 25 characters, the
+   longest single line this headline has ever carried, and it alone sets the
+   cap. Splitting it across two lines allowed 5rem; keeping it whole forces
+   3.7rem. 3.8rem was measured first and came to 720px in a 736px column,
+   which is inside this file's own no-go zone for margin.
+
+   The same 25-character line sets the FLOOR, and this is where the three-line
+   ceiling actually bites. At a 1.65rem floor it measured 327px in a 375px
+   viewport's 327px column and wrapped, which produced the fourth line the
+   headline is not allowed to have. The floor is 1.55rem for that one line's
+   sake. Mobile, not desktop, is the binding end here, and a desktop-only check
+   would have passed this. Shorter copy is what buys big type here, not the other way round: at
+   four lines the same sentence set half again as large.
+
+   The last break must not move. "to solutions." alone, in the accent, is the
+   arrival, and pulling it up to join line two would leave the sentence
+   trailing off rather than landing.
+
+   The accent sits on the whole last line, where the eye finishes. Marking
+   words mid-sentence was tried on an earlier headline and rejected: two marks
+   stop the eye twice on the way in, the sentence stops reading as a sentence,
+   and the line loses its landing, since at display size the colour rather than
+   the barely visible period is what says the thought has ended.
+
+   -- Line shape --
+   Each line is an ARRAY of segments. A string is plain, `{ a: '...' }` is
+   accented, so any words anywhere can take the accent.
+
+   LINE LENGTH IS LOAD-BEARING and BOTH ends bind: desktop at the 46rem column,
+   mobile at a 375px viewport's 327px. Earlier headlines were found to wrap by
+   landing EXACTLY on those numbers (736px in 736, 327px in 327), so the clamp
+   keeps real margin at both ends rather than maximising size. A 4.4rem cap
+   once fit by nine pixels and was rejected for that: nine pixels is one font
+   swap or one browser's rounding from wrapping, and it fails silently.
+
+   Count characters at your peril: a 20-character line here once measured wider
+   than a 23-character one, because m, w and o are wide where i, t, f and l are
+   not. Measure at BOTH 1440px and 375px after any edit to the words.
+
+   A wrapped line is not merely ugly: each line owns one clip mask and one
+   `data-line` that the entrance staggers, so a line that wraps puts two visual
+   lines behind one reveal and the stagger silently loses a beat. With a
+   three-line ceiling a wrap is worse still, because it produces the fourth
+   line this headline is not allowed to have. */
 const HEADLINE = [
-  { plain: 'I turn complex' },
-  { plain: 'problems into' },
-  { plain: '', accent: 'clear', tail: ' experiences', stop: true },
+  ['From wondering to making:'],
+  ['I follow questions'],
+  [{ a: 'to solutions.' }],
 ]
+
+/* Socials are icons, not words: the rail is 9px mono everywhere else and two
+   more text labels there read as more nav. Each mark carries its own
+   aria-label, since an icon with no text has no accessible name. */
+function LinkedInIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.65h.05a4.17 4.17 0 0 1 3.75-2.06C21.6 8.59 23 10.9 23 14.24V21h-4v-6c0-1.43-.03-3.27-2-3.27-2 0-2.3 1.56-2.3 3.17V21h-4V9Z" />
+    </svg>
+  )
+}
+
+function DribbbleIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true" {...props}>
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="M5.3 6.4c3.6 3.6 8.4 5 13.9 4.5M2.9 14.3c5.6-1.5 10.2-.4 13.6 3.4M8.6 2.9c3.7 4.6 6 9.7 6.6 15.6" />
+    </svg>
+  )
+}
 
 export default function Hero() {
   const root = useRef(null)
   const cta = useRef(null)
+  const navigate = useNavigate()
 
   useLayoutEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -228,16 +309,16 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  const go = (e, href) => {
+  const go = (e, to) => {
     e.preventDefault()
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    navigate(to)
   }
 
   return (
     <section
       id="hero"
       ref={root}
-      className="relative min-h-[100svh] w-full overflow-hidden bg-hero-void text-hero-ink"
+      className="relative min-h-[100svh] w-full overflow-hidden bg-hero-void text-hero-ink md:h-[100svh] md:min-h-0"
     >
       <NightScene />
 
@@ -253,78 +334,132 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Nav. The numbers stay because they are indices into an ordered route
-             through the work, and mono is the register this site reads data in. ── */}
-      <nav
-        className="absolute inset-x-0 top-0 z-30 mx-auto flex max-w-[1440px] items-start justify-between px-6 pt-7 lg:px-10 lg:pt-9"
-        aria-label="Primary"
-      >
-        <a
-          href="#hero"
-          onClick={(e) => go(e, '#hero')}
-          data-nav
-          className="font-display text-[1.6rem] font-semibold leading-none tracking-tight text-white"
-          style={{ textShadow: '0 0 18px rgba(255,46,136,0.45)' }}
-        >
-          A<span className="text-hero-magenta">.</span>
-        </a>
+      {/* ── Nav. The indices are gone: they were pointing into a five-item
+             route through one page, and three links to three routes do not
+             need to be counted. Mono stays — it is the register this site
+             reads data in.
 
-        <ul className="hidden items-start gap-7 md:flex lg:gap-10">
-          {NAV.map((item, i) => (
+             Straight, and in the corner people look for a menu in. It spent a
+             version turned sideways down the right edge, which looked like the
+             rest of the frame and read like nothing: rotated, uppercase, mono,
+             tracked and small is five legibility penalties stacked on the one
+             control that has to be scannable on sight.
+
+             The <nav> spans the frame because its two halves answer to
+             different edges — the mark to the centred 1440 column, the links to
+             the viewport's own right margin, which is where the socials sit.
+             Anything narrower than 1440 makes those the same edge; anything
+             wider does not, and then a nav that respects the column no longer
+             lines up with the rail below it. pointer-events-none with the links
+             opting back in, because an element this size must not sit on top of
+             the scene. ── */}
+      <nav className="pointer-events-none absolute inset-0 z-30" aria-label="Primary">
+
+        <div className="absolute inset-x-0 top-0 mx-auto flex max-w-[1440px] items-center justify-between px-6 pt-7 lg:px-10 lg:pt-9">
+          {/* The real mark, not the `A.` that stood in for it. The file is dark
+              ink on transparency — right for the light inner pages, invisible
+              here — so it is knocked out to white: brightness(0) flattens the
+              ink to black and invert(1) turns it white, with the transparency
+              untouched. No blend mode needed, and nothing to maintain if the
+              artwork is ever re-exported. The glow is the same one the type in
+              this frame carries. */}
+          <a
+            href="/"
+            onClick={(e) => go(e, '/')}
+            data-nav
+            aria-label="Alimoon Nisha, home"
+            className="pointer-events-auto block"
+          >
+            <img
+              src={logo}
+              alt="Alimoon Nisha"
+              className="h-9 w-auto object-contain lg:h-10"
+              draggable="false"
+              style={{
+                filter: 'brightness(0) invert(1) drop-shadow(0 0 18px rgba(232, 184, 98,0.35))',
+              }}
+            />
+          </a>
+
+          <a
+            href="/work"
+            onClick={(e) => go(e, '/work')}
+            data-nav
+            className="pointer-events-auto font-mono text-[10px] uppercase tracking-[0.2em] text-hero-signal underline decoration-hero-signal/40 underline-offset-[6px] md:hidden"
+          >
+            Work
+          </a>
+        </div>
+
+        {/* Same right margin as the social rail at the bottom of the frame, so
+            the two read as one edge. No box around the words: the capsules were
+            legible but they made three links look like three buttons, and the
+            rule under the word already says which one the cursor is on. The
+            padding stays for the hit area — it is just no longer drawn. */}
+        <ul className="absolute right-6 top-7 hidden items-center gap-7 md:flex lg:right-10 lg:top-9">
+          {NAV.map((item) => (
             <li key={item.label} data-nav>
+              {/* No aria-current: Home has left the list — the mark is the way
+                  back — and none of what remains is the page you are on. */}
               <a
-                href={item.href}
-                onClick={(e) => go(e, item.href)}
-                className="hero-navlink group block text-center"
-                aria-current={i === 0 ? 'page' : undefined}
+                href={item.to}
+                onClick={(e) => go(e, item.to)}
+                className="hero-navlink group pointer-events-auto relative block py-3"
               >
-                <span className="block font-mono text-[9px] tabular-nums text-hero-cyan/60 transition-colors duration-200 group-hover:text-hero-cyan">
-                  {item.n}
-                </span>
-                <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#c3c9e6] transition-colors duration-200 group-hover:text-white lg:text-[11px]">
+                <span className="block font-mono text-[11px] uppercase tracking-[0.2em] text-[#c9cfe9] transition-colors duration-200 group-hover:text-hero-hot lg:text-[12px]">
                   {item.label}
                 </span>
-                <span
-                  className="hero-underline mx-auto mt-1.5 block h-[1.5px] w-5 bg-hero-magenta"
-                  style={{ boxShadow: '0 0 10px rgba(255,46,136,0.8)' }}
-                />
               </a>
             </li>
           ))}
         </ul>
-
-        <a
-          href="#work"
-          onClick={(e) => go(e, '#work')}
-          data-nav
-          className="font-mono text-[10px] uppercase tracking-[0.2em] text-hero-cyan underline decoration-hero-cyan/40 underline-offset-[6px] md:hidden"
-        >
-          Work
-        </a>
       </nav>
 
-      {/* ── Left rail, raised clear of the ticker ── */}
+      {/* ── Social rail, right side, raised clear of the ticker.
+
+             This said "Scroll". On a locked homepage that is an instruction to
+             do something the page will not do, so the slot carries the two
+             profiles instead — the same vertical line, now under something
+             that goes somewhere. Below `lg` the rail is hidden and the CTA row
+             carries LinkedIn inline, so the link is never only in the rail. ── */}
       <div
         data-rail
-        className="absolute bottom-20 left-6 z-20 hidden flex-col items-center gap-4 lg:left-10 lg:flex"
+        className="absolute bottom-20 right-6 z-20 hidden flex-col items-center gap-4 lg:right-10 lg:flex"
       >
-        <span className="h-16 w-px bg-gradient-to-b from-transparent to-hero-cyan/70" />
-        <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-hero-mute [writing-mode:vertical-rl]">
-          Scroll
-        </span>
+        <span className="h-16 w-px bg-gradient-to-b from-transparent to-hero-signal/70" />
+        <div className="flex flex-col items-center gap-5">
+          <a
+            href={meta.linkedin}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="LinkedIn"
+            className="hero-social flex h-11 w-11 items-center justify-center rounded-full"
+          >
+            <LinkedInIcon className="h-[22px] w-[22px]" />
+          </a>
+          <a
+            href={meta.dribbble}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="Dribbble"
+            className="hero-social flex h-11 w-11 items-center justify-center rounded-full"
+          >
+            <DribbbleIcon className="h-[22px] w-[22px]" />
+          </a>
+        </div>
       </div>
 
       {/* ── The argument ── */}
-      <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-[1440px] items-center px-6 pb-32 pt-28 lg:px-10">
+      <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-[1440px] items-center px-6 pb-32 pt-28 md:h-full md:min-h-0 lg:px-10">
         <div data-copy className="w-full max-w-[46rem]">
 
           <div data-eyebrow className="mb-6 flex items-center gap-3">
             <span
-              className="h-[5px] w-[5px] rotate-45 bg-hero-magenta"
-              style={{ boxShadow: '0 0 12px rgba(255,46,136,0.9)' }}
+              className="h-[5px] w-[5px] rotate-45 bg-hero-hot"
+              style={{ boxShadow: '0 0 6px rgba(232, 184, 98,1), 0 0 18px rgba(232, 184, 98,0.6)' }}
             />
-            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-hero-cyan sm:text-[11px]">
-              UX / Product Designer
+            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-hero-signal sm:text-[11px]">
+              UX Designer / UX Engineer
             </span>
           </div>
 
@@ -338,44 +473,106 @@ export default function Hero() {
               "problems" — without the padding changing the line spacing. */}
           <h1
             data-headline
-            className="hero-headline hero-split leading-[1.06] tracking-[-0.03em] text-[clamp(2.3rem,6.2vw,4.9rem)]"
+            className="hero-headline hero-split leading-[1.06] tracking-[-0.03em] text-[clamp(1.55rem,6.2vw,3.7rem)]"
           >
-            {HEADLINE.map((line, i) => (
+            {HEADLINE.map((parts, i) => (
               <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
                 <span data-line className="inline-block">
-                  {line.plain}
-                  {line.accent && <span className="text-hero-magenta">{line.accent}</span>}
-                  {line.tail}
-                  {line.stop && <span className="text-hero-cyan">.</span>}
+                  {parts.map((part, j) =>
+                    typeof part === 'string'
+                      ? part
+                      : <span key={j} className="text-hero-hot">{part.a}</span>
+                  )}
                 </span>
               </span>
             ))}
           </h1>
 
-          <p data-sub className="mt-7 max-w-lg text-[15px] leading-relaxed text-[#b9c0dd] sm:text-[16px]">
-            UX strategy, product thinking and interaction design — for banking,
-            payments and platform products where getting it wrong costs someone
-            real money.
+          {/* The sub carries everything the headline is free NOT to say: who she
+              is, where, and what she works on. The headline above is a mood; if
+              this paragraph goes vague the hero states nothing at all.
+
+              Four edits from the version handed over:
+                · "This is Alimoon Nisha" -> "I'm". The headline is first person
+                  ("I follow questions"), so a third-person introduction between
+                  it and "I design ..." switched voice twice in three lines.
+                · The name is capitalised. It appears nowhere else in readable
+                  type — the wordmark top-left is a signature and reads as a
+                  mark, not as a name — so this is the only place a first-time
+                  visitor actually learns it.
+                · "etc." is gone. A capability list that trails off says the
+                  list ran out of energy, and it is the last thing read before
+                  the call to action.
+                · The front-end clause is back in its place. Designing AND
+                  shipping the code is the rarer half of what she does and the
+                  only claim here another designer could not also make.
+
+              THREE LINES at 183 characters. A two-line version was tried and
+              is not reachable with this copy: at the 672px measure a line holds
+              about 64 characters, so two lines is roughly a 128-character
+              budget. Widening further would buy it, and is refused — 672px is
+              already at the edge of a comfortable measure, and the fix for a
+              long paragraph is a shorter paragraph, not a wider column.
+
+              The em dash in "products—then" was replaced with a comma. No em
+              dashes anywhere in this project's copy.
+
+              MEASURE: max-w-2xl (672px), widened from max-w-lg (512px). It now
+              sits just inside the headline's longest line rather than stepping
+              well in from it, so the two blocks read as one column. The cost is
+              about 64 characters per line, which lands inside the 45-75 that is
+              comfortable to read. Do not widen it further to absorb a longer
+              paragraph; shorten the paragraph instead.
+
+              If this is edited, re-measure the RENDERED line count rather than
+              counting characters, and check it at 375px as well as desktop.
+              Below 672px the viewport, not this cap, sets the width, so the
+              mobile line count does not follow from the desktop one. */}
+          <p data-sub className="mt-7 max-w-2xl text-[15px] leading-relaxed text-[#b9c0dd] sm:text-[16px]">
+            I&rsquo;m Alimoon Nisha, a UX Analyst at SSL Wireless in Dhaka. I design
+            complex banking, healthcare, and enterprise products, then write the
+            clean, production-ready front-end that ships them.
           </p>
 
           <div data-cta className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
             <a
               ref={cta}
-              href="#work"
-              onClick={(e) => go(e, '#work')}
+              href="/work"
+              onClick={(e) => go(e, '/work')}
               className="group inline-flex items-center gap-4 transition-transform duration-150 active:scale-[0.97]"
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-hero-ink">
                 Explore my work
               </span>
-              <span className="relative flex h-10 w-10 items-center justify-center rounded-full border border-hero-magenta/50 transition-colors duration-200 group-hover:border-hero-magenta group-hover:bg-hero-magenta/15 group-hover:shadow-[0_0_22px_rgba(255,46,136,0.45)]">
-                <span className="text-hero-magenta transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+              <span className="relative flex h-10 w-10 items-center justify-center rounded-full border border-hero-hot/50 transition-colors duration-200 group-hover:border-hero-hot group-hover:bg-hero-hot/15 group-hover:shadow-[0_0_10px_rgba(232,184,98,0.6),0_0_30px_rgba(232,184,98,0.35)]">
+                <span className="text-hero-hot transition-transform duration-200 group-hover:translate-x-0.5">→</span>
               </span>
             </a>
             <span className="hidden h-8 w-px bg-white/15 sm:block" />
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-hero-mute">
               8 yrs · Dhaka, BD
             </span>
+            {/* The rail's job below `lg`, where the rail is not rendered. */}
+            <div className="flex items-center gap-4 lg:hidden">
+              <a
+                href={meta.linkedin}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="LinkedIn"
+                className="hero-social flex h-11 w-11 items-center justify-center rounded-full"
+              >
+                <LinkedInIcon className="h-[20px] w-[20px]" />
+              </a>
+              <a
+                href={meta.dribbble}
+                target="_blank"
+                rel="noreferrer noopener"
+                aria-label="Dribbble"
+                className="hero-social flex h-11 w-11 items-center justify-center rounded-full"
+              >
+                <DribbbleIcon className="h-[20px] w-[20px]" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

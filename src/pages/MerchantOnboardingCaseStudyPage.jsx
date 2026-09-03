@@ -615,9 +615,9 @@ export default function MerchantOnboardingCaseStudyPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-surface-base/80 backdrop-blur-xl border-b border-border-subtle">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <img src={logo} alt="Alimoon Nisha" className="h-14 w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300" style={{ mixBlendMode: 'multiply' }} />
+            <img src={logo} alt="Alimoon Nisha" className="h-14 w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300" />
           </Link>
-          <Link to="/" className="group flex items-center gap-2 text-base text-ink-secondary hover:text-ink-primary transition-colors">
+          <Link to="/work" className="group flex items-center gap-2 text-base text-ink-secondary hover:text-ink-primary transition-colors">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-0.5 transition-transform">
               <path d="M19 12H5M12 5l-7 7 7 7" />
             </svg>
@@ -1009,7 +1009,7 @@ export default function MerchantOnboardingCaseStudyPage() {
                     <line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" />
                   </svg>
                 </a>
-                <Link to="/" className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium text-ink-secondary hover:text-ink-primary border border-border-strong rounded-md transition-colors">
+                <Link to="/work" className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium text-ink-secondary hover:text-ink-primary border border-border-strong rounded-md transition-colors">
                   View all work
                 </Link>
               </div>

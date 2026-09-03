@@ -84,7 +84,7 @@ const COMETS = [
      walk's ~7.4s, so no two events lock into a visible rhythm. */
   // The event: longest streak, brightest head, thickest tail.
   { left: '10%', top: '4%', angle: 12, run: '30vw', streak: 'w-[19vw] max-w-[265px]',
-    thick: 'h-[3px]', head: 5, tail: 'rgba(34,229,255,0.45)', tip: 'rgba(240,249,255,1)',
+    thick: 'h-[3px]', head: 5, tail: 'rgba(91, 157, 255,0.45)', tip: 'rgba(240,249,255,1)',
     bloom: '0 0 18px 4px rgba(150,220,255,0.95)', dur: '9s', delay: '1.5s' },
   // The quick one: seen most often, so kept small.
   { left: '30%', top: '2%', angle: 15, run: '20vw', streak: 'w-[9vw] max-w-[126px]',
@@ -99,7 +99,7 @@ const COMETS = [
      off the frame edge rather than stopping inside it, so it reads as passing
      through rather than as an animation that ended. */
   { left: '84%', top: '4%', angle: 14, run: '16vw', streak: 'w-[7vw] max-w-[98px]',
-    thick: 'h-[2px]', head: 4, tail: 'rgba(34,229,255,0.32)', tip: 'rgba(232,244,255,0.92)',
+    thick: 'h-[2px]', head: 4, tail: 'rgba(91, 157, 255,0.32)', tip: 'rgba(232,244,255,0.92)',
     bloom: '0 0 12px 2px rgba(150,220,255,0.85)', dur: '17s', delay: '6s' },
 ]
 
@@ -150,15 +150,16 @@ export default function NightScene() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
 
-      {/* ── Sky. Darker at the top than the old scene so the neons below have
-             something to be bright against, and warmed toward magenta only at
-             the very horizon, where a city's light pollution actually sits. ── */}
+      {/* ── Sky. Navy the whole way down, deepest at the top so the lit city
+             below has something to be bright against, and opening out toward
+             the rooflines where a city's light pollution actually sits. The
+             ramp used to end on a dark plum, which fought the gold. ── */}
       <div
         data-layer="sky"
         className="absolute inset-0 -top-[6%] h-[112%]"
         style={{
           background:
-            'linear-gradient(180deg, #03040c 0%, #05081a 26%, #0a1030 52%, #14183c 74%, #1c1740 88%, #241536 100%)',
+            'linear-gradient(180deg, #030c1a 0%, #061529 26%, #0b2144 52%, #102c56 74%, #14345f 88%, #183a66 100%)',
         }}
       />
 
@@ -315,11 +316,11 @@ export default function NightScene() {
           />
 
           {/* Hue pass, same move as the city's: the artwork's haze band is a
-              warm peach dawn, and this swings it to the scene's indigo while
+              warm peach dawn, and this swings it to the scene's navy while
               leaving the ridge luminance alone. Without it the left horizon
               glows warm while the right one glows magenta, from two different
               times of day. */}
-          <div className="absolute inset-0 mix-blend-color" style={{ background: '#182047', opacity: 0.8 }} />
+          <div className="absolute inset-0 mix-blend-color" style={{ background: '#14294f', opacity: 0.8 }} />
 
           {/* A touch of the moon's light on the ridges nearest it. The moon is
               up and right, so only the right-facing flanks catch anything. */}
@@ -372,41 +373,53 @@ export default function NightScene() {
         />
 
         {/* Hue pass. `color` takes hue and saturation from this fill and keeps
-            the luminance underneath, so the mauve towers move to indigo while
-            the lit windows stay bright. `hue-rotate()` could not do this — it
-            would have swung the teal foreground just as far the wrong way. */}
-        <div className="absolute inset-0 mix-blend-color" style={{ background: '#1b2350', opacity: 0.66 }} />
+            the luminance underneath, so the mauve towers move to navy while the
+            lit windows stay bright. `hue-rotate()` could not do this — it would
+            have swung the teal foreground just as far the wrong way.
+
+            Dropped from 0.66 to 0.52 along with the warm windows: at full
+            strength it was overwriting the artwork's own window colour too,
+            and the gold bloom above had to fight a hue pass that had already
+            turned every pane blue. Leaving some of the baked warmth in means
+            the bloom lands on windows that are already the right colour. */}
+        <div className="absolute inset-0 mix-blend-color" style={{ background: '#153158', opacity: 0.52 }} />
 
         {/* ── Two-sided neon light. This is the whole cyberpunk move, and it is
-               `screen` rather than a tint because neon ADDS light: magenta from
-               the low right where the city is densest, cyan from mid-left where
-               the traces run. Two sources, so the massing has a lit side and a
+               `screen` rather than a tint because neon ADDS light: gold from
+               the low right where the city is densest, blue from mid-left
+               where the traces run. Two sources, so the massing has a lit side and a
                cool side instead of one flat wash. ── */}
         <div
           data-layer="city-neon"
           className="absolute inset-0 mix-blend-screen"
           style={{
             background:
-              'radial-gradient(ellipse 58% 52% at 78% 88%, rgba(255,46,136,0.30) 0%, rgba(255,46,136,0.09) 44%, transparent 74%),' +
-              'radial-gradient(ellipse 52% 46% at 34% 70%, rgba(34,229,255,0.20) 0%, rgba(34,229,255,0.06) 46%, transparent 76%)',
+              'radial-gradient(ellipse 58% 52% at 78% 88%, rgba(232, 184, 98,0.30) 0%, rgba(232, 184, 98,0.09) 44%, transparent 74%),' +
+              'radial-gradient(ellipse 52% 46% at 34% 70%, rgba(91, 157, 255,0.20) 0%, rgba(91, 157, 255,0.06) 46%, transparent 76%)',
           }}
         />
 
         {/* Window bloom. The artwork bakes its windows in, so the separable
-            lights layer is faked as a cool bloom over the massing — cool, not
-            warm: these windows are pale yellow-green, and an orange bloom over
-            them read as a different city entirely. */}
+            lights layer is faked as a bloom over the massing rather than drawn
+            per pane.
+
+            It is warm now, and that is a reversal: an earlier note here warned
+            that a warm bloom over the artwork's pale yellow-green windows read
+            as a different city entirely. The finding was right and the city is
+            the one we want — lamplit rather than fluorescent. The value is the
+            accent's own gold, so the windows and the copy are lit by one
+            source instead of two that nearly match. */}
         <div
           data-layer="city-lights"
           className="absolute inset-0 mix-blend-screen opacity-45"
-          style={{ background: 'radial-gradient(ellipse 76% 44% at 58% 76%, rgba(214,226,255,0.30) 0%, rgba(198,204,230,0.13) 44%, transparent 78%)' }}
+          style={{ background: 'radial-gradient(ellipse 76% 44% at 58% 76%, rgba(232,184,98,0.46) 0%, rgba(226,172,92,0.22) 44%, transparent 80%)' }}
         />
 
         {/* Aerial perspective, and the artwork's water at the very bottom,
             which should read as dark and still. */}
         <div
           className="absolute inset-0"
-          style={{ background: 'linear-gradient(180deg, transparent 40%, rgba(19,26,60,0.30) 74%, rgba(9,14,36,0.62) 100%)' }}
+          style={{ background: 'linear-gradient(180deg, transparent 40%, rgba(16,34,68,0.30) 74%, rgba(7,20,40,0.62) 100%)' }}
         />
 
         {/* The headline lives on the left, so the city quiets down there. This
@@ -414,7 +427,7 @@ export default function NightScene() {
             the sky, which the section-level scrim cannot tell apart. */}
         <div
           className="absolute inset-0"
-          style={{ background: 'linear-gradient(96deg, rgba(4,6,16,0.88) 0%, rgba(4,6,16,0.68) 28%, rgba(4,6,16,0.28) 52%, transparent 74%)' }}
+          style={{ background: 'linear-gradient(96deg, rgba(5,16,31,0.90) 0%, rgba(5,16,31,0.72) 28%, rgba(5,16,31,0.30) 52%, transparent 74%)' }}
         />
 
         {/* ── Load sweep. Hero.jsx runs this bar up the city once, on entrance,
@@ -425,7 +438,7 @@ export default function NightScene() {
           className="absolute inset-x-0 h-[38%] opacity-0 mix-blend-screen"
           style={{
             top: '100%',
-            background: 'linear-gradient(180deg, transparent 0%, rgba(34,229,255,0.16) 42%, rgba(255,46,136,0.20) 72%, transparent 100%)',
+            background: 'linear-gradient(180deg, transparent 0%, rgba(91, 157, 255,0.16) 42%, rgba(232, 184, 98,0.20) 72%, transparent 100%)',
           }}
         />
         </div>
@@ -443,11 +456,11 @@ export default function NightScene() {
       <div data-layer="shafts" className="absolute inset-0 mix-blend-screen">
         <div
           className="hero-shaft absolute bottom-[18%] left-[54%] h-[52%] w-[16%] origin-bottom -skew-x-12"
-          style={{ background: 'linear-gradient(0deg, rgba(34,229,255,0.16) 0%, transparent 82%)' }}
+          style={{ background: 'linear-gradient(0deg, rgba(91, 157, 255,0.16) 0%, transparent 82%)' }}
         />
         <div
           className="hero-shaft absolute bottom-[14%] left-[72%] h-[46%] w-[13%] origin-bottom skew-x-[9deg]"
-          style={{ background: 'linear-gradient(0deg, rgba(255,46,136,0.18) 0%, transparent 80%)', animationDelay: '-4.5s' }}
+          style={{ background: 'linear-gradient(0deg, rgba(232, 184, 98,0.18) 0%, transparent 80%)', animationDelay: '-4.5s' }}
         />
         <div
           className="hero-shaft absolute bottom-[20%] left-[88%] h-[40%] w-[11%] origin-bottom -skew-x-6"
@@ -500,8 +513,8 @@ export default function NightScene() {
         className="absolute inset-x-0 bottom-0 h-[46%]"
         style={{
           background:
-            'radial-gradient(120% 100% at 74% 100%, rgba(255,46,136,0.16) 0%, rgba(90,60,150,0.10) 34%, transparent 70%),' +
-            'radial-gradient(100% 90% at 30% 100%, rgba(34,229,255,0.10) 0%, transparent 64%)',
+            'radial-gradient(120% 100% at 74% 100%, rgba(232, 184, 98,0.16) 0%, rgba(90,60,150,0.10) 34%, transparent 70%),' +
+            'radial-gradient(100% 90% at 30% 100%, rgba(91, 157, 255,0.10) 0%, transparent 64%)',
         }}
       />
 
@@ -516,7 +529,7 @@ export default function NightScene() {
              moon is light and a focal point; it needs no instrumentation. ── */}
       <div
         data-layer="moon"
-        className="absolute right-[10%] top-[9%] h-[30vmin] w-[30vmin] sm:right-[14%] lg:right-[17%]"
+        className="absolute right-[10%] top-[9%] h-[22vmin] w-[22vmin] sm:right-[14%] lg:right-[17%]"
       >
         <div
           className="absolute left-1/2 top-1/2 h-[340%] w-[340%] -translate-x-1/2 -translate-y-1/2 rounded-full"

@@ -70,8 +70,8 @@ const CANVAS = { w: 1703, h: 1200 }
 const OBJECT_POSITION = { x: 0.5, y: 0.84 }
 
 const TONE = {
-  cyan: { light: '#22e5ff', text: '#8ef0ff' },
-  magenta: { light: '#ff2e88', text: '#ffa3c9' },
+  early: { light: '#f4d79c', text: '#f9e8c6' },
+  late:  { light: '#e8a53a', text: '#f2cb85' },
 }
 
 /* Six anchors, one per building face, in the order the walk visits them.
@@ -82,12 +82,12 @@ const TONE = {
    `tone` follows the headline's arc rather than the phase: cool while the work
    is still being worked out, hot once it is real and going to people. */
 const ANCHORS = [
-  { x: 1028, y: 660, w: 15, h: 27, tone: 'cyan', side: 'left' },
-  { x: 1108, y: 928, w: 20, h: 33, tone: 'cyan', side: 'right' },
-  { x: 1283, y: 747, w: 12, h: 29, tone: 'cyan', side: 'right' },
-  { x: 1363, y: 659, w: 14, h: 35, tone: 'magenta', side: 'left' },
-  { x: 1428, y: 649, w: 12, h: 21, tone: 'magenta', side: 'right' },
-  { x: 1521, y: 738, w: 12, h: 16, tone: 'magenta', side: 'right' },
+  { x: 1028, y: 660, w: 15, h: 27, tone: 'early', side: 'left' },
+  { x: 1108, y: 928, w: 20, h: 33, tone: 'early', side: 'right' },
+  { x: 1283, y: 747, w: 12, h: 29, tone: 'early', side: 'right' },
+  { x: 1363, y: 659, w: 14, h: 35, tone: 'late', side: 'left' },
+  { x: 1428, y: 649, w: 12, h: 21, tone: 'late', side: 'right' },
+  { x: 1521, y: 738, w: 12, h: 16, tone: 'late', side: 'right' },
 ]
 
 /* Words from the process, geometry from here. If a phase is ever added to

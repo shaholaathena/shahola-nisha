@@ -3,9 +3,9 @@ import easyHealthImg from '../assets/easy-health.jpg';
 export const meta = {
   name: 'AN',
   fullName: 'Alimoon Nisha',
-  title: 'UX Analyst & UX Engineer',
+  title: 'UX Designer & UX Engineer',
   tagline: 'Designing banking,\nhealth, and platform\nexperiences.',
-  bio: 'I am a UX Analyst and UX Engineer based in Dhaka, Bangladesh. I specialize in problem solving, research, visual design, and prototyping for mobile banking, healthcare, social platforms, and learning products.',
+  bio: 'I am a UX Designer and UX Engineer based in Dhaka, Bangladesh. I specialize in problem solving, research, visual design, and prototyping for mobile banking, healthcare, social platforms, and learning products.',
   location: 'Dhaka, Bangladesh',
   availability: 'Currently working as UX Analyst at SSL Wireless',
   linkedin: 'https://www.linkedin.com/in/shahola-nisha/',

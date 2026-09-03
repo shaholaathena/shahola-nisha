@@ -1,11 +1,19 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import SectionRow from '../about/SectionRow'
 import { experience } from '../../data/portfolio'
 
-const EASE = [0.22, 1, 0.36, 1]
-const VP = { once: true, margin: '-15%' }
+/* ─────────────────────────────────────────────────────────────────────────────
+   Experience and capabilities.
 
-/* Capabilities grouped by where they sit in the work, so the list reads as a
-   practice rather than a keyword dump. The third column is the differentiator. */
+   Two rows in the page's one shape. The experience list follows the reference's
+   timeline exactly: the period in a narrow left column, then company, role and
+   what the work actually was. Reading the dates as a column is the point — a
+   reader scanning a CV wants the shape of a career before the detail of it.
+
+   Capabilities sit in a separate row rather than inside the timeline, because
+   they are not tied to one employer. Grouped by where they fall in the work,
+   so the list reads as a practice rather than a keyword dump; the third group
+   is the one most designers cannot claim.
+   ───────────────────────────────────────────────────────────────────────────── */
 const CAPABILITIES = [
   {
     group: 'Research & definition',
@@ -21,110 +29,67 @@ const CAPABILITIES = [
   },
 ]
 
-function Reveal({ children, delay = 0, className = '' }) {
-  const reduce = useReducedMotion()
-  if (reduce) return <div className={className}>{children}</div>
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 24, filter: 'blur(5px)' }}
-      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      viewport={VP}
-      transition={{ duration: 0.8, delay, ease: EASE }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="relative bg-surface-base py-24 lg:py-36">
-      <div className="mx-auto max-w-[1320px] px-6 lg:px-10">
-
-        {/* ── Masthead ── */}
-        <Reveal className="mb-14 lg:mb-20">
-          <div className="flex items-end justify-between border-t border-ink-primary pt-4">
-            <span className="font-mono text-[11px] uppercase tracking-[0.24em] tabular-nums text-ink-muted">
-              Practice
-            </span>
-            <span className="hidden font-mono text-[11px] uppercase tracking-[0.24em] text-ink-muted sm:block">
-              Experience &amp; capabilities
-            </span>
-          </div>
-        </Reveal>
-
-        {/* ── Experience, set as records rather than a timeline graphic ── */}
-        <div className="border-t border-border-default">
-          {experience.map((role, i) => (
-            <Reveal key={role.company} delay={i * 0.08}>
-              <article className="grid grid-cols-12 gap-x-4 gap-y-4 border-b border-border-default py-9 sm:gap-x-8 lg:py-12">
-                {/* period */}
-                <div className="col-span-12 sm:col-span-3">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] tabular-nums text-ink-muted">
-                    {role.period}
-                  </span>
-                </div>
-
-                {/* company + role */}
-                <div className="col-span-12 sm:col-span-5">
-                  <h3 className="font-display text-[clamp(1.6rem,3.2vw,2.6rem)] font-medium leading-[1.02] tracking-[-0.02em] text-ink-primary">
-                    {role.company}
-                  </h3>
-                  <p className="mt-2 text-[14px] font-semibold text-accent">{role.role}</p>
-                  <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-muted">
-                    {role.location}
-                  </p>
-                </div>
-
-                {/* detail */}
-                <div className="col-span-12 sm:col-span-4">
-                  <p className="text-[14px] leading-relaxed text-ink-secondary">{role.description}</p>
-                  <ul className="mt-4 flex flex-wrap gap-x-3 gap-y-1.5">
-                    {role.highlights.map((h) => (
-                      <li key={h} className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-muted">
+    <>
+      <SectionRow id="experience" label="Experience" meta="Since 2018">
+        <ol className="flex flex-col">
+          {experience.map((job, i) => (
+            <li
+              key={job.company}
+              className={`grid grid-cols-12 gap-x-6 gap-y-2 py-7 lg:gap-x-10 ${
+                i > 0 ? 'border-t border-white/[0.08]' : ''
+              }`}
+            >
+              <div className="col-span-12 sm:col-span-3">
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-hero-mute">
+                  {job.period}
+                </span>
+              </div>
+              <div className="col-span-12 sm:col-span-9">
+                <h3 className="font-display text-[1.3rem] font-semibold leading-tight tracking-[-0.015em] text-hero-ink">
+                  {job.company}
+                </h3>
+                <p className="mt-1 text-[13px] font-semibold text-hero-hot">{job.role}</p>
+                <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-[#aeb6d6]">
+                  {job.description}
+                </p>
+                {job.highlights?.length > 0 && (
+                  <ul className="mt-4 flex flex-wrap gap-x-2 gap-y-2">
+                    {job.highlights.map((h) => (
+                      <li
+                        key={h}
+                        className="rounded-full border border-white/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-hero-mute"
+                      >
                         {h}
                       </li>
                     ))}
                   </ul>
-                </div>
-              </article>
-            </Reveal>
+                )}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </SectionRow>
+
+      <SectionRow label="What I do" meta="Research to release">
+        <div className="grid grid-cols-1 gap-x-12 gap-y-10 sm:grid-cols-3">
+          {CAPABILITIES.map((c) => (
+            <div key={c.group}>
+              <h3 className="font-mono text-[10px] uppercase tracking-[0.18em] text-hero-hot">
+                {c.group}
+              </h3>
+              <ul className="mt-4 flex flex-col gap-2">
+                {c.items.map((it) => (
+                  <li key={it} className="text-[14px] leading-snug text-[#b9c0dd]">
+                    {it}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
-
-        {/* ── Capabilities ── */}
-        <div className="mt-20 lg:mt-28">
-          <Reveal>
-            <div className="mb-10 flex items-center gap-4">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-ink-muted">
-                What I do
-              </span>
-              <span className="h-px flex-1 bg-border-default" />
-            </div>
-          </Reveal>
-
-          <div className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-3">
-            {CAPABILITIES.map((c, i) => (
-              <Reveal key={c.group} delay={i * 0.1}>
-                <div>
-                  <h3 className="font-display text-[1.35rem] font-medium leading-tight tracking-tight text-ink-primary">
-                    {c.group}
-                  </h3>
-                  <span className="mt-4 mb-4 block h-px w-10 bg-accent" />
-                  <ul className="space-y-2">
-                    {c.items.map((item) => (
-                      <li key={item} className="text-[14px] leading-snug text-ink-secondary">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
+      </SectionRow>
+    </>
   )
 }

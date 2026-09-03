@@ -225,9 +225,9 @@ export default function CaseStudyPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-surface-base/80 backdrop-blur-xl border-b border-border-subtle">
         <div className="max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <img src={logo} alt="Alimoon Nisha" className="h-14 w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300" style={{ mixBlendMode: 'multiply' }} />
+            <img src={logo} alt="Alimoon Nisha" className="h-14 w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300" />
           </Link>
-          <Link to="/" className="group flex items-center gap-2 text-base text-ink-secondary hover:text-ink-primary transition-colors">
+          <Link to="/work" className="group flex items-center gap-2 text-base text-ink-secondary hover:text-ink-primary transition-colors">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-0.5 transition-transform">
               <path d="M19 12H5M12 5l-7 7 7 7" />
             </svg>
@@ -1138,7 +1138,7 @@ export default function CaseStudyPage() {
                     <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
                   </svg>
                 </a>
-                <Link to="/" className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium text-ink-secondary hover:text-ink-primary border border-border-strong rounded-md transition-colors">
+                <Link to="/work" className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium text-ink-secondary hover:text-ink-primary border border-border-strong rounded-md transition-colors">
                   View all work
                 </Link>
               </div>
@@ -1156,7 +1156,7 @@ export default function CaseStudyPage() {
 function AbstractAppMockup() {
   return (
     <div className="relative w-full max-w-[360px] h-[560px] flex items-center justify-center perspective-[1200px] group">
-      
+
       {/* 3D Stage Wrapper */}
       <motion.div
         initial={{ opacity: 0, rotateY: 25, rotateX: 10, y: 40, rotateZ: -2 }}
@@ -1166,9 +1166,9 @@ function AbstractAppMockup() {
         className="relative flex items-center justify-center w-full h-full cursor-pointer"
         style={{ transformStyle: 'preserve-3d' }}
       >
-        
+
         {/* Continuous Floating Animation */}
-        <motion.div 
+        <motion.div
           animate={{ y: [0, -12, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           style={{ transformStyle: 'preserve-3d' }}
@@ -1176,12 +1176,12 @@ function AbstractAppMockup() {
         >
           {/* Main Phone Frame */}
           <div className="relative z-10 w-[250px] h-[500px] bg-white rounded-[36px] border-[2px] border-slate-400 overflow-hidden flex flex-col shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)]" style={{ transform: 'translateZ(0px)' }}>
-            
+
             <div className="w-full h-full flex flex-col relative z-10 bg-white">
-              
+
               {/* Top Header Box */}
               <div className="absolute top-0 left-0 right-0 h-[150px] border-b-2 border-slate-200 z-0 bg-white" />
-              
+
               {/* Status Bar */}
               <div className="flex items-center justify-between pt-3 px-5 mb-2 relative z-10">
                 <div className="flex gap-1.5">
@@ -1212,7 +1212,7 @@ function AbstractAppMockup() {
                 </div>
 
                 {/* Banner Card Placeholder */}
-                <motion.div 
+                <motion.div
                   className="w-full h-[90px] bg-white rounded-lg p-3 flex items-center relative overflow-hidden border-2 border-slate-300 border-dashed"
                   whileHover={{ scale: 1.02 }}
                 >
@@ -1230,7 +1230,7 @@ function AbstractAppMockup() {
                       <div className="w-1/2 h-1.5 bg-slate-200 mt-1" />
                    </div>
                 </motion.div>
-                
+
                 {/* Pagination Dots */}
                 <div className="flex justify-center gap-1.5 mt-3">
                    <div className="w-1.5 h-1.5 rounded-full border border-slate-400" />
@@ -1242,8 +1242,8 @@ function AbstractAppMockup() {
               {/* 3x4 Feature Grid Wireframe */}
               <div className="grid grid-cols-3 gap-y-5 gap-x-2 mt-5 px-3 relative z-10 flex-1 content-start">
                 {[...Array(12)].map((_, i) => (
-                  <motion.div 
-                    key={i} 
+                  <motion.div
+                    key={i}
                     className="flex flex-col items-center gap-2 cursor-pointer"
                     whileHover={{ y: -4, rotateZ: [-2, 2, 0], scale: 1.05 }}
                     transition={{ type: 'spring', bounce: 0.5 }}
@@ -1277,8 +1277,8 @@ function AbstractAppMockup() {
             className="absolute pointer-events-none"
             style={{ transformStyle: 'preserve-3d' }}
           >
-             <motion.div 
-               animate={{ y: [0, -8, 0] }} 
+             <motion.div
+               animate={{ y: [0, -8, 0] }}
                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
                className="w-44 h-16 bg-white/70 backdrop-blur-md rounded-xl border-2 border-slate-300 flex items-center p-3 gap-3 shadow-md"
              >
@@ -1300,8 +1300,8 @@ function AbstractAppMockup() {
             className="absolute pointer-events-none"
             style={{ transformStyle: 'preserve-3d' }}
           >
-             <motion.div 
-               animate={{ y: [0, -6, 0] }} 
+             <motion.div
+               animate={{ y: [0, -6, 0] }}
                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 2.5 }}
                className="w-36 h-14 bg-white/70 backdrop-blur-md rounded-xl border-2 border-slate-300 flex items-center p-2.5 gap-3 border-dashed shadow-md"
              >
@@ -1323,8 +1323,8 @@ function AbstractAppMockup() {
             className="absolute pointer-events-none"
             style={{ transformStyle: 'preserve-3d' }}
           >
-             <motion.div 
-               animate={{ y: [0, -4, 0], scale: [1, 1.05, 1] }} 
+             <motion.div
+               animate={{ y: [0, -4, 0], scale: [1, 1.05, 1] }}
                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
                className="w-12 h-12 bg-white/70 backdrop-blur-md rounded-full border-2 border-slate-400 flex items-center justify-center shadow-md"
              >

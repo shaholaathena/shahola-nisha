@@ -25,11 +25,30 @@
   --color-border-strong: rgba(18 21 15 / 0.22);
   --color-border-accent: rgba(18 21 15 / 0.34);
 
-  /* intaglio green — the ink banknotes and cheques are printed in */
-  --color-accent: #0d5c3c;
-  --color-accent-hover: #094a30;
-  --color-accent-ink: #073d27;
-  --color-accent-soft: rgba(13 92 60 / 0.12);
+  /* ── Accent: burnt amber, with a coral second voice. It replaced the
+     intaglio green the palette started in — the same idea (an ink, not a
+     brand blue) carried somewhere warmer, and closer to the sodium light the
+     hero's city is lit by.
+
+     Two backgrounds have to be served, and one value cannot serve both: this
+     amber reads AA on the paper surfaces (5.4:1) but only 3:1 on the ink
+     section, so anything set as TYPE on a dark surface uses accent-on-dark
+     instead. The green had the same split and ignored it — it was landing at
+     2.3:1 on the dark section, which is why its hover states there read as
+     mud. accent itself is still correct as a FILL on dark; paper on it is
+     6.1:1. ── */
+  --color-accent: #93511b;
+  --color-accent-hover: #7a4214;
+  --color-accent-ink: #5f330f;
+  --color-accent-soft: rgba(147 81 27 / 0.12);
+
+  /* Type on the ink surfaces — 8.6:1 there, and never to be used on paper. */
+  --color-accent-on-dark: #f0a03c;
+
+  /* The second voice: a coral for what needs to be told apart from the amber
+     rather than ranked under it. AA on paper at 4.7:1. */
+  --color-accent-2: #b8443a;
+  --color-accent-2-soft: rgba(184 68 58 / 0.12);
 }
 
 @layer base {
@@ -53,7 +72,7 @@
   }
 
   ::selection {
-    background-color: rgba(13, 92, 60, 0.18);
+    background-color: rgba(147, 81, 27, 0.18);
     color: #12150f;
   }
 
@@ -156,18 +175,61 @@
    tokens are named `hero-*` and nothing outside `#hero` should reach for them.
 
    The palette is two neons over a near-black void. Two, not three: a third
-   accent turned the skyline to mush every time. Magenta is the hot one and
-   carries the brand; cyan reads as data and settlement. `--color-hero-violet`
-   is the existing site accent, kept as a bridge so the hero still belongs to
-   the same portfolio rather than looking like a different website.
+   accent turned the skyline to mush every time. `hot` carries the brand and
+   marks what matters; `signal` reads as data, arrival and settlement.
+
+   They are named by role, not by hue, and the hues have moved under them
+   repeatedly — magenta and cyan, amber and coral, a green lead, indigo and
+   pink, and now a single antique gold. A token called `hero-hot` holding a
+   gold is worse than no token at all, which is why none of them say what
+   colour they are: the names have outlived six palettes precisely because
+   they describe the job rather than the paint.
+
+   The gold is a deliberately desaturated one. The palette started at #ffb020,
+   a bright sodium amber, and that was the thing that had to go — not warmth
+   itself. #e8b862 sits at the same luminance (11:1 on the void) with roughly
+   half the chroma, so it reads as lit metal rather than as a highlighter.
+
+   `hot` and `signal` now hold the SAME value. They are still two tokens, and
+   that is the point: the call sites already say which role they mean, so the
+   two can be pulled apart again by editing one line here rather than by going
+   back through the markup to work out which gold was which. Nothing should
+   start reaching for `hero-hot` where it means `signal` just because they
+   currently match — the moment that happens the split is unrecoverable.
+
+   One consequence to know: with both accents equal, colour no longer tells
+   `signal`'s data apart from `hot`'s emphasis. Placement and weight carry it
+   now, which is what the ticker and the full stop were already relying on.
+
+   Two things deliberately did NOT follow the accent to gold:
+
+     - The chromatic split on the headline keeps a cool second fringe. A split
+       into two golds is not a split, it is a blur. It resolves to 0 on
+       entrance and is never seen at rest.
+     - The night scene keeps its cool counter-light. It is atmosphere, not
+       accent: the city needs a lit side and a cool side or the massing goes
+       flat, and warming both sides was tried and read as one wash.
+
+   The hero is the one place on the site that goes dark and loud; paper stays
+   burnt amber. The two warms are now close relatives, which makes crossing
+   out of the hero quieter than it has been.
    ═════════════════════════════════════════════════════════════════════════════ */
 
 @theme {
-  --color-hero-void: #05070f;
-  --color-hero-deep: #0a1030;
-  --color-hero-magenta: #ff2e88;
-  --color-hero-cyan: #22e5ff;
-  --color-hero-violet: #a99cf0;
+  --color-hero-void: #05101f;
+  --color-hero-deep: #0b2144;
+  --color-hero-hot: #e8b862;      /* antique gold — the brand's hot accent */
+  --color-hero-signal: #e8b862;   /* the same gold — see the note above on why
+                                     this stays a separate token anyway */
+
+  /* The light `hot` throws, as raw channels so alpha can vary per use, and so
+     every glow in the hero pulls from one source rather than each one carrying
+     its own literal. Kept in sync with the hex above by hand — there is no
+     colour-mix here, because Tailwind's arbitrary values cannot read it. */
+  --hero-hot-rgb: 232 184 98;
+  --color-hero-violet: #a99cf0;  /* NOT a third accent — 1.8:1 from `hot` and
+                                    indistinguishable beside it. Only ever used
+                                    at low alpha for the ticker's rules and dots. */
   --color-hero-ink: #e9ecfa;
   --color-hero-mute: #8f96b8;
 
@@ -229,9 +291,12 @@
 }
 
 /* ── Ticker. Linear, because constant motion should not accelerate. ── */
+/* -25%, not -50%: the track holds FOUR copies of the item list, so one quarter
+   of it is exactly one copy width. See NeonTicker for why two copies left a
+   bare gap at the loop on any viewport wider than a single copy. */
 @keyframes hero-marquee {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(-25%, 0, 0); }
 }
 
 .hero-comet      { animation: hero-comet var(--comet-dur) linear infinite var(--comet-delay); }
@@ -279,21 +344,69 @@
    resolves to 0, so it never sits in a continuous animation. */
 .hero-split {
   text-shadow:
-    calc(var(--hero-gx) * -1px) 0 rgba(255, 46, 136, 0.85),
-    calc(var(--hero-gx) * 1px) 0 rgba(34, 229, 255, 0.85);
+    calc(var(--hero-gx) * -1px) 0 rgba(232, 184, 98, 0.85),
+    calc(var(--hero-gx) * 1px) 0 rgba(91, 157, 255, 0.85);
 }
 
-/* Neon underline that draws from the left on hover. `transform` only, so it
-   stays on the compositor. */
-.hero-underline {
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 200ms var(--ease-out-quint);
+/* Hover. The two react differently on purpose. The nav across the top only
+   changes colour: its text goes to the accent gold, set on the span in the
+   markup, with no motion and no underline (an earlier version drew a rule that
+   swept in from the left; it was removed). The socials on the rail below step
+   in off the edge they are pinned to and light their ring. The shared piece is
+   just the transition timing. */
+.hero-navlink,
+.hero-social {
+  transition:
+    transform 260ms var(--ease-out-quint),
+    color 200ms ease,
+    border-color 200ms ease,
+    background-color 200ms ease,
+    filter 260ms ease;
+}
+
+/* Social rings. The marks used to be bare glyphs; each now sits in an outlined
+   circle, the same ring the CTA arrow uses, so the hero's two interactive
+   shapes speak one language. The border is a hairline of white at rest,
+   present but quiet against the night, and lights to the accent gold on hover
+   the way the CTA ring does.
+
+   This is `.hero-social` ALONE, deliberately not shared with `.hero-navlink`:
+   the two share the transition above because both animate, but only the socials
+   are rings. An earlier version folded the border into the shared selector and
+   drew a box around every nav item. */
+.hero-social {
+  color: #9aa3c4;
+  border: 1px solid rgba(255, 255, 255, 0.16);
 }
 @media (hover: hover) and (pointer: fine) {
-  .hero-navlink:hover .hero-underline { transform: scaleX(1); }
+  /* The nav has no hover motion or rule any more — its hover is the text
+     colour change, set on the span in the markup. Only the socials move. */
+  .hero-social:hover {
+    transform: translateX(-5px) scale(1.08);
+    color: var(--color-hero-hot);
+    border-color: rgba(232, 184, 98, 0.6);
+    background-color: rgba(232, 184, 98, 0.12);
+    filter: drop-shadow(0 0 14px rgba(232, 184, 98, 0.5));
+  }
 }
-.hero-navlink[aria-current='page'] .hero-underline { transform: scaleX(1); }
+/* Keyboard users get the same state — an outline alone on a 2px rule in a dark
+   frame is easy to lose. */
+.hero-social:focus-visible { transform: translateX(-5px); }
+.hero-navlink:focus-visible,
+.hero-social:focus-visible {
+  outline: 1px solid rgba(232, 184, 98, 0.7);
+  outline-offset: 6px;
+  color: var(--color-hero-hot);
+  border-color: rgba(232, 184, 98, 0.6);
+  background-color: rgba(232, 184, 98, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-navlink,
+  .hero-social { transition: color 200ms ease; }
+  .hero-navlink:hover,
+  .hero-social:hover { transform: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .hero-split { text-shadow: none; }
