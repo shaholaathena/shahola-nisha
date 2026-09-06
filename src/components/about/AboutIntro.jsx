@@ -20,26 +20,34 @@ import Eyebrow from './Eyebrow'
 
    ── The photograph ──
 
-   This is an environmental portrait, not a cut-out: a composed frame with a
-   wall, dappled tree shadows and a bench, supplied as RGB with no alpha. Three
-   things that were right for the previous asset are wrong for this one, and all
-   three were removed:
+   The asset is a masked cut-out: 822×839 RGBA, already desaturated, with her
+   silhouette occupying roughly the middle 60% and everything around it fully
+   transparent. It is not a framed scene, and the distinction decides the whole
+   treatment — anything painted across the element's box lands on empty pixels
+   as well as on her, which is how an earlier flat `rgba(5,16,31,0.30)` wash
+   over the frame turned into a visible navy rectangle hanging in the sky.
 
-     · Grayscale. The earlier cut-out was a plum outfit fighting the gold, so
-       desaturating it helped. This frame already carries a warm cast (+13 red
-       over blue, measured) which lands in the same family as the accent, so
-       black and white threw away the one thing tying it to the palette.
-     · The bottom gradient mask. That existed to dissolve a cut-out's straight
-       horizontal cut across the chest. Here the bottom of the frame is her
-       feet and the ground, and fading it just deleted the composition.
-     · The small size. 340px suited a head-and-shoulders cut-out; a scene with
-       a wall and a canopy of shadow in it needs room to be legible at all.
+   So nothing here is allowed to be rectangular. Three layers, in order:
 
-   So it is framed rather than floated. A rectangular photograph has an edge
-   whether or not you acknowledge it, and rounding it with a hairline border
-   reads as a deliberate plate; pretending it has no edge is what made the
-   earlier tile look like a stray blue box. Its own mean brightness is 46, so
-   it sits down into the night surface without needing anything behind it.
+     · An aura underneath her. A cut-out with no ground reads as pasted on;
+       a soft warm-over-cool bloom, blurred and centred on her torso rather
+       than on the box, makes the section look like the thing lighting her.
+       It sits behind the image so her own edge stays crisp against it.
+     · A duotone locked to her silhouette. The overlay carries the same mask
+       as the photograph, so the tint stops exactly where she does. Blended
+       `soft-light`, it warms her lit side toward the gold and drops her
+       shadow side into the page's navy, which is what actually marries a
+       black-and-white portrait to a coloured surface — a wash over the box
+       only ever greys the background out.
+     · A bottom fade, as a mask rather than a gradient fill. The asset ends in
+       a straight horizontal cut at her waist; masking dissolves that cut into
+       the night, whereas painting a gradient over it would re-introduce the
+       rectangle the mask exists to avoid. It is applied to the wrapper so the
+       photograph and its duotone fade together as one.
+
+   The image also renders at its own aspect ratio. The previous `aspect-[3/4]`
+   with `object-cover` cropped a near-square source down to a portrait box,
+   which cut her trailing arm off at the frame edge.
 
    ───────────────────────────────────────────────────────────────────────────── */
 
@@ -56,6 +64,26 @@ const STARS = Array.from({ length: 38 }, (_, i) => {
     op: 0.2 + r(4.53) * 0.45,
   }
 })
+
+/* Dissolves the asset's straight waist cut into the night. On the wrapper, so
+   the photograph and the duotone over it fade as a single object. */
+const BOTTOM_FADE = {
+  WebkitMaskImage:
+    'linear-gradient(180deg, #000 0%, #000 58%, rgba(0,0,0,0.55) 80%, transparent 100%)',
+  maskImage:
+    'linear-gradient(180deg, #000 0%, #000 58%, rgba(0,0,0,0.55) 80%, transparent 100%)',
+}
+
+/* Clips the tint to her outline by reusing the portrait's own alpha as a mask,
+   which is what keeps it off the transparent air around her. */
+const SILHOUETTE = {
+  WebkitMaskImage: `url(${nisha})`,
+  maskImage: `url(${nisha})`,
+  WebkitMaskSize: '100% 100%',
+  maskSize: '100% 100%',
+  WebkitMaskRepeat: 'no-repeat',
+  maskRepeat: 'no-repeat',
+}
 
 export default function AboutIntro() {
   const reduce = useReducedMotion()
@@ -107,7 +135,7 @@ export default function AboutIntro() {
               {...step(0.04)}
               className="font-display text-[clamp(2.5rem,6.4vw,4.6rem)] font-semibold leading-[1.02] tracking-[-0.035em]"
             >
-              Hi, I&rsquo;m <span className="text-hero-hot">Alimoon.</span>
+              Hi, I&rsquo;m <span className="text-hero-hot">Nisha.</span>
             </motion.h1>
 
             <motion.p
@@ -164,34 +192,53 @@ export default function AboutIntro() {
                 })}
             className="col-span-12 sm:col-span-8 md:col-span-6 lg:col-span-6"
           >
-            <div className="relative ml-auto w-full max-w-[420px]">
-              <div className="relative overflow-hidden">
+            <div className="relative ml-auto w-full max-w-[500px]">
+              {/* The light she is standing in. Centred on her torso — 47% 40%
+                  is where the silhouette actually sits inside the transparent
+                  frame, not where the box's middle is. */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -inset-x-10 -inset-y-8 blur-2xl"
+                style={{
+                  background:
+                    'radial-gradient(46% 42% at 47% 40%, rgba(232,184,98,0.20) 0%, transparent 72%),' +
+                    'radial-gradient(62% 58% at 47% 52%, rgba(43,86,158,0.34) 0%, transparent 74%)',
+                }}
+              />
+
+              {/* Photograph + duotone, faded out together at the waist cut. */}
+              <div className="relative" style={BOTTOM_FADE}>
                 <img
                   src={nisha}
                   alt="Alimoon Nisha"
-                  className="block aspect-[3/4] w-full select-none object-cover object-center"
+                  className="relative block w-full select-none"
+                  style={{ filter: 'contrast(1.06) brightness(0.97)' }}
                   draggable="false"
                 />
-                {/* Two scrims, both inside the frame so the radius clips them.
-
-                    The flat one is the actual blend: the lit wall in this
-                    photograph is far brighter than anything else on the page,
-                    and left alone the plate read as a window cut into the
-                    night rather than part of it. A wash of the page's own navy
-                    pulls its highlights down into the surrounding luminance
-                    range and cools them toward the palette, without touching
-                    the warmth in her and the bench.
-
-                    The gradient one hands the bottom edge off to the page. */}
+                {/* Depth first: soft-light deepens her shadow side toward the
+                    page's navy without flattening the face. */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0"
-                  style={{ background: 'rgba(5,16,31,0.30)' }}
+                  className="pointer-events-none absolute inset-0 mix-blend-soft-light"
+                  style={{
+                    ...SILHOUETTE,
+                    background:
+                      'linear-gradient(158deg, rgba(232,184,98,0.75) 0%, rgba(232,184,98,0.22) 42%,' +
+                      ' rgba(19,44,84,0.50) 76%, rgba(11,33,68,0.70) 100%)',
+                  }}
                 />
+                {/* Then hue, held at 0.3. `color` on a greyscale base is a true
+                    duotone and will happily recolour her skin outright; a third
+                    of it is the point where she picks up the section's warmth
+                    and cool without ceasing to read as a photograph. */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3"
-                  style={{ background: 'linear-gradient(180deg, transparent 0%, rgba(5,16,31,0.6) 100%)' }}
+                  className="pointer-events-none absolute inset-0 opacity-30 mix-blend-color"
+                  style={{
+                    ...SILHOUETTE,
+                    background:
+                      'linear-gradient(158deg, #e8b862 0%, #c99a52 38%, #2b4a86 78%, #16305c 100%)',
+                  }}
                 />
               </div>
             </div>

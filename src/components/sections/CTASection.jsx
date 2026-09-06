@@ -28,9 +28,9 @@ const VP = { once: true, margin: '-15%' }
    she knows which is current, so the data file's value is kept and the
    discrepancy is flagged rather than silently switched. */
 const CHANNELS = [
-  { label: 'Email', value: 'alimoon.nisha@gmail.com', href: 'mailto:alimoon.nisha@gmail.com' },
+  { label: 'Email', value: 'nishashahola@gmail.com', href: 'mailto:nishashahola@gmail.com' },
   { label: 'LinkedIn', value: 'in/shahola-nisha', href: meta.linkedin },
-  { label: 'Portfolio', value: 'alimoonnisha.vercel.app', href: 'https://alimoonnisha.vercel.app' },
+  { label: 'Portfolio', value: 'shahola-nisha.vercel.app', href: 'https://shahola-nisha.vercel.app' },
   { label: 'Dribbble', value: 'dribbble.com/shahola', href: meta.dribbble },
 ]
 
