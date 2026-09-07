@@ -57,7 +57,11 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    /* No `scroll-behavior: smooth` here. Lenis owns scrolling now
+       (components/util/SmoothScroll), and CSS smooth scrolling animates the
+       same scrollTop — the two fight and the page stutters. Under reduced
+       motion no Lenis is created and anchor jumps are instant, which is the
+       right behaviour for that preference. */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;

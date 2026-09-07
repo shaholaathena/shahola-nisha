@@ -51,20 +51,6 @@ import Eyebrow from './Eyebrow'
 
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* Deterministic star field, so it never reflows on a re-render. */
-const STARS = Array.from({ length: 38 }, (_, i) => {
-  const r = (n) => {
-    const x = Math.sin((i + 1) * n) * 10000
-    return x - Math.floor(x)
-  }
-  return {
-    left: `${(r(12.9898) * 100).toFixed(2)}%`,
-    top: `${(r(78.233) * 64).toFixed(2)}%`,
-    size: r(43.12) > 0.85 ? 2 : 1,
-    op: 0.2 + r(4.53) * 0.45,
-  }
-})
-
 /* Dissolves the asset's straight waist cut into the night. On the wrapper, so
    the photograph and the duotone over it fade as a single object. */
 const BOTTOM_FADE = {
@@ -98,27 +84,26 @@ export default function AboutIntro() {
     reduce ? {} : { ...rise, transition: { ...rise.transition, delay: d } }
 
   return (
-    <section className="relative overflow-hidden bg-hero-void text-hero-ink">
-      {/* ── Night backdrop ── */}
+    <section className="relative overflow-hidden text-hero-ink">
+      {/* The hero used to paint its own night: an opaque gradient, its own
+          38-star field, and a fade back to the void at its foot. All of that is
+          gone. AboutAtmosphere now carries one sky for the whole page — the
+          homepage's real `sky.svg` field included — and this section is
+          transparent so that sky runs through it unbroken.
+
+          That opacity was the reason the top of the page still looked like a
+          different site after everything below it had been rebuilt: the shared
+          atmosphere was there, and the hero was sitting on top of it painting
+          over the part a visitor sees first.
+
+          What stays is the one thing this section owns: the warm glow up and to
+          the right, which is the hero's own light and has nothing behind it to
+          conflict with. */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(180deg, #05070f 0%, #061529 64%, #0b2144 100%)' }}
-        />
-        <div className="absolute inset-0">
-          {STARS.map((s, i) => (
-            <span
-              key={i}
-              className="absolute rounded-full bg-white"
-              style={{ left: s.left, top: s.top, width: s.size, height: s.size, opacity: s.op }}
-            />
-          ))}
-        </div>
         <div
           className="absolute inset-0 mix-blend-screen"
           style={{ background: 'radial-gradient(100% 70% at 78% 8%, rgba(232,184,98,0.14) 0%, transparent 58%)' }}
         />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-hero-void" />
       </div>
 
       {/* ── Content ── */}

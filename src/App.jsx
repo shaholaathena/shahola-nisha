@@ -9,6 +9,8 @@ import MerchantOnboardingCaseStudyPage from './pages/MerchantOnboardingCaseStudy
 import ZCommerzCaseStudyPage from './pages/ZCommerzCaseStudyPage'
 import Cursor from './components/ui/Cursor'
 import Grain from './components/ui/Grain'
+import SmoothScroll from './components/util/SmoothScroll'
+import { getLenis } from './lib/lenisInstance'
 
 const pageVariants = {
   initial: { opacity: 0, filter: 'blur(6px)' },
@@ -40,12 +42,25 @@ function ScrollToTop() {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
   }, [])
 
+  /* One jump, through Lenis when it exists.
+
+     Lenis animates the page on its own clock and keeps its own idea of where
+     the page is. A bare `window.scrollTo` moves the document out from under it,
+     Lenis notices the mismatch on its next frame and eases straight back — so a
+     route change would land at the top and then glide away from it. `immediate`
+     tells Lenis to move its own target too.
+
+     The `window.scrollTo` fallback still matters: `getLenis()` returns null
+     under reduced motion, and there is no instance at all on the first paint. */
+  const jumpTo = (top) => {
+    const lenis = getLenis()
+    if (lenis) lenis.scrollTo(top, { immediate: true })
+    else window.scrollTo({ top, behavior: 'instant' })
+  }
+
   useEffect(() => {
     if (!hash) {
-      /* `instant`, not the default: index.css sets `scroll-behavior: smooth`
-         on the root, and a bare scrollTo would inherit it and animate the whole
-         way up a long page after the route has already changed. */
-      window.scrollTo({ top: 0, behavior: 'instant' })
+      jumpTo(0)
       return
     }
     /* The target moves twice over: the incoming page has not mounted yet
@@ -80,7 +95,7 @@ function ScrollToTop() {
       }
 
       const target = Math.round(el.getBoundingClientRect().top + window.scrollY - 64)
-      if (Math.abs(window.scrollY - target) > 2) window.scrollTo({ top: target, behavior: 'instant' })
+      if (Math.abs(window.scrollY - target) > 2) jumpTo(target)
 
       // Then re-aim for ~1.5s: late images shift a long page well after the
       // position first looks stable, so one scroll lands hundreds of pixels off.
@@ -118,6 +133,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Grain />
+      <SmoothScroll />
       <Cursor />
       <ScrollToTop />
       <AnimatedRoutes />

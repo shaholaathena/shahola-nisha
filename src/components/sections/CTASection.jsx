@@ -16,21 +16,35 @@ const VP = { once: true, margin: '-15%' }
 
    It also carried the last of `accent-on-dark` (#f0a03c), a yellow-orange left
    over from the original palette. Everything accent here is the site's gold.
+
+   The closing statement used to run to 8rem — 128px, against section headings
+   that are now 48px and a hero that caps at 4.6rem. It capped the page with
+   something nearly twice the size of anything else on it. It is 4.6rem here,
+   the hero's ceiling, so the page opens and closes at one scale and the
+   sections between them sit a clear step below.
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* The email and the portfolio URL come from her own About mockup, which
-   publishes both — so the earlier "no email by default" stance is settled: she
-   has made that call, and withholding it now would just be a dead end on a
-   contact section.
+/* Two social profiles, and no email address.
 
-   NOTE: the mockup also shows linkedin.com/in/alimoonnisha, while
-   `meta.linkedin` is /in/shahola-nisha. Those are different handles and only
-   she knows which is current, so the data file's value is kept and the
-   discrepancy is flagged rather than silently switched. */
+   An earlier version published the address, on the reasoning that her own
+   mockup showed it and withholding it would leave the contact section as a dead
+   end. She has since removed it, which reverses that: the direct line is now
+   LinkedIn, which is also where the primary button goes. Worth knowing the
+   consequence — there is no longer any way to reach her from this site without
+   an account on someone else's platform. That is a deliberate choice, not an
+   oversight, and it is the kind of thing that looks like an oversight later.
+
+   The portfolio URL went with it. It pointed at this site, from this site, and
+   the "Based in" row went too — the location is already in the ticker's reach
+   and, unlike the other rows, it was the one entry that was not a way to
+   contact anybody.
+
+   NOTE: her mockup shows linkedin.com/in/alimoonnisha, while `meta.linkedin` is
+   /in/shahola-nisha. Those are different handles and only she knows which is
+   current, so the data file's value is kept and the discrepancy is flagged
+   rather than silently switched. */
 const CHANNELS = [
-  { label: 'Email', value: 'nishashahola@gmail.com', href: 'mailto:nishashahola@gmail.com' },
   { label: 'LinkedIn', value: 'in/shahola-nisha', href: meta.linkedin },
-  { label: 'Portfolio', value: 'shahola-nisha.vercel.app', href: 'https://shahola-nisha.vercel.app' },
   { label: 'Dribbble', value: 'dribbble.com/shahola', href: meta.dribbble },
 ]
 
@@ -55,64 +69,44 @@ export default function CTASection() {
 
       <div className="relative z-10 mx-auto max-w-[1440px] px-6 lg:px-10">
 
-        {/* ── Masthead ── */}
-        <motion.div
-          initial={reduce ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={VP}
-          transition={{ duration: 0.7, ease: EASE }}
-          className="flex items-end justify-between border-t border-white/20 pt-4"
-        >
-          <span className="font-mono text-[11px] uppercase tracking-[0.24em] tabular-nums text-hero-mute">
-            Contact
-          </span>
-          <span className="hidden font-mono text-[11px] uppercase tracking-[0.24em] text-hero-mute sm:block">
-            Open to new work
-          </span>
-        </motion.div>
 
-        {/* ── The statement ── */}
-        <div className="mt-16 lg:mt-24">
-          <motion.h2
+        {/* ── Statement, beside the channels ──
+
+            A masthead row used to sit above this: "Contact" against "Open to
+            new work", over its own rule. Removed on request. Two consequences
+            worth knowing — the section no longer labels itself, so the only
+            thing naming it is the nav link that scrolls here; and "Open to new
+            work" was the page's one availability signal, which the ticker
+            deliberately does not carry because this band did. Nothing says it
+            now.
+
+            The grid lost its top rule and top margin with the masthead: the
+            section element already draws a border above itself, and a second
+            one immediately under it read as a doubled line. */}
+        <div className="grid grid-cols-1 gap-y-12 lg:grid-cols-[46%_1fr] lg:gap-x-16">
+
+          <motion.div
             initial={reduce ? false : { opacity: 0, y: 30, filter: 'blur(6px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             viewport={VP}
             transition={{ duration: 1, ease: EASE }}
-            className="max-w-[14ch] font-display text-[clamp(2.75rem,10vw,8rem)] font-semibold leading-[0.9] tracking-[-0.035em]"
+            
           >
-            Let&rsquo;s make something{' '}
-            <em className="not-italic font-semibold text-hero-hot decoration-hero-hot/40 underline underline-offset-[6px]">worth using</em>.
-          </motion.h2>
-        </div>
+            {/* The closing line moved out of its own full-width band and into
+                the left column, so it sits level with the two links instead of
+                above them. Same two-column shape the three sections above this
+                one now use, which makes the contact band the fourth rather than
+                a layout of its own.
 
-        {/* ── Channels + action ── */}
-        <div className="mt-16 grid grid-cols-12 gap-y-12 border-t border-white/10 pt-10 lg:mt-24 lg:gap-x-12">
-
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={VP}
-            transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
-            className="col-span-12 lg:col-span-5"
-          >
-            <p className="max-w-md text-[16px] leading-relaxed text-[#b9c0dd]">
-              I&rsquo;m a UX Analyst at SSL Wireless in Dhaka, working across banking,
-              payments and platform products. If you&rsquo;re building something where
-              clarity actually matters, I&rsquo;d like to hear about it.
-            </p>
-
-            {/* Gold pill: the one filled control on the page, so the primary
-                action does not look like the ghost rings around it. */}
-            <a
-              href={meta.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative mt-9 inline-flex items-center gap-3 overflow-hidden rounded-full bg-hero-hot px-8 py-4 text-sm font-semibold text-[#05101f] transition-transform active:scale-95"
-            >
-              <span className="absolute inset-0 translate-y-full bg-white transition-transform duration-500 ease-out group-hover:translate-y-0" />
-              <span className="relative z-10">Start a conversation</span>
-              <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">↗</span>
-            </a>
+                Its column is 46%, not the 35% the three sections above use.
+                Those hold a short eyebrow and a heading; this holds the page's
+                closing sentence at 54px, and 35% broke it into three ragged
+                lines. The right-hand column only carries two short link rows,
+                so the width was going spare. */}
+            <h2 className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-semibold leading-[1.02] tracking-[-0.032em]">
+              Let&rsquo;s make something{' '}
+              <em className="not-italic font-semibold text-hero-hot decoration-hero-hot/40 underline underline-offset-[6px]">worth using</em>.
+            </h2>
           </motion.div>
 
           {/* Channel index */}
@@ -121,7 +115,7 @@ export default function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
             transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-            className="col-span-12 lg:col-span-6 lg:col-start-7"
+            
           >
             {CHANNELS.map((c) => (
               <a
@@ -134,19 +128,13 @@ export default function CTASection() {
                 <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-hero-mute">
                   {c.label}
                 </dt>
-                <dd className="flex items-baseline gap-3 font-display text-[1.15rem] font-medium tracking-tight text-hero-ink transition-colors group-hover:text-hero-hot sm:text-[1.4rem]">
+                <dd className="flex items-baseline gap-3 font-display text-[1rem] font-medium tracking-tight text-hero-ink transition-colors group-hover:text-hero-hot sm:text-[1.15rem]">
                   {c.value}
                   <span className="text-hero-hot opacity-40 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" aria-hidden="true">↗</span>
                 </dd>
               </a>
             ))}
 
-            <div className="flex items-baseline justify-between gap-6 border-b border-white/[0.12] py-5">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-hero-mute">Based in</span>
-              <span className="font-display text-[1.15rem] font-medium tracking-tight text-hero-ink sm:text-[1.4rem]">
-                {meta.location}
-              </span>
-            </div>
           </motion.dl>
         </div>
       </div>

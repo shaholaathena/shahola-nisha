@@ -6,29 +6,36 @@ import logo from '../../assets/logo.png'
 /* Routes, not anchors. This header is only rendered on the inner pages — the
    homepage is a single locked frame carrying its own editorial nav — so it no
    longer has to hide behind a hero or track which section is on screen. It is
-   present from the top; active state comes from the URL. */
-const navLinks = [
-  { label: 'Work', to: '/work' },
-  { label: 'About', to: '/about' },
-  { label: 'Certifications', to: '/about#certifications' },
-]
+   present from the top; active state comes from the URL.
 
-/* The homepage's own nav, reproduced exactly: same three destinations, same
-   order. `hero` variant uses this so the menu does not change between the
-   homepage and About — the mark, the type and the targets all match. */
-const heroNavLinks = [
+   ── One nav, two palettes ──
+
+   There used to be two: a `hero` editorial nav on About, and a `default` pill
+   nav with a bordered "Get in touch" button on Work and the case studies. They
+   shared nothing — different links, different type, different logo size, a
+   different container width — so moving between /about and /work changed the
+   furniture, not just the page.
+
+   It is one layout now, and only the palette branches. Dark gets the knockout
+   wordmark and gold hover; light gets the mark as drawn and the paper theme's
+   accent. The destinations are the homepage's own three, so the menu is the
+   same on every page of the site.
+
+   The "Get in touch" button went with the pill nav. It duplicated the Contact
+   link two positions to its left, and the homepage's nav has no button. */
+const NAV_LINKS = [
   { label: 'Work', to: '/work' },
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/about#contact' },
 ]
 
 export default function Navigation({ dark = false, variant = 'default' }) {
-  /* `hero` mirrors the homepage's editorial nav — wordmark knockout + mono
-     uppercase links with the gold hover, no pill — and implies the dark
-     surface it lives on. `default` is the inner-page pill nav. */
-  const hero = variant === 'hero'
-  const links = variant === 'hero' ? heroNavLinks : navLinks
-  const isDark = dark || hero
+  /* `variant="hero"` now only means "this page is dark". The layout no longer
+     forks on it; it is kept so AboutPage's existing call site still reads
+     correctly and so a caller can opt into the night palette without also
+     passing `dark`. */
+  const isDark = dark || variant === 'hero'
+  const links = NAV_LINKS
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const { pathname, hash } = useLocation()
@@ -62,102 +69,58 @@ export default function Navigation({ dark = false, variant = 'default' }) {
             : 'bg-transparent shadow-none'
         }`}
       >
-        <div
-          className={
-            hero
-              ? 'mx-auto flex max-w-[1440px] items-center px-6 pt-7 pb-5 lg:px-10 lg:pt-9'
-              : 'max-w-7xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between'
-          }
-        >
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 lg:px-10">
           <Link to="/" className="group" aria-label="Home">
             <img
               src={logo}
               alt="Alimoon Nisha"
-              className={
-                hero
-                  ? 'h-9 w-auto object-contain lg:h-10'
-                  : 'h-14 w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300'
-              }
-              style={hero ? { filter: 'brightness(0) invert(1) drop-shadow(0 0 18px rgba(232,184,98,0.35))' } : isDark ? { filter: 'brightness(0) invert(1)' } : undefined}
+              className="h-9 w-auto object-contain transition-opacity duration-300 lg:h-10"
+              /* 36px, not the 56px the pill nav used. That logo stood 56px tall
+                 inside a 64px bar, leaving 4px of air above and below it, and it
+                 was the single loudest thing on the Work page. */
+              style={isDark ? { filter: 'brightness(0) invert(1)' } : undefined}
             />
           </Link>
 
-          {/* Desktop nav */}
-          {hero ? (
-            /* ul/li, not bare links: the homepage's nav is a list, and matching
-               the structure matters because the two are measured against each
-               other — a bare <a> sat 3px narrower than its <li> equivalent. */
-            <ul
-              className="absolute right-6 top-7 hidden items-center gap-7 md:flex lg:right-10 lg:top-9"
-              aria-label="Primary"
-            >
-              {links.map((link) => {
-                const active = isActive(link.to)
-                return (
-                  <li key={link.label}>
-                    <Link to={link.to} className="hero-navlink group relative block py-3">
-                      <span
-                        className={`block font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-200 lg:text-[12px] ${
-                          active ? 'text-hero-hot' : 'text-[#c9cfe9] group-hover:text-hero-hot'
-                        }`}
-                      >
-                        {link.label}
-                      </span>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          ) : (
-            <nav className="hidden md:flex items-center gap-1" role="navigation">
-              {links.map((link) => {
-                const active = isActive(link.to)
-                return (
-                  <Link
-                    key={link.label}
-                    to={link.to}
-                    className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
-                      active
-                        ? (dark ? 'text-hero-ink font-semibold' : 'text-ink-primary font-semibold')
-                        : (dark ? 'text-hero-mute hover:text-hero-ink' : 'text-ink-secondary hover:text-ink-primary')
-                    }`}
-                  >
-                    {active && (
-                      <motion.span
-                        layoutId="nav-indicator"
-                        className={`absolute inset-0 rounded-md ${dark ? 'bg-white/[0.08]' : 'bg-black/[0.05]'}`}
-                        transition={{ type: 'spring', stiffness: 400, damping: 40 }}
-                      />
-                    )}
-                    <span className="relative z-10">{link.label}</span>
+          {/* Desktop nav.
+
+              ul/li, not bare links: the homepage's nav is a list, and matching
+              the structure matters because the two are measured against each
+              other — a bare <a> sat 3px narrower than its <li> equivalent. */}
+          <ul className="hidden items-center gap-7 md:flex" aria-label="Primary">
+            {links.map((link) => {
+              const active = isActive(link.to)
+              return (
+                <li key={link.label}>
+                  <Link to={link.to} className="hero-navlink group relative block py-3">
+                    <span
+                      className={`block font-mono text-[11px] uppercase tracking-[0.2em] transition-colors duration-200 lg:text-[12px] ${
+                        isDark
+                          ? active
+                            ? 'text-hero-hot'
+                            : 'text-[#c9cfe9] group-hover:text-hero-hot'
+                          : active
+                            ? 'text-accent'
+                            : 'text-ink-secondary group-hover:text-accent'
+                      }`}
+                    >
+                      {link.label}
+                    </span>
                   </Link>
-                )
-              })}
-            </nav>
-          )}
+                </li>
+              )
+            })}
+          </ul>
 
-          {/* Right CTA */}
-          <div
-            className={
-              hero
-                ? 'absolute right-6 top-7 flex items-center gap-3 lg:right-10 lg:top-9'
-                : 'flex items-center gap-3'
-            }
-          >
-            {!hero && <Link
-              to="/about#contact"
-              className={`hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
-                dark
-                  ? 'text-hero-ink border border-white/20 hover:bg-white/5 hover:border-hero-hot/60 hover:text-hero-hot'
-                  : 'text-zinc-900 border border-zinc-800/30 hover:bg-zinc-800/5 hover:border-zinc-800/50'
-              }`}
-            >
-              Get in touch
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4M9.5 2.5V8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Link>}
+          {/* `md:hidden` on the WRAPPER, not just the button inside it.
 
+              The button alone was hidden and this div stayed, zero-width but
+              still a flex item — so `justify-between` had three children to
+              space out and parked the links in the middle of the bar, 542px
+              short of the right edge, where the homepage right-aligns them.
+              Hidden entirely, the bar has two children and the links sit where
+              they belong. */}
+          <div className="flex items-center md:hidden">
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -182,59 +145,59 @@ export default function Navigation({ dark = false, variant = 'default' }) {
             </button>
           </div>
         </div>
-      </motion.header>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ y: -8 }}
-            animate={{ y: 0 }}
-            exit={{ y: -8 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            className={`fixed top-16 left-0 right-0 z-40 backdrop-blur-xl border-b md:hidden ${isDark ? 'bg-hero-void border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.55)]' : 'bg-surface-base/96 border-border-subtle'}`}
-          >
-            <nav className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1">
-              {links.map((link) => {
-                const active = isActive(link.to)
-                if (hero) {
+          {/* Mobile menu.
+
+              Rendered INSIDE the header and pinned to `top-full`, so it always
+              begins exactly where the bar ends. It used to be a sibling with a
+              hardcoded `top-16`, tuned to a 64px pill bar that no longer exists —
+              the bar is 76px on mobile and 80px above `lg`, so the panel sat
+              12px up inside it and the two overlapped. A measurement that has to
+              be kept in sync with a padding value in another element will drift;
+              `top-full` cannot. */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              /* Fade, not slide. The panel is pinned to `top-full`, directly
+                 against the bar, so a translate has nowhere to travel from
+                 except underneath it — and any frame where the animation has
+                 not settled shows the menu overlapping the header. It was
+                 measured resting at `matrix(1,0,0,1,0,-8)`, 8px inside the bar.
+                 Opacity has no geometry to get wrong. */
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+              className={`absolute inset-x-0 top-full backdrop-blur-xl border-b md:hidden ${isDark ? 'bg-hero-void border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.55)]' : 'bg-surface-base/96 border-border-subtle'}`}
+            >
+              <nav className="mx-auto flex max-w-[1440px] flex-col gap-1 px-6 py-4 lg:px-10">
+                {links.map((link) => {
+                  const active = isActive(link.to)
                   return (
                     <Link
                       key={link.label}
                       to={link.to}
                       onClick={() => setMobileOpen(false)}
-                      className={`px-4 py-3.5 font-mono text-[12px] uppercase tracking-[0.2em] transition-colors ${
-                        active ? 'text-hero-hot' : 'text-[#c9cfe9] hover:text-hero-hot'
+                      className={`px-1 py-3.5 font-mono text-[12px] uppercase tracking-[0.2em] transition-colors ${
+                        isDark
+                          ? active
+                            ? 'text-hero-hot'
+                            : 'text-[#c9cfe9] hover:text-hero-hot'
+                          : active
+                            ? 'text-accent'
+                            : 'text-ink-secondary hover:text-accent'
                       }`}
                     >
                       {link.label}
                     </Link>
                   )
-                }
-                return (
-                  <Link
-                    key={link.label}
-                    to={link.to}
-                    onClick={() => setMobileOpen(false)}
-                    className={`px-4 py-3 text-sm font-medium rounded-md transition-all ${isDark ? 'text-hero-mute hover:text-hero-ink hover:bg-white/[0.05]' : 'text-ink-secondary hover:text-ink-primary hover:bg-black/[0.03]'}`}
-                  >
-                    {link.label}
-                  </Link>
-                )
-              })}
-              {!hero && <div className={`mt-2 pt-3 border-t ${isDark ? 'border-white/10' : 'border-border-subtle'}`}>
-                <Link
-                  to="/about#contact"
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2 px-4 py-3 text-sm font-medium ${isDark ? 'text-hero-hot' : 'text-zinc-500'}`}
-                >
-                  Get in touch →
-                </Link>
-              </div>}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                })}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
+
     </>
   )
 }
