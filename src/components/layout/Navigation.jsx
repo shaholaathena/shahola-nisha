@@ -61,7 +61,7 @@ export default function Navigation({ dark = false, variant = 'default' }) {
         initial={false}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-[900] transition-colors duration-500 ${
           scrolled
             ? isDark
               ? 'bg-hero-void/90 backdrop-blur-xl border-b border-white/10 shadow-[0_1px_28px_rgba(0,0,0,0.4)]'

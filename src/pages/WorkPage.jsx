@@ -1,9 +1,6 @@
 import Navigation from '../components/layout/Navigation'
-import Footer from '../components/layout/Footer'
 import AboutAtmosphere from '../components/about/AboutAtmosphere'
-import WorkHero from '../components/work/WorkHero'
-import FeaturedCases from '../components/work/FeaturedCases'
-import AllWork from '../components/work/AllWork'
+import WorkReel from '../components/work/WorkReel'
 
 /* The work index, lifted out of the old single-page scroll.
 
@@ -53,23 +50,45 @@ import AllWork from '../components/work/AllWork'
    */
 export default function WorkPage() {
   return (
-    <div className="min-h-screen bg-hero-void text-hero-ink antialiased">
+    <div className="relative h-screen overflow-hidden bg-hero-void text-hero-ink antialiased">
       <Navigation variant="hero" dark />
 
-      <div className="relative">
-        {/* No horizon here: this page ends on a nine-card grid, and the
-            skyline was coming up through the bottom third of it. */}
-        <AboutAtmosphere horizon={false} />
+      {/* The homepage hero's night sky, one viewport tall, behind everything.
 
-        <div className="relative z-10">
-          <main>
-            <WorkHero />
-            <FeaturedCases />
-            <AllWork />
-          </main>
+          It is `absolute`, not `fixed`, on purpose: an ancestor of this page
+          carries `filter: blur(0px)`, which makes it the containing block for
+          fixed descendants, so `fixed` here would not have stayed put anyway.
+          Since the page no longer scrolls, absolute holds it exactly where it
+          needs to be. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 h-screen w-full overflow-hidden">
+        {/* The night sky, held well back.
 
-          <Footer dark />
-        </div>
+            At full strength the star field, the range and the lit skyline all
+            sit in the same tonal band as the covers — dark artwork on dark
+            artwork — and the stacks never separate from it no matter how they
+            are lit or arranged. Dropped to a third and veiled through the
+            middle, the sky still reads as the same scene as the rest of the
+            site but stops competing with the work in front of it. */}
+        <AboutAtmosphere />
+        {/* Muted with a veil rather than by wrapping the sky in an opacity
+            layer. Opacity on that subtree forces the whole thing — large SVGs,
+            masks and all — into an offscreen buffer on every composite, which
+            was enough to lock the renderer up. A plain gradient painted over the
+            top costs nothing and reads the same. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(78% 68% at 50% 46%, rgba(5,16,31,0.95) 0%,' +
+              ' rgba(5,16,31,0.86) 55%, rgba(5,16,31,0.62) 100%)',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 h-screen">
+        <main className="h-full">
+          <WorkReel />
+        </main>
       </div>
     </div>
   )

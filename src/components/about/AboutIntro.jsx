@@ -102,7 +102,7 @@ export default function AboutIntro() {
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div
           className="absolute inset-0 mix-blend-screen"
-          style={{ background: 'radial-gradient(100% 70% at 78% 8%, rgba(232,184,98,0.14) 0%, transparent 58%)' }}
+          style={{ background: 'radial-gradient(100% 70% at 78% 8%, rgba(232,184,98,0.07) 0%, transparent 58%)' }}
         />
       </div>
 
@@ -186,8 +186,8 @@ export default function AboutIntro() {
                 className="pointer-events-none absolute -inset-x-10 -inset-y-8 blur-2xl"
                 style={{
                   background:
-                    'radial-gradient(46% 42% at 47% 40%, rgba(232,184,98,0.20) 0%, transparent 72%),' +
-                    'radial-gradient(62% 58% at 47% 52%, rgba(43,86,158,0.34) 0%, transparent 74%)',
+                    'radial-gradient(46% 42% at 47% 40%, rgba(232,184,98,0.09) 0%, transparent 72%),' +
+                    'radial-gradient(62% 58% at 47% 52%, rgba(43,86,158,0.28) 0%, transparent 74%)',
                 }}
               />
 
@@ -208,7 +208,7 @@ export default function AboutIntro() {
                   style={{
                     ...SILHOUETTE,
                     background:
-                      'linear-gradient(158deg, rgba(232,184,98,0.75) 0%, rgba(232,184,98,0.22) 42%,' +
+                      'linear-gradient(158deg, rgba(232,184,98,0.42) 0%, rgba(232,184,98,0.12) 42%,' +
                       ' rgba(19,44,84,0.50) 76%, rgba(11,33,68,0.70) 100%)',
                   }}
                 />
@@ -218,7 +218,7 @@ export default function AboutIntro() {
                     and cool without ceasing to read as a photograph. */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 opacity-30 mix-blend-color"
+                  className="pointer-events-none absolute inset-0 opacity-[0.16] mix-blend-color"
                   style={{
                     ...SILHOUETTE,
                     background:
