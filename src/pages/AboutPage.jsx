@@ -3,7 +3,7 @@ import Footer from '../components/layout/Footer'
 import AboutIntro from '../components/about/AboutIntro'
 import WhoIAm from '../components/about/WhoIAm'
 import AboutAtmosphere from '../components/about/AboutAtmosphere'
-import AboutGallery from '../components/about/AboutGallery'
+// import AboutGallery from '../components/about/AboutGallery'
 import WhatIDo from '../components/about/WhatIDo'
 import ExperienceSection from '../components/sections/ExperienceSection'
 import CertificationsSection from '../components/sections/CertificationsSection'
@@ -47,7 +47,7 @@ export default function AboutPage() {
             <ExperienceSection />
             <WhatIDo />
             <WhoIAm />
-            <AboutGallery />
+            {/* The rest of it — parked for later. <AboutGallery /> */}
             <CertificationsSection />
             <CTASection />
           </main>

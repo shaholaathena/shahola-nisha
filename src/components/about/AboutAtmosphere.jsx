@@ -214,6 +214,10 @@ export default function AboutAtmosphere({ horizon = true, parallax = true, topSt
           ink, which is the wrong end of the problem to fix. The glow is gone
           and the ink is back to the token.
 
+          Then taken one step darker on request: the peak is #0a1c3b rather
+          than #0b2144, every stop scaled down with it. Still navy, not
+          charcoal, and darker only widens the contrast margins above.
+
           So: blue rather than bright. No blooms, no screened light; only the
           hue of the ground moves toward the homepage's, and the interest on
           this page still comes from type and structure rather than light. */}
@@ -221,9 +225,9 @@ export default function AboutAtmosphere({ horizon = true, parallax = true, topSt
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, #061328 0%, #07172f 4%, #081a35 9%, #091c3a 15%,' +
-            ' #0a1d3c 24%, #0b1f40 38%, #0b2144 54%, #0b1f40 67%, #0a1d3c 78%,' +
-            ' #08192f 86%, #071730 92%, #06132a 96%, #05101f 100%)',
+            'linear-gradient(180deg, #051024 0%, #06132a 4%, #07162f 9%, #081833 15%,' +
+            ' #081935 24%, #091b38 38%, #0a1c3b 54%, #091b38 67%, #081935 78%,' +
+            ' #07162d 86%, #06142a 92%, #051126 96%, #05101f 100%)',
         }}
       />
 

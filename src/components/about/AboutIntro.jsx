@@ -133,7 +133,7 @@ export default function AboutIntro() {
 
             <motion.p
               {...step(0.1)}
-              className="mt-6 max-w-lg text-[16px] leading-relaxed text-[#b9c0dd] sm:text-[17px]"
+              className="mt-6 max-w-2xl text-[16px] leading-relaxed text-[#b9c0dd] sm:text-[17px]"
             >
               A UX Analyst based in Dhaka, designing digital products and
               experiences that are useful, usable, and meaningful.
@@ -148,7 +148,7 @@ export default function AboutIntro() {
 
             <motion.p
               {...step(0.18)}
-              className="mt-7 max-w-lg text-[14px] leading-relaxed text-hero-mute sm:text-[15px]"
+              className="mt-7 max-w-2xl text-[14px] leading-relaxed text-hero-mute sm:text-[15px]"
             >
               I enjoy turning complex requirements into simple, intuitive
               solutions that create real impact. When I&rsquo;m not designing,

@@ -1,5 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { meta } from '../../data/portfolio'
+import { SPLIT, MAIN, HEADING } from '../about/columns'
+import Eyebrow from '../about/Eyebrow'
 
 const EASE = [0.22, 1, 0.36, 1]
 const VP = { once: true, margin: '-15%' }
@@ -54,7 +56,7 @@ export default function CTASection() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden py-24 text-hero-ink lg:py-36"
+      className="relative overflow-hidden pt-16 pb-24 text-hero-ink lg:pt-24 lg:pb-36"
     >
       {/* A warm pool at the base, so the page ends on light rather than on a
           hard edge. Same gold as every other accent, at a whisper. */}
@@ -83,7 +85,7 @@ export default function CTASection() {
             The grid lost its top rule and top margin with the masthead: the
             section element already draws a border above itself, and a second
             one immediately under it read as a doubled line. */}
-        <div className="grid grid-cols-1 gap-y-12 lg:grid-cols-[46%_1fr] lg:gap-x-16">
+        <div className={SPLIT}>
 
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 30, filter: 'blur(6px)' }}
@@ -98,14 +100,15 @@ export default function CTASection() {
                 one now use, which makes the contact band the fourth rather than
                 a layout of its own.
 
-                Its column is 46%, not the 35% the three sections above use.
-                Those hold a short eyebrow and a heading; this holds the page's
-                closing sentence at 54px, and 35% broke it into three ragged
-                lines. The right-hand column only carries two short link rows,
-                so the width was going spare. */}
-            <h2 className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-semibold leading-[1.02] tracking-[-0.032em]">
+                Its column is the shared third from columns.js and its heading
+                the shared HEADING, with the same small label every other
+                section opens on, so the page ends on the rhythm it kept all
+                the way down. "worth using" is held together so the line never
+                breaks inside the gold phrase. */}
+            <Eyebrow className="mb-6">Contact</Eyebrow>
+            <h2 className={HEADING}>
               Let&rsquo;s make something{' '}
-              <em className="not-italic font-semibold text-hero-hot decoration-hero-hot/40 underline underline-offset-[6px]">worth using</em>.
+              <span className="whitespace-nowrap text-hero-hot">worth using</span>.
             </h2>
           </motion.div>
 
@@ -115,7 +118,7 @@ export default function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
             transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-            
+            className={MAIN}
           >
             {CHANNELS.map((c) => (
               <a

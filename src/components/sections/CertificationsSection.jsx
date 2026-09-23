@@ -123,10 +123,9 @@ export default function CertificationsSection() {
       eyebrow="Certifications"
       label={
         <>
-          Verified, not claimed<span className="text-hero-hot">.</span>
+          Always <span className="text-hero-hot">learning</span>.
         </>
       }
-      lede="Three of these link straight to the issuer's record."
     >
       <ul className="flex flex-col">
         {certs.map((c, i) => (

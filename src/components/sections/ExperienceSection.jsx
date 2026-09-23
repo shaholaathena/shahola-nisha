@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import SectionIntro from '../about/SectionIntro'
+import { SPLIT, MAIN } from '../about/columns'
 import Star from '../about/Star'
 import { experience } from '../../data/portfolio'
 
@@ -67,7 +68,7 @@ function Role({ job, i, at, progress, reduce }) {
   const text = useTransform(progress, [at - 0.12, Math.min(1, at + 0.03)], [0.45, 1])
 
   return (
-    <li className={`relative py-8 pl-9 sm:pl-10 ${i > 0 ? 'border-t border-white/[0.08]' : 'pt-0'}`}>
+    <li className={`relative py-8 pl-9 sm:pl-10 ${i > 0 ? '' : 'pt-0'}`}>
       <span
         data-star
         className="absolute left-0 block"
@@ -147,14 +148,14 @@ export default function ExperienceSection() {
   return (
     <section id="experience" className="relative">
       <div className="mx-auto max-w-[1440px] px-6 py-16 lg:px-10 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[35%_1fr] gap-y-12 lg:gap-x-16">
+        <div className={SPLIT}>
           <div>
             <SectionIntro eyebrow="Experience">
               From ideas to <span className="text-hero-hot">real impact</span>.
             </SectionIntro>
           </div>
 
-          <div>
+          <div className={MAIN}>
             <ol ref={listRef} className="relative flex flex-col">
               {/* The track: from the first star down, fading out past the last. */}
               <span

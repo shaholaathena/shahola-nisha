@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { projects } from '../data/portfolio'
 import Footer from '../components/layout/Footer'
+import CaseStudyBar from '../components/layout/CaseStudyBar'
+import AboutAtmosphere from '../components/about/AboutAtmosphere'
 import ScrollProgress from '../components/layout/ScrollProgress'
-import logo from '../assets/logo.png'
 
 const project = projects.find(p => p.id === 'merchant-onboarding')
 const cs = project.caseStudy
@@ -254,7 +255,7 @@ function BrandSwitcher() {
               className={`group relative flex items-center gap-2 rounded-full border px-3.5 py-2 text-[12px] font-semibold transition-all duration-200 ${
                 on
                   ? 'border-transparent text-white'
-                  : 'border-border-subtle bg-surface-1 text-ink-muted hover:text-ink-secondary hover:border-zinc-300'
+                  : 'border-border-subtle bg-surface-1 text-ink-muted hover:text-ink-secondary hover:border-border-strong'
               }`}
               style={on ? { background: b.accent } : undefined}
             >
@@ -410,7 +411,7 @@ function ProductCard({ product: p }) {
       />
 
       <div className="relative z-10 p-7">
-        <span className="inline-block px-2 py-0.5 rounded-full bg-zinc-900 text-white text-[9px] font-mono uppercase tracking-[0.16em] whitespace-nowrap">
+        <span className="inline-block px-2 py-0.5 rounded-full bg-hero-hot/15 text-hero-hot text-[9px] font-mono uppercase tracking-[0.16em] whitespace-nowrap">
           {p.role}
         </span>
 
@@ -509,7 +510,7 @@ function FlowRow({ flow }) {
                   </div>
 
                   <motion.span
-                    className="mt-1.5 block h-0.5 rounded-full bg-zinc-900"
+                    className="mt-1.5 block h-0.5 rounded-full bg-hero-hot"
                     animate={{ width: on ? 18 : 0, opacity: on ? 1 : 0 }}
                     transition={{ duration: 0.3, ease: EASE }}
                   />
@@ -547,7 +548,7 @@ function FlowRow({ flow }) {
             </div>
             <div className="lg:col-span-7">
               <p className="text-[1.02rem] text-ink-secondary leading-relaxed mb-3">{a.hint}</p>
-              <p className="text-[13px] text-ink-muted leading-relaxed border-l-2 border-zinc-200 pl-3.5">{a.why}</p>
+              <p className="text-[13px] text-ink-muted leading-relaxed border-l-2 border-hero-hot/40 pl-3.5">{a.why}</p>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -577,7 +578,7 @@ export default function MerchantOnboardingCaseStudyPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-surface-base text-ink-primary antialiased">
+    <div className="theme-night min-h-screen bg-hero-void text-ink-primary antialiased">
       <ScrollProgress />
 
       {/* ── Sticky Section Nav ── */}
@@ -600,10 +601,10 @@ export default function MerchantOnboardingCaseStudyPage() {
                   title={label}
                   className="group flex items-center justify-end gap-2"
                 >
-                  <span className={`text-[11px] font-mono transition-all duration-200 ${isActive ? 'opacity-100 text-zinc-600' : 'opacity-0 group-hover:opacity-50 text-ink-muted'}`}>
+                  <span className={`text-[11px] font-mono transition-all duration-200 ${isActive ? 'opacity-0 group-hover:opacity-100 text-ink-secondary' : 'opacity-0 group-hover:opacity-70 text-ink-muted'}`}>
                     {num} {label}
                   </span>
-                  <div className={`rounded-full transition-all duration-300 ${isActive ? 'w-2 h-2 bg-zinc-800' : 'w-1.5 h-1.5 bg-zinc-300 group-hover:bg-zinc-400'}`} />
+                  <div className={`rounded-full transition-all duration-300 ${isActive ? 'w-2 h-2 bg-hero-hot' : 'w-1.5 h-1.5 bg-white/20 group-hover:bg-white/40'}`} />
                 </button>
               )
             })}
@@ -611,27 +612,16 @@ export default function MerchantOnboardingCaseStudyPage() {
         )}
       </AnimatePresence>
 
-      {/* ── Top Nav ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-surface-base/80 backdrop-blur-xl border-b border-border-subtle">
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <img src={logo} alt="Alimoon Nisha" className="h-14 w-auto object-contain opacity-85 group-hover:opacity-100 transition-opacity duration-300" />
-          </Link>
-          <Link to="/work" className="group flex items-center gap-2 text-base text-ink-secondary hover:text-ink-primary transition-colors">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:-translate-x-0.5 transition-transform">
-              <path d="M19 12H5M12 5l-7 7 7 7" />
-            </svg>
-            Back to work
-          </Link>
-        </div>
-      </header>
+      <CaseStudyBar />
 
-      <main className="pt-16">
+      <div className="relative">
+        <AboutAtmosphere topStars={0.38} />
+        <div className="relative z-10">
+      <main className="pt-24 lg:pt-28">
 
         {/* ══════════ 01 HERO ══════════ */}
-        <section id="cs-cover" style={{ scrollMarginTop: '64px' }} className="bg-surface-base">
-          <div className="h-0.5 w-full bg-gradient-to-r from-zinc-800 via-zinc-400/40 to-transparent" />
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 pt-20 pb-16 lg:pt-28 lg:pb-20">
+        <section id="cs-cover" style={{ scrollMarginTop: '64px' }}>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 pt-20 pb-16 lg:pt-28 lg:pb-20">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 xl:gap-16 items-center">
               <div className="lg:col-span-7">
                 <motion.div
@@ -643,7 +633,7 @@ export default function MerchantOnboardingCaseStudyPage() {
                   <span className="w-1 h-1 rounded-full bg-zinc-300" />
                   <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-ink-muted">{cs.year}</span>
                   <span className="w-1 h-1 rounded-full bg-zinc-300" />
-                  <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-zinc-600">Bangla QR · Fintech</span>
+                  <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-ink-secondary">Bangla QR · Fintech</span>
                 </motion.div>
 
                 <motion.h1
@@ -686,8 +676,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ══════════ TL;DR — the skimmer's path, three beats ══════════ */}
-        <section className="border-y border-border-subtle bg-surface-1">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-14 lg:py-16">
+        <section>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 py-14 lg:py-16">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
               {cs.tldr.map((t, i) => (
                 <Reveal key={t.label} delay={i * 0.1}>
@@ -700,8 +690,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ══════════ 02 THE PROBLEM ══════════ */}
-        <section id="cs-problem" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-20 lg:py-24">
+        <section id="cs-problem" style={{ scrollMarginTop: '64px' }}>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 py-20 lg:py-24">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 mb-16">
               <Reveal className="lg:col-span-7">
                 <Eyebrow num="02" label="The problem" />
@@ -711,16 +701,16 @@ export default function MerchantOnboardingCaseStudyPage() {
                 {/* Guard: unverified copy renders as an obvious placeholder rather
                     than shipping as fact. Kept for any future gap in this data. */}
                 {cs.problem.startsWith('[NEEDS') ? (
-                  <div className="rounded-xl border-2 border-dashed border-amber-300 bg-amber-50/60 p-4">
-                    <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-amber-700 mb-1.5">
+                  <div className="rounded-xl border-2 border-dashed border-hero-hot/40 bg-hero-hot/[0.05] p-4">
+                    <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-hero-hot mb-1.5">
                       Placeholder, not publishable
                     </div>
-                    <p className="text-[14px] text-amber-900/80 leading-relaxed">{cs.problem}</p>
+                    <p className="text-[14px] text-ink-secondary leading-relaxed">{cs.problem}</p>
                   </div>
                 ) : (
                   <>
                     <p className="text-[1.05rem] text-ink-secondary leading-relaxed mb-5">{cs.problem}</p>
-                    <p className="text-[1.05rem] text-ink-primary leading-relaxed font-medium border-l-2 border-zinc-900 pl-4">
+                    <p className="text-[1.05rem] text-ink-primary leading-relaxed font-medium border-l-2 border-hero-hot pl-4">
                       {cs.solution}
                     </p>
                   </>
@@ -728,8 +718,8 @@ export default function MerchantOnboardingCaseStudyPage() {
               </Reveal>
 
               <Reveal className="lg:col-span-5" delay={0.12}>
-                <div className="rounded-2xl bg-zinc-900 p-6 text-white h-full flex flex-col justify-center">
-                  <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500 mb-3">
+                <div className="rounded-2xl border border-hero-hot/25 bg-hero-hot/[0.06] p-6 text-ink-primary h-full flex flex-col justify-center">
+                  <div className="text-[10px] font-mono uppercase tracking-[0.18em] text-hero-hot mb-3">
                     The design challenge
                   </div>
                   <p className="font-display text-[1.15rem] font-semibold leading-snug">
@@ -740,7 +730,7 @@ export default function MerchantOnboardingCaseStudyPage() {
             </div>
 
             {/* the constraints that shaped every decision */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 pt-14 border-t border-zinc-100">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 pt-14 border-t border-border-subtle">
               {cs.frictions.map((f, i) => (
                 <Reveal key={f.title} delay={i * 0.1}>
                   <div className="font-display text-4xl font-bold text-ink-primary tracking-tight mb-3">{f.stat}</div>
@@ -753,8 +743,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ══════════ 03 TWO APPS ══════════ */}
-        <section id="cs-apps" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-1">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-20 lg:py-24">
+        <section id="cs-apps" style={{ scrollMarginTop: '64px' }}>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 py-20 lg:py-24">
             <Reveal className="max-w-2xl mb-12">
               <Eyebrow num="03" label="Two apps" />
               <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink-primary tracking-tight leading-[1.1] mb-5">
@@ -790,8 +780,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ══════════ 04 THE FLOW ══════════ */}
-        <section id="cs-flow" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-16 lg:py-20">
+        <section id="cs-flow" style={{ scrollMarginTop: '64px' }}>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 py-16 lg:py-20">
             <Reveal className="max-w-2xl">
               <Eyebrow num="04" label="The flow" />
               <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink-primary tracking-tight leading-[1.1] mb-5">
@@ -806,8 +796,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ══════════ 05 THE CRM FLOW ══════════ */}
-        <section id="cs-crm" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-1">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-16 lg:py-20">
+        <section id="cs-crm" style={{ scrollMarginTop: '64px' }}>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 py-16 lg:py-20">
             <Reveal className="max-w-2xl">
               <Eyebrow num="05" label="Onboard a merchant" />
               <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink-primary tracking-tight leading-[1.1] mb-5">
@@ -822,8 +812,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ══════════ 06 HOW IT SCALES — the platform, placed after the product ══════════ */}
-        <section id="cs-platform" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-20 lg:py-24">
+        <section id="cs-platform" style={{ scrollMarginTop: '64px' }}>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 py-20 lg:py-24">
             <Reveal className="max-w-2xl mb-12">
               <Eyebrow num="06" label="How it scales" />
               <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink-primary tracking-tight leading-[1.1] mb-5">
@@ -838,7 +828,7 @@ export default function MerchantOnboardingCaseStudyPage() {
             </div>
 
             {/* Token architecture — two tiers, one rule */}
-            <div className="pt-14 border-t border-zinc-100">
+            <div className="pt-14 border-t border-border-subtle">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
                 <Reveal className="lg:col-span-5">
                   <h3 className="font-display text-2xl font-bold text-ink-primary tracking-tight leading-tight mb-3">
@@ -873,8 +863,8 @@ export default function MerchantOnboardingCaseStudyPage() {
                   ))}
 
                   <Reveal delay={0.2}>
-                    <div className="rounded-2xl bg-zinc-900 p-5 text-white">
-                      <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-zinc-500 mb-2">The one rule</div>
+                    <div className="rounded-2xl border border-hero-hot/25 bg-hero-hot/[0.06] p-5 text-ink-primary">
+                      <div className="text-[10px] font-mono uppercase tracking-[0.16em] text-hero-hot mb-2">The one rule</div>
                       <p className="font-display text-lg font-bold leading-snug mb-2">{cs.tokenRule}</p>
                       <p className="text-[13px] text-zinc-400 leading-relaxed">{cs.tokenRuleWhy}</p>
                     </div>
@@ -884,7 +874,7 @@ export default function MerchantOnboardingCaseStudyPage() {
             </div>
 
             {/* what the system buys */}
-            <Reveal className="pt-14 mt-14 border-t border-zinc-100">
+            <Reveal className="pt-14 mt-14 border-t border-border-subtle">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {cs.systemPillars.map((p, i) => (
                   <Reveal key={p.title} delay={i * 0.08}>
@@ -900,8 +890,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ══════════ 07 DECISIONS ══════════ */}
-        <section id="cs-system" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-1">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-20 lg:py-24">
+        <section id="cs-system" style={{ scrollMarginTop: '64px' }}>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 py-20 lg:py-24">
             <Reveal className="max-w-2xl mb-12">
               <Eyebrow num="07" label="Decisions" />
               <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink-primary tracking-tight leading-[1.1]">
@@ -928,8 +918,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ══════════ 08 OUTCOME ══════════ */}
-        <section id="cs-outcome" style={{ scrollMarginTop: '64px' }} className="border-b border-border-subtle bg-surface-base">
-          <div className="max-w-6xl mx-auto px-6 lg:px-10 py-20 lg:py-24">
+        <section id="cs-outcome" style={{ scrollMarginTop: '64px' }}>
+          <div className="max-w-[1440px] mx-auto px-6 lg:px-10 py-20 lg:py-24">
             <Reveal className="max-w-2xl mb-12">
               <Eyebrow num="08" label="Outcome" />
               <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink-primary tracking-tight leading-[1.15]">
@@ -979,7 +969,7 @@ export default function MerchantOnboardingCaseStudyPage() {
                 </div>
 
                 <Reveal delay={0.2}>
-                  <div className="mt-8 pt-6 border-t border-zinc-100 grid grid-cols-2 gap-x-6 gap-y-4">
+                  <div className="mt-8 pt-6 border-t border-border-subtle grid grid-cols-2 gap-x-6 gap-y-4">
                     {cs.overviewSpecs.map(s => (
                       <div key={s.label}>
                         <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-[0.14em] mb-1">{s.label}</div>
@@ -994,8 +984,8 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
         {/* ── CTA ── */}
-        <section className="relative overflow-hidden bg-surface-base">
-          <div className="relative z-10 max-w-6xl mx-auto px-6 lg:px-10 py-24 lg:py-28 text-center">
+        <section className="relative overflow-hidden">
+          <div className="relative z-10 max-w-[1440px] mx-auto px-6 lg:px-10 py-24 lg:py-28 text-center">
             <Reveal>
               <p className="text-xs font-bold uppercase tracking-[0.22em] text-ink-muted mb-6">Interested in working together?</p>
               <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-ink-primary tracking-tight leading-[1.06] mb-10">
@@ -1003,7 +993,7 @@ export default function MerchantOnboardingCaseStudyPage() {
               </h2>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a href="https://www.linkedin.com/in/shahola-nisha/" target="_blank" rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 px-7 py-3.5 text-sm font-semibold text-white bg-zinc-900 rounded-md hover:bg-zinc-800 transition-all hover:-translate-y-0.5 shadow-sm">
+                  className="group inline-flex items-center gap-3 px-7 py-3.5 text-sm font-semibold text-hero-void bg-hero-hot rounded-md hover:bg-[#f0c97f] transition-all hover:-translate-y-0.5 shadow-sm">
                   Get in touch
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
                     <line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" />
@@ -1018,7 +1008,9 @@ export default function MerchantOnboardingCaseStudyPage() {
         </section>
 
       </main>
-      <Footer />
+      <Footer dark />
+        </div>
+      </div>
     </div>
   )
 }

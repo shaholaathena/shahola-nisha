@@ -36,6 +36,7 @@
    ───────────────────────────────────────────────────────────────────────────── */
 import { motion, useReducedMotion } from 'framer-motion'
 import SectionIntro from './SectionIntro'
+import { SPLIT, MAIN } from './columns'
 
 /* Outline marks, 1.5px stroke on currentColor so they inherit the muted ink and
    stay a whisper next to the type rather than competing with it. */
@@ -88,17 +89,14 @@ export default function WhoIAm() {
   return (
     <section id="who-i-am" className="relative">
       <div className="mx-auto max-w-[1440px] px-6 py-16 lg:px-10 lg:py-24">
-        <div className="grid grid-cols-1 gap-y-12 lg:grid-cols-[35%_1fr] lg:gap-x-16">
+        <div className={SPLIT}>
           <div>
-            <SectionIntro
-              eyebrow="Who I am"
-              lede="Curious about people, drawn to details, and always looking for a better way to make things feel simple."
-            >
-              I notice the <span className="text-hero-hot">little things</span>.
+            <SectionIntro eyebrow="Who I am">
+              Drawn to the <span className="text-hero-hot">little things</span>.
             </SectionIntro>
           </div>
 
-          <div className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2">
+          <div className={`${MAIN} grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2`}>
             {PERSONAL.map((p, i) => {
               const Mark = Icon[p.icon]
               return (

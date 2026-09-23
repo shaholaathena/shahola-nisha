@@ -57,7 +57,7 @@ export const projects = [
       duration: '2 months',
      
       challenge: 'Make complex banking — fund transfers, beneficiary management, bill payments — feel simple for users ranging from urban professionals to first-time mobile banking users in rural Bangladesh, within Bangladesh Bank regulations.',
-      outcome: 'Handoff-ready design covering 30+ flows and 100+ screens — onboarding, transfers, payments, and account management — with a scalable component library for Android & iOS.',
+      outcome: 'Handoff-ready design for onboarding, transfers, payments, and account management, with a scalable component library for Android & iOS.',
       phases: ['Research', 'User Flow', 'Mobile UI Design', 'Prototype', 'Handoff'],
       metrics: [
         { label: 'Project duration', value: '2 months' },
@@ -68,7 +68,7 @@ export const projects = [
       keyDecisions: [
         {
           title: 'Beneficiary-first transfer architecture',
-          description: 'Structured beneficiary system with 5 types — once saved, any transfer becomes a 3-tap process.',
+          description: 'Structured beneficiary system with 5 types.',
         },
         {
           title: 'One decision per screen',

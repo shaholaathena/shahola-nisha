@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { HEADING } from './columns'
 
 /* ─────────────────────────────────────────────────────────────────────────────
    SectionIntro — the full-width section header from her mockups.
@@ -55,7 +56,7 @@ export default function SectionIntro({ eyebrow, lede, children }) {
           {eyebrow}
         </div>
 
-        <h2 className="font-display text-[clamp(1.85rem,3.4vw,3rem)] font-medium leading-[1.1] tracking-[-0.028em] text-hero-ink">
+        <h2 className={HEADING}>
           {children}
         </h2>
       </motion.div>

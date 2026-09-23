@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import Eyebrow from './Eyebrow'
+import { SPLIT, MAIN, HEADING } from './columns'
 
 /* ─────────────────────────────────────────────────────────────────────────────
    SectionRow — the About page's one structural idea.
@@ -21,8 +22,7 @@ import Eyebrow from './Eyebrow'
    was simply too small to hold a page whose hero runs to 4.6rem and whose
    closing statement runs to 8rem: the entire middle of the scroll sat a full
    register below both ends of it and read as small print between two posters.
-   The rail is three columns wide, so this is close to the ceiling before
-   two-word headings start breaking badly.
+   The rail is a third of the page (see columns.js).
 
    `eyebrow` and `lede` are both optional and both widen the rail from a label
    into a small piece of writing. Pass `eyebrow` ONLY when it says something the
@@ -45,14 +45,14 @@ export default function SectionRow({ id, label, eyebrow, lede, meta, children })
   return (
     <section id={id} className="relative">
       <div className="mx-auto max-w-[1440px] px-6 py-16 lg:px-10 lg:py-24">
-        <div className="grid grid-cols-12 gap-y-8 lg:gap-x-16">
-          <div className="col-span-12 lg:col-span-3">
+        <div className={SPLIT}>
+          <div>
             <div className="lg:sticky lg:top-28">
               {/* No mark either way. The bare gold diamond that used to sit
                   above an unlabelled heading went with the rest of the page's
                   marks; without an eyebrow the heading simply leads. */}
-              {eyebrow && <Eyebrow className="mb-5">{eyebrow}</Eyebrow>}
-              <h2 className="font-display text-[clamp(1.95rem,3.5vw,2.95rem)] font-semibold leading-[1.04] tracking-[-0.028em] text-hero-ink">
+              {eyebrow && <Eyebrow className="mb-6">{eyebrow}</Eyebrow>}
+              <h2 className={HEADING}>
                 {label}
               </h2>
               {lede && (
@@ -67,7 +67,7 @@ export default function SectionRow({ id, label, eyebrow, lede, meta, children })
               )}
             </div>
           </div>
-          <motion.div {...reveal} className="col-span-12 lg:col-span-9">
+          <motion.div {...reveal} className={MAIN}>
             {children}
           </motion.div>
         </div>

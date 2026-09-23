@@ -123,6 +123,55 @@ html:has(.bg-hero-void) ::-webkit-scrollbar-thumb:hover {
   background: rgba(233, 236, 250, 0.3);
 }
 
+/* ── Night theme for the case studies ──
+
+   The case-study pages were written against the paper tokens above, which is
+   what lets them go dark without being rewritten: inside `.theme-night` the
+   same token names resolve to the About page's night palette. `surface-base`
+   goes transparent so the shared sky (AboutAtmosphere) shows through every
+   section; `surface-1/2/3` become faint lifts off it rather than paper bands;
+   ink moves to hero-ink and its steps; the burnt-amber accent becomes the gold.
+
+   Anything a page hard-codes (zinc, slate, white) does not follow and is fixed
+   at the call site. ── */
+.theme-night {
+  --color-paper: transparent;
+  --color-surface-base: transparent;
+  --color-surface-1: rgba(233 236 250 / 0.035);
+  --color-surface-2: rgba(233 236 250 / 0.06);
+  --color-surface-3: rgba(233 236 250 / 0.1);
+  --color-card: rgba(233 236 250 / 0.035);
+
+  --color-ink-primary: #e9ecfa;
+  --color-ink-secondary: #b9c0dd;
+  --color-ink-muted: #8f96b8;
+
+  --color-border-subtle: rgba(233 236 250 / 0.08);
+  --color-border-default: rgba(233 236 250 / 0.14);
+  --color-border-strong: rgba(233 236 250 / 0.22);
+  --color-border-accent: rgba(233 236 250 / 0.32);
+
+  --color-accent: #e8b862;
+  --color-accent-hover: #f0c97f;
+  --color-accent-ink: #e8b862;
+  --color-accent-soft: rgba(232 184 98 / 0.12);
+  --color-accent-on-dark: #e8b862;
+}
+
+.theme-night .card-surface {
+  background: rgba(233, 236, 250, 0.035);
+  border-color: rgba(233, 236, 250, 0.08);
+}
+
+.theme-night .card-surface-elevated {
+  background: rgba(233, 236, 250, 0.06);
+  border-color: rgba(233, 236, 250, 0.12);
+}
+
+.theme-night .divider {
+  border-top-color: rgba(233, 236, 250, 0.08);
+}
+
 /* ── Scrollbar utilities ── */
 .hide-scrollbar {
   scrollbar-width: none;       /* Firefox */
