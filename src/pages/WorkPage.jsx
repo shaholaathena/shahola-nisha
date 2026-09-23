@@ -69,18 +69,24 @@ export default function WorkPage() {
             are lit or arranged. Dropped to a third and veiled through the
             middle, the sky still reads as the same scene as the rest of the
             site but stops competing with the work in front of it. */}
-        <AboutAtmosphere />
+        <AboutAtmosphere parallax={false} />
         {/* Muted with a veil rather than by wrapping the sky in an opacity
             layer. Opacity on that subtree forces the whole thing — large SVGs,
             masks and all — into an offscreen buffer on every composite, which
             was enough to lock the renderer up. A plain gradient painted over the
-            top costs nothing and reads the same. */}
+            top costs nothing and reads the same.
+
+            Held back hardest behind the covers and the two type columns, and
+            opened up toward the corners. At 0.62 even at the edges the stars
+            were gone entirely and the page read as flat navy beside About's
+            sky; the corners are where the sky can show without anything
+            sitting on it. */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(78% 68% at 50% 46%, rgba(5,16,31,0.95) 0%,' +
-              ' rgba(5,16,31,0.86) 55%, rgba(5,16,31,0.62) 100%)',
+              'radial-gradient(70% 62% at 50% 48%, rgba(5,16,31,0.93) 0%,' +
+              ' rgba(5,16,31,0.74) 58%, rgba(5,16,31,0.34) 100%)',
           }}
         />
       </div>

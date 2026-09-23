@@ -98,6 +98,31 @@
   }
 }
 
+/* ── The dark pages' own chrome ──
+
+   The base layer above is the paper theme's: a #eef1ea body and a scrollbar
+   track in the same paper. On the night pages that showed as a pale 3px stripe
+   down the right edge of every screen, and as a flash of paper past the ends of
+   the page on an overscroll bounce — a light seam on a dark site. Scoped with
+   :has() to whichever page renders the night ground, so the paper pages keep
+   theirs. ── */
+html:has(.bg-hero-void),
+html:has(.bg-hero-void) body {
+  background-color: #05101f;
+}
+
+html:has(.bg-hero-void) ::-webkit-scrollbar-track {
+  background: #05101f;
+}
+
+html:has(.bg-hero-void) ::-webkit-scrollbar-thumb {
+  background: rgba(233, 236, 250, 0.16);
+}
+
+html:has(.bg-hero-void) ::-webkit-scrollbar-thumb:hover {
+  background: rgba(233, 236, 250, 0.3);
+}
+
 /* ── Scrollbar utilities ── */
 .hide-scrollbar {
   scrollbar-width: none;       /* Firefox */
@@ -303,6 +328,26 @@
   to   { transform: translate3d(-25%, 0, 0); }
 }
 
+/* ── The rooftop cat's tail. A slow sway and back, then a long rest, so it
+      reads as a cat that is awake rather than as a thing on a loop. Pivots on
+      the root, which is where the tail meets the haunch in RoofCat's drawing.
+      11s, coprime with the comets and off the process walk's beat. ── */
+@keyframes hero-cat-tail {
+  0%, 62%, 100% { transform: rotate(0deg); }
+  72%           { transform: rotate(-9deg); }
+  82%           { transform: rotate(3deg); }
+  90%           { transform: rotate(-2deg); }
+}
+
+.hero-cat-tail {
+  /* fill-box, not view-box: view-box measures the origin from the SVG's own
+     viewport, which does not start at the drawing's x = 0. The root is the
+     bottom-left of the tail's own box — it leaves the haunch and runs right. */
+  transform-box: fill-box;
+  transform-origin: 0% 90%;
+  animation: hero-cat-tail 11s var(--ease-in-out-quint) infinite;
+}
+
 .hero-comet      { animation: hero-comet var(--comet-dur) linear infinite var(--comet-delay); }
 .hero-twinkle    { animation: hero-twinkle var(--tw-dur) ease-in-out infinite var(--tw-delay); }
 .hero-shaft      { animation: hero-shaft 11s var(--ease-in-out-quint) infinite; }
@@ -314,7 +359,8 @@
   .hero-comet,
   .hero-twinkle,
   .hero-shaft,
-  .hero-marquee { animation: none !important; }
+  .hero-marquee,
+  .hero-cat-tail { animation: none !important; }
   .hero-comet { opacity: 0 !important; }
 }
 
@@ -340,8 +386,16 @@
       one axis makes `font-weight` unreliable for the other. ── */
 .hero-headline {
   font-family: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
-  font-variation-settings: 'wght' 700, 'wdth' var(--hero-wdth);
-  font-weight: 700;
+  font-variation-settings: 'wght' var(--hero-wght, 700), 'wdth' var(--hero-wdth);
+  font-weight: var(--hero-wght, 700);
+}
+
+/* The headline under the name. Same face and the same entrance, a much lighter
+   weight: with the name above it at 700, a second 700 block read as a second
+   title and neither led. Weight, not only size, is what makes this the voice
+   under the name rather than a rival to it. */
+.hero-headline--voice {
+  --hero-wght: 420;
 }
 
 /* Chromatic split. Paint-only and short-lived — it runs once on entrance and
@@ -414,5 +468,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero-split { text-shadow: none; }
-  .hero-headline { font-variation-settings: 'wght' 700, 'wdth' 100; }
+  .hero-headline { font-variation-settings: 'wght' var(--hero-wght, 700), 'wdth' 100; }
 }

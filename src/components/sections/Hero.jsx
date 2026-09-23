@@ -366,12 +366,16 @@ export default function Hero() {
             onClick={(e) => go(e, '/')}
             data-nav
             aria-label="Alimoon Nisha, home"
-            className="pointer-events-auto flex h-11 items-center"
+            className="pointer-events-auto flex h-12 items-center lg:h-14"
           >
+            {/* 48/56px, up from 36/40. It is the only drawing of her name on the
+                page, and at 40px a signature this thin read as an ornament in
+                the corner. The homepage does not scroll, so there is no tighter
+                state for it to shrink to. */}
             <img
               src={logo}
               alt="Alimoon Nisha"
-              className="h-9 w-auto object-contain lg:h-10"
+              className="h-12 w-auto object-contain lg:h-14"
               draggable="false"
               style={{
                 filter: 'brightness(0) invert(1) drop-shadow(0 0 18px rgba(232, 184, 98,0.35))',
@@ -394,10 +398,10 @@ export default function Hero() {
               rule under the word already says which one the cursor is on. The
               padding stays for the hit area — it is just no longer drawn.
 
-              h-11 here and on the mark's link, so the two share a centreline
-              by construction. Left to their content, the 40px mark and the 43px
-              link row sat 1.6px apart (2.8px below lg). */}
-          <ul className="hidden h-11 items-center gap-7 md:flex">
+              The same box height here and on the mark's link, so the two share
+              a centreline by construction. Left to their content, the mark and
+              the 43px link row sat 1.6px apart (2.8px below lg). */}
+          <ul className="hidden h-12 items-center gap-7 md:flex lg:h-14">
             {NAV.map((item) => (
               <li key={item.label} data-nav>
                 {/* No aria-current: Home has left the list — the mark is the way
@@ -476,9 +480,38 @@ export default function Hero() {
 
               `pb/-mb` on each mask: the mask has to clear descenders — the p in
               "problems" — without the padding changing the line spacing. */}
+          {/* ── The name is the title ──
+
+              A first-time visitor could read the whole frame without learning
+              whose it was: the name sat mid-paragraph in body type, and the
+              signature in the corner reads as a mark rather than as a name. So
+              it leads, as the h1, in the headline's own face and on the same
+              entrance — its own clip mask and `data-line`, so the stagger opens
+              on it, and `data-headline`, so the width axis and the chromatic
+              split resolve on it too.
+
+              Her headline follows with its words, breaks and gold untouched.
+
+              The first pass separated the two by size alone — both 700, both
+              white, 1.7:1 — and they read as two titles stacked, neither
+              leading. Now the difference is in kind: the name at 700 and the
+              headline at 420 in a softer ink, with only its gold phrase in full
+              colour, and the name about 2.2x the headline, not 1.7x.
+
+              Tracking is -0.03em, not tighter. At -0.045em the l-i-m in
+              "Alimoon" touched and the name set as one dark slab. */}
           <h1
             data-headline
-            className="hero-headline hero-split leading-[1.06] tracking-[-0.03em] text-[clamp(1.55rem,6.2vw,3.7rem)]"
+            className="hero-headline hero-split leading-[0.98] tracking-[-0.03em] text-hero-ink text-[clamp(2.6rem,8.2vw,5.5rem)]"
+          >
+            <span className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
+              <span data-line className="inline-block">Alimoon Nisha</span>
+            </span>
+          </h1>
+
+          <p
+            data-headline
+            className="hero-headline hero-headline--voice hero-split mt-4 leading-[1.14] tracking-[-0.02em] text-[#c9cfe9] text-[clamp(1.2rem,3.3vw,2.5rem)]"
           >
             {HEADLINE.map((parts, i) => (
               <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
@@ -491,7 +524,7 @@ export default function Hero() {
                 </span>
               </span>
             ))}
-          </h1>
+          </p>
 
           {/* The sub carries everything the headline is free NOT to say: who she
               is, where, and what she works on. The headline above is a mood; if
@@ -501,10 +534,16 @@ export default function Hero() {
                 · "This is Alimoon Nisha" -> "I'm". The headline is first person
                   ("I follow questions"), so a third-person introduction between
                   it and "I design ..." switched voice twice in three lines.
-                · The name is capitalised. It appears nowhere else in readable
-                  type — the wordmark top-left is a signature and reads as a
-                  mark, not as a name — so this is the only place a first-time
-                  visitor actually learns it.
+                · The name has since moved out of this sentence and up into
+                  the h1. "I'm Alimoon Nisha, a UX Analyst" directly under a
+                  title reading "Alimoon Nisha" said it twice in one glance, so
+                  this now opens "I'm a UX Analyst", with her sign-off.
+                · Then her own line, shortened at her request. Its opening
+                  sentence ("UX Designer & Engineer based in Dhaka, Bangladesh.")
+                  went: the eyebrow already names both roles and the meta line
+                  under the CTA already says Dhaka. "From research and
+                  interaction to" became "from research to", and the em dash a
+                  comma, per the note below.
                 · "etc." is gone. A capability list that trails off says the
                   list ran out of energy, and it is the last thing read before
                   the call to action.
@@ -533,10 +572,9 @@ export default function Hero() {
               counting characters, and check it at 375px as well as desktop.
               Below 672px the viewport, not this cap, sets the width, so the
               mobile line count does not follow from the desktop one. */}
-          <p data-sub className="mt-7 max-w-2xl text-[15px] leading-relaxed text-[#b9c0dd] sm:text-[16px]">
-            I&rsquo;m Alimoon Nisha, a UX Analyst at SSL Wireless in Dhaka. I design
-            complex banking, healthcare, and enterprise products, then write the
-            clean, production-ready front-end that ships them.
+          <p data-sub className="mt-6 max-w-2xl text-[15px] leading-relaxed text-[#b9c0dd] sm:text-[16px]">
+            I design thoughtful experiences for banking, payments, healthcare, and
+            enterprise products, from research to production-ready interfaces.
           </p>
 
           <div data-cta className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">

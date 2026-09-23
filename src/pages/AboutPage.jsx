@@ -3,7 +3,6 @@ import Footer from '../components/layout/Footer'
 import AboutIntro from '../components/about/AboutIntro'
 import WhoIAm from '../components/about/WhoIAm'
 import AboutAtmosphere from '../components/about/AboutAtmosphere'
-import AboutTicker from '../components/about/AboutTicker'
 import AboutGallery from '../components/about/AboutGallery'
 import WhatIDo from '../components/about/WhatIDo'
 import ExperienceSection from '../components/sections/ExperienceSection'
@@ -41,11 +40,10 @@ export default function AboutPage() {
     <div className="min-h-screen bg-hero-void text-hero-ink antialiased">
       <Navigation variant="hero" dark />
       <div className="relative">
-        <AboutAtmosphere />
+        <AboutAtmosphere topStars={0.38} />
         <div className="relative z-10">
           <main>
             <AboutIntro />
-            <AboutTicker />
             <ExperienceSection />
             <WhatIDo />
             <WhoIAm />

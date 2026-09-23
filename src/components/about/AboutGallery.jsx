@@ -53,8 +53,8 @@ const placeholder = (w, h, index, label) =>
     `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>
       <defs>
         <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-          <stop offset='0' stop-color='#0c1a2e'/>
-          <stop offset='1' stop-color='#16273e'/>
+          <stop offset='0' stop-color='#0e2548'/>
+          <stop offset='1' stop-color='#17325c'/>
         </linearGradient>
       </defs>
       <rect width='${w}' height='${h}' fill='url(#g)'/>
@@ -131,7 +131,7 @@ export default function AboutGallery() {
       }
 
   return (
-    <section id="gallery" className="relative border-t border-white/10">
+    <section id="gallery" className="relative">
       <div className="mx-auto max-w-[1440px] px-6 pt-16 lg:px-10 lg:pt-24">
         <motion.div {...reveal} className="max-w-xl">
           <Eyebrow className="mb-6">Off the clock</Eyebrow>
@@ -151,13 +151,18 @@ export default function AboutGallery() {
       <div className="group relative mt-10 overflow-hidden py-1 motion-reduce:overflow-x-auto lg:mt-14">
         {/* Edge fade, so frames enter and leave instead of being cut. Hidden
             when the strip becomes a manual scroller, where a fade over the
-            first and last frame would just obscure them. */}
+            first and last frame would just obscure them.
+
+            Painted in the sky's colour at this depth of the page (#0a1d3c,
+            see AboutAtmosphere), not the void. It was #05101f, which matched
+            when the whole sky was near-black; on the navy it drew two dark
+            bands down the edges of the strip. */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-10 motion-reduce:hidden"
           style={{
             background:
-              'linear-gradient(90deg, #05101f 0%, transparent 7%, transparent 93%, #05101f 100%)',
+              'linear-gradient(90deg, #0a1d3c 0%, transparent 7%, transparent 93%, #0a1d3c 100%)',
           }}
         />
         {/* The duration is inline because `.hero-marquee` sets `animation` as

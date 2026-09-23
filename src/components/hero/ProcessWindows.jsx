@@ -55,8 +55,9 @@
 
    ══ THE COUPLING ════════════════════════════════════════════════════════════
 
-   `CANVAS` and `OBJECT_POSITION` MUST match the artwork's intrinsic size and
-   the `objectPosition` on the <img> in NightScene. Change one without the other
+   `CANVAS` and `OBJECT_POSITION` (in ./cityArtwork, shared with RoofCat) MUST
+   match the artwork's intrinsic size and the `objectPosition` on the <img> in
+   NightScene. Change one without the other
    and every light drifts off its window. `object-fit` geometry is not exposed
    to script, so there is no way to derive it from the DOM — it is duplicated on
    purpose, and this note is why that is safe.
@@ -64,10 +65,7 @@
 import { useRef, useState, useLayoutEffect, useEffect } from 'react'
 import gsap from 'gsap'
 import { process } from '../../data/portfolio'
-
-/* cityscape2.svg's own viewBox, and the objectPosition NightScene renders it at. */
-const CANVAS = { w: 1703, h: 1200 }
-const OBJECT_POSITION = { x: 0.5, y: 0.84 }
+import { coverMapping } from './cityArtwork'
 
 const TONE = {
   early: { light: '#f4d79c', text: '#f9e8c6' },
@@ -214,12 +212,8 @@ export default function ProcessWindows() {
      state rather than silently reporting it missing. */
   if (!box) return <svg ref={root} data-process className={shell} aria-hidden="true" />
 
-  /* ── Artwork space → host space. `object-cover` scales by whichever axis needs
-        more, then objectPosition decides which part of the overflow is cropped.
-        That overflow is negative, which is why these offsets are. ── */
-  const scale = Math.max(box.w / CANVAS.w, box.h / CANVAS.h)
-  const offX = (box.w - CANVAS.w * scale) * OBJECT_POSITION.x
-  const offY = (box.h - CANVAS.h * scale) * OBJECT_POSITION.y
+  // Artwork space → host space; see ./cityArtwork.
+  const { scale, offX, offY } = coverMapping(box)
 
   return (
     <svg

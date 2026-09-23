@@ -50,6 +50,7 @@ import mountains from '../../assets/hero/mtn-back.svg'
 // layers resolve from hero/. Worth unifying, but not worth a silent file move.
 import cityscape from '../../assets/hero-creative/cityscape2.svg'
 import ProcessWindows from './ProcessWindows'
+import RoofCat from './RoofCat'
 
 /* ── Comets.
 
@@ -448,6 +449,7 @@ export default function NightScene() {
             and scroll scale the artwork gets, or they slide off their panes the
             moment anything moves. */}
         <ProcessWindows />
+        <RoofCat />
       </div>
 
       {/* ── Volumetric shafts. Skewed wedges rising off the city, breathing on

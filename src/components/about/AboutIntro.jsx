@@ -1,7 +1,8 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import nisha from '../../assets/nisha-1.png'
+import nisha from '../../assets/nisha-3.png'
 import Eyebrow from './Eyebrow'
+import { softStops } from '../../lib/softGradient'
 
 /* ─────────────────────────────────────────────────────────────────────────────
    AboutIntro — the arrival band of the About page.
@@ -20,48 +21,55 @@ import Eyebrow from './Eyebrow'
 
    ── The photograph ──
 
-   The asset is a masked cut-out: 822×839 RGBA, already desaturated, with her
-   silhouette occupying roughly the middle 60% and everything around it fully
-   transparent. It is not a framed scene, and the distinction decides the whole
-   treatment — anything painted across the element's box lands on empty pixels
-   as well as on her, which is how an earlier flat `rgba(5,16,31,0.30)` wash
-   over the frame turned into a visible navy rectangle hanging in the sky.
+   Her own portrait, her own cut-out: 1160×1355 RGBA, shot outdoors in soft
+   natural light, head tilted, in a dark shirt. It replaced a front-on studio
+   headshot on white, and nearly everything that one needed has gone with it —
+   there was a shade laid across one side of her face to break its symmetry,
+   and a darkening over a cream jacket so the chest did not outshine the face.
+   This photograph has its own light and its own dark clothes, so both were
+   taken out; putting a painted shadow on a face that already has real light
+   on it only fights it.
 
-   So nothing here is allowed to be rectangular. Three layers, in order:
-
-     · An aura underneath her. A cut-out with no ground reads as pasted on;
-       a soft warm-over-cool bloom, blurred and centred on her torso rather
-       than on the box, makes the section look like the thing lighting her.
-       It sits behind the image so her own edge stays crisp against it.
-     · A duotone locked to her silhouette. The overlay carries the same mask
-       as the photograph, so the tint stops exactly where she does. Blended
-       `soft-light`, it warms her lit side toward the gold and drops her
-       shadow side into the page's navy, which is what actually marries a
-       black-and-white portrait to a coloured surface — a wash over the box
-       only ever greys the background out.
-     · A bottom fade, as a mask rather than a gradient fill. The asset ends in
-       a straight horizontal cut at her waist; masking dissolves that cut into
-       the night, whereas painting a gradient over it would re-introduce the
-       rectangle the mask exists to avoid. It is applied to the wrapper so the
-       photograph and its duotone fade together as one.
-
-   The image also renders at its own aspect ratio. The previous `aspect-[3/4]`
-   with `object-cover` cropped a near-square source down to a portrait box,
-   which cut her trailing arm off at the frame edge.
+   What is left is light-touch. No frame, and fades only on the outside edges
+   where the original photograph cut her off: the sides and the foot. A grade a
+   shade below a daylight frame, a soft warm-over-cool glow behind her, and a
+   thin warm rim offset toward the moon, up and to the right, so her hair
+   separates from the sky.
 
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* Dissolves the asset's straight waist cut into the night. On the wrapper, so
-   the photograph and the duotone over it fade as a single object. */
-const BOTTOM_FADE = {
-  WebkitMaskImage:
-    'linear-gradient(180deg, #000 0%, #000 58%, rgba(0,0,0,0.55) 80%, transparent 100%)',
-  maskImage:
-    'linear-gradient(180deg, #000 0%, #000 58%, rgba(0,0,0,0.55) 80%, transparent 100%)',
+/* An eased falloff that holds full strength out to `hold` of the way, then
+   leaves along a smoothstep, so there is no point at which the eye can find
+   where it starts or ends. Used for both masks below. */
+const held = (rgb, a, hold) =>
+  [`rgb(${rgb} / ${a}) 0%`, `rgb(${rgb} / ${a}) ${hold}%`]
+    .concat(
+      [0.12, 0.25, 0.38, 0.5, 0.62, 0.75, 0.88, 1].map((t) => {
+        const k = 1 - t * t * (3 - 2 * t)
+        return `rgb(${rgb} / ${(a * k).toFixed(4)}) ${(hold + t * (100 - hold)).toFixed(1)}%`
+      }),
+    )
+    .join(', ')
+
+/* ── How she meets the sky ──
+
+   One soft oval, not straight edges. Three linear fades — one per cut edge of
+   the photograph — each drew a line of its own: a vertical one down the right
+   shoulder and a band across the foot. A single ellipse round her, at full
+   strength over her face, hair and shoulders and easing out beyond them,
+   leaves no line anywhere. It is deliberately large: an earlier oval that
+   began fading at the shoulders took her body with it and left a head
+   floating in the sky, which reads as too big however it is sized. This one
+   keeps the shoulders and chest, and only the photograph's own cut edges fall
+   into the tail, at a tenth of their strength or less. */
+const EDGE_FADE_OVAL = `radial-gradient(ellipse 56% 64% at 52% 40%, ${held('0 0 0', 1, 50)})`
+const EDGE_FADE = {
+  WebkitMaskImage: EDGE_FADE_OVAL,
+  maskImage: EDGE_FADE_OVAL,
 }
 
-/* Clips the tint to her outline by reusing the portrait's own alpha as a mask,
-   which is what keeps it off the transparent air around her. */
+/* Her outline, from the portrait's own alpha, so the ambient shade below
+   stops exactly where she does and never lands on the sky. */
 const SILHOUETTE = {
   WebkitMaskImage: `url(${nisha})`,
   maskImage: `url(${nisha})`,
@@ -102,7 +110,7 @@ export default function AboutIntro() {
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <div
           className="absolute inset-0 mix-blend-screen"
-          style={{ background: 'radial-gradient(100% 70% at 78% 8%, rgba(232,184,98,0.07) 0%, transparent 58%)' }}
+          style={{ background: `radial-gradient(100% 70% at 78% 8%, ${softStops('232 184 98', 0.07, 62)})` }}
         />
       </div>
 
@@ -113,7 +121,7 @@ export default function AboutIntro() {
           {/* Statement */}
           <div className="col-span-12 lg:col-span-6">
             <motion.div {...rise}>
-              <Eyebrow className="mb-7">About me</Eyebrow>
+              <Eyebrow className="mb-7">A LITTLE ABOUT ME</Eyebrow>
             </motion.div>
 
             <motion.h1
@@ -177,52 +185,57 @@ export default function AboutIntro() {
                 })}
             className="col-span-12 sm:col-span-8 md:col-span-6 lg:col-span-6"
           >
-            <div className="relative ml-auto w-full max-w-[500px]">
-              {/* The light she is standing in. Centred on her torso — 47% 40%
-                  is where the silhouette actually sits inside the transparent
-                  frame, not where the box's middle is. */}
+            {/* 400px: a presence in the sky beside the words rather than
+                their equal, with some air to its right. */}
+            <div className="relative mx-auto w-full max-w-[400px] lg:ml-auto lg:mr-10">
+              {/* The light she stands in: warm at her head, the page's cool
+                  navy further out. Blurred, eased, and behind her. */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute -inset-x-10 -inset-y-8 blur-2xl"
+                className="pointer-events-none absolute -inset-12 blur-2xl"
                 style={{
                   background:
-                    'radial-gradient(46% 42% at 47% 40%, rgba(232,184,98,0.09) 0%, transparent 72%),' +
-                    'radial-gradient(62% 58% at 47% 52%, rgba(43,86,158,0.28) 0%, transparent 74%)',
+                    `radial-gradient(46% 38% at 50% 34%, ${softStops('232 184 98', 0.09)}),` +
+                    `radial-gradient(64% 60% at 50% 46%, ${softStops('52 84 156', 0.16)})`,
                 }}
               />
 
-              {/* Photograph + duotone, faded out together at the waist cut. */}
-              <div className="relative" style={BOTTOM_FADE}>
+              {/* Turned 13° toward level. Her head sits at 21° in the
+                  photograph (measured along the pupils), which read as
+                  lopsided at this size; 8° is left so it still reads as a
+                  relaxed tilt rather than a passport pose. It turns about her
+                  face, and the fade masks turn with it — rotating only the
+                  image would swing the photograph's cut edges out from under
+                  them. */}
+              <div className="relative" style={{ ...EDGE_FADE, transform: 'rotate(13deg)', transformOrigin: '50% 40%' }}>
                 <img
                   src={nisha}
                   alt="Alimoon Nisha"
                   className="relative block w-full select-none"
-                  style={{ filter: 'contrast(1.06) brightness(0.97)' }}
+                  style={{
+                    filter:
+                      /* The rim is offset toward the light — right and up — so it
+                         catches only the edge the moon would, instead of
+                         outlining her evenly all the way round. */
+                      'saturate(0.9) contrast(1.02) brightness(0.9) drop-shadow(1.5px -1px 1px rgba(232,184,98,0.22)) drop-shadow(6px -4px 14px rgba(232,184,98,0.08))',
+                  }}
                   draggable="false"
                 />
-                {/* Depth first: soft-light deepens her shadow side toward the
-                    page's navy without flattening the face. */}
+                {/* Night round her, daylight on her face. The photograph was
+                    taken outdoors by day, so the ends of her hair and her
+                    shoulders are lit as brightly as her face — brighter than
+                    anything else in a night sky, which is what kept her
+                    looking pasted in. The night now reaches into her from the
+                    outside: clear over the face, deepening toward her edges,
+                    so those edges are already close to the sky's own value
+                    when the oval above dissolves them into it. Multiply only
+                    darkens; nothing on her changes colour. */}
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 mix-blend-soft-light"
+                  className="pointer-events-none absolute inset-0 mix-blend-multiply"
                   style={{
                     ...SILHOUETTE,
-                    background:
-                      'linear-gradient(158deg, rgba(232,184,98,0.42) 0%, rgba(232,184,98,0.12) 42%,' +
-                      ' rgba(19,44,84,0.50) 76%, rgba(11,33,68,0.70) 100%)',
-                  }}
-                />
-                {/* Then hue, held at 0.3. `color` on a greyscale base is a true
-                    duotone and will happily recolour her skin outright; a third
-                    of it is the point where she picks up the section's warmth
-                    and cool without ceasing to read as a photograph. */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 opacity-[0.16] mix-blend-color"
-                  style={{
-                    ...SILHOUETTE,
-                    background:
-                      'linear-gradient(158deg, #e8b862 0%, #c99a52 38%, #2b4a86 78%, #16305c 100%)',
+                    background: `radial-gradient(ellipse 34% 30% at 52% 38%, rgb(255 255 255 / 0) 0%, rgb(255 255 255 / 0) 55%, rgb(40 58 102 / 0.35) 100%), radial-gradient(ellipse 60% 62% at 52% 40%, rgb(40 58 102 / 0) 0%, rgb(40 58 102 / 0) 30%, rgb(24 40 78 / 0.5) 100%)`,
                   }}
                 />
               </div>

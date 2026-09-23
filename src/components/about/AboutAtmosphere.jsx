@@ -1,3 +1,7 @@
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { softStops } from '../../lib/softGradient'
 import skyStars from '../../assets/hero/sky.svg'
 import mountains from '../../assets/hero/mtn-back.svg'
 import cityscape from '../../assets/hero-creative/cityscape2.svg'
@@ -77,7 +81,7 @@ import cityscape from '../../assets/hero-creative/cityscape2.svg'
    covers the entire scroll, several thousand pixels, so the same density would
    read as static rather than as sky. The count is tuned to the page height, not
    to the hero's number. */
-const STARS = Array.from({ length: 70 }, (_, i) => {
+const STARS = Array.from({ length: 130 }, (_, i) => {
   const r = (n) => {
     const x = Math.sin((i + 1) * n) * 10000
     return x - Math.floor(x)
@@ -85,9 +89,10 @@ const STARS = Array.from({ length: 70 }, (_, i) => {
   const bright = r(43.12) > 0.74
   return {
     left: `${(r(12.9898) * 100).toFixed(2)}%`,
-    /* Starts at 14%: above that is the hero, which paints over this anyway, and
-       drawing stars nobody can see is just work for the compositor. */
-    top: `${(14 + r(78.233) * 84).toFixed(2)}%`,
+    /* Starts at 18%, below the intro. The intro already has the top star
+       field behind it, and twinkles scattered round her portrait as well made
+       that sky busier than the portrait itself. */
+    top: `${(18 + r(78.233) * 80).toFixed(2)}%`,
     size: bright ? 2 : 1,
     /* Per-star floor and ceiling, so the layer has stars that pulse hard and
        stars that barely move. A uniform blink reads as a broken pixel. */
@@ -100,13 +105,106 @@ const STARS = Array.from({ length: 70 }, (_, i) => {
   }
 })
 
-export default function AboutAtmosphere({ horizon = true }) {
+gsap.registerPlugin(ScrollTrigger)
+
+/* The pools of light, in page px. `r` is the ellipse's radii, so each element
+   is twice that; the gradient fades out by 70% of the way to its edge. */
+const NEBULAE = [
+  /* The first one sits under the portrait and runs down into Experience, so
+     the light she stands in and the first pool below are one continuous glow
+     rather than two lights with a dark band between them. */
+  { x: '74%', y: 960, rx: 900, ry: 640, rgb: '88 118 205', a: 0.1 },
+  { x: '8%', y: 1900, rx: 860, ry: 580, rgb: '169 156 240', a: 0.08 },
+  { x: '90%', y: 2560, rx: 800, ry: 540, rgb: '99 132 230', a: 0.1 },
+  { x: '12%', y: 3240, rx: 880, ry: 560, rgb: '169 156 240', a: 0.08 },
+  { x: '80%', y: 3900, rx: 820, ry: 520, rgb: '99 132 230', a: 0.09 },
+]
+
+// Falloffs with no edge; see lib/softGradient.
+const soft = softStops
+
+/* ── Parallax ──
+
+   The sky used to scroll as one flat sheet with the copy, so nothing in it
+   ever read as further away than the text on top. Now each layer moves by its
+   own amount as it passes through the viewport: `data-depth` is how many px it
+   travels either side of where it is drawn, and the further back a layer is,
+   the more it holds still against the scroll. Stars furthest, then the light,
+   then the range; the skyline is nearest and moves least.
+
+   Each layer rests at its drawn position when it is centred in view — the
+   `-d → +d` range is symmetric about that point — so the composition this file
+   describes is still what you see when you look at it. The skyline is the
+   exception: the page ends before it can reach the middle of the screen, so it
+   instead arrives at its drawn place exactly at the bottom of the scroll.
+
+   Scrubbed straight off the scroll, which is Lenis's (SmoothScroll feeds its
+   position to ScrollTrigger), so the drift has the page's own inertia and needs
+   no smoothing of its own. Transform only. Nothing under reduced motion. */
+const DEPTH = { stars: 170, light: 110, range: 60, skyline: 70 }
+
+/* `parallax={false}` for a page that does not scroll — /work is one locked
+   viewport, and a layer tied to a scroll that never happens just sits at its
+   start offset, which pushed the skyline 70px down and out of frame there. */
+/* `topStars` is the strength of the star field across the top of the page.
+   About passes it lower than the default: that field sits behind the intro,
+   and at full strength the sky around her portrait was busier than the
+   portrait. /work keeps the default under its own veil. */
+export default function AboutAtmosphere({ horizon = true, parallax = true, topStars = 0.8 }) {
+  const root = useRef(null)
+
+  useEffect(() => {
+    const el = root.current
+    if (!el || !parallax) return undefined
+    const mm = gsap.matchMedia()
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      el.querySelectorAll('[data-depth]').forEach((layer) => {
+        const d = Number(layer.dataset.depth)
+        gsap.fromTo(
+          layer,
+          { y: -d },
+          { y: d, ease: 'none', scrollTrigger: { trigger: layer, start: 'top bottom', end: 'bottom top', scrub: true } },
+        )
+      })
+
+      el.querySelectorAll('[data-depth-end]').forEach((layer) => {
+        gsap.fromTo(
+          layer,
+          { y: Number(layer.dataset.depthEnd) },
+          { y: 0, ease: 'none', scrollTrigger: { trigger: layer, start: 'top bottom', end: 'max', scrub: true } },
+        )
+      })
+
+      /* The first star field and the drawn twinkle start at the very top, so
+         they have no "centred" moment to rest on: they sit where drawn at the
+         top of the page and drift down as it scrolls away. */
+      gsap.to(el.querySelectorAll('[data-drift]'), {
+        y: (i, target) => Number(target.dataset.drift),
+        ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top top', end: 'max', scrub: true, invalidateOnRefresh: true },
+      })
+    })
+    return () => mm.revert()
+  }, [horizon, parallax])
+
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* The sky. It does move, but only between #05101f and #071528 — a
-          difference you register as depth rather than as a colour change, and
-          small enough that the ground stays effectively as dark as the flat
-          void it replaced.
+    <div ref={root} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* The sky. It was held between #05101f and #071528 — so dark and so
+          grey that beside the homepage it read as charcoal, not night, and
+          crossing from / to /about changed the colour of the whole site. It now
+          takes the homepage sky's own navy (NightScene's ramp runs #061529 →
+          #0b2144 → #183a66), stopping at #0b2144: the deepest blue that ramp
+          reaches while the page's smallest type still clears 4.5:1 on it
+          (`text-hero-mute` is 5.5:1 at #0b2144, 4.8:1 at #102c56, which is
+          too close to the line to put under body copy for a whole page).
+
+          The top is NOT the void. It was, and the intro sat on the darkest band
+          of the page with the portrait's blue aura lit up inside it, so the
+          hero read as a dark block with a bright patch and the navy of the
+          sections began below it as a separate colour. It now opens at
+          #061328 and reaches the page's navy by a quarter of the way down,
+          through small steps, so the intro and Experience share one sky. Only
+          the foot still settles to the void, under the footer.
 
           An earlier pass ran this out to #102440 with gold blooms screened over
           it. That is the version that cost readability, and the numbers were
@@ -116,25 +214,87 @@ export default function AboutAtmosphere({ horizon = true }) {
           ink, which is the wrong end of the problem to fix. The glow is gone
           and the ink is back to the token.
 
-          What is left is dark, and the interest on this page now comes from
-          type, structure and one moving strip instead of from light. */}
+          So: blue rather than bright. No blooms, no screened light; only the
+          hue of the ground moves toward the homepage's, and the interest on
+          this page still comes from type and structure rather than light. */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, #05101f 0%, #061426 30%, #071528 56%,' +
-            ' #061224 80%, #05101f 100%)',
+            'linear-gradient(180deg, #061328 0%, #07172f 4%, #081a35 9%, #091c3a 15%,' +
+            ' #0a1d3c 24%, #0b1f40 38%, #0b2144 54%, #0b1f40 67%, #0a1d3c 78%,' +
+            ' #08192f 86%, #071730 92%, #06132a 96%, #05101f 100%)',
         }}
       />
 
 
+
+      {/* ── Nebulae ──
+
+          The sky alone was one flat colour for four thousand pixels: navy now
+          rather than charcoal, but still a solid ground, and she did not want a
+          solid ground. The homepage's night has depth because light sits in it.
+          These are that light — broad, soft pools of the cool counter-light and
+          the violet the homepage already uses, alternating sides down the page
+          so each section sits in a slightly different part of the sky.
+
+          Cool only, never gold: the gold bloom is what once took the page's
+          smallest labels to 3.6:1. At these strengths the worst point — the
+          centre of a pool over the bluest band of the sky — keeps
+          `text-hero-mute` at 4.8:1. Positioned in px from the top, not %, so
+          the pools keep their shape however tall the page is. */}
+      {NEBULAE.map((n) => (
+        <div
+          key={n.y}
+          data-depth={DEPTH.light}
+          className="absolute will-change-transform"
+          style={{
+            left: `calc(${n.x} - ${n.rx}px)`,
+            top: n.y - n.ry,
+            width: n.rx * 2,
+            height: n.ry * 2,
+            background: `radial-gradient(closest-side, ${soft(n.rgb, n.a)})`,
+          }}
+        />
+      ))}
+
+      {/* The same star field again, further down, so the stars do not stop
+          where the intro ends. Two more bands of the supplied artwork, each
+          faded at both ends so no band has an edge, fainter than the first,
+          and mirrored or flipped so the repeat is not recognisable. */}
+      {[
+        { top: 1250, flip: 'scaleX(-1)', opacity: 0.5 },
+        { top: 2550, flip: 'scaleY(-1)', opacity: 0.42 },
+      ].map((band) => (
+        <div
+          key={band.top}
+          data-depth={DEPTH.stars}
+          className="absolute inset-x-0 h-[1100px] will-change-transform"
+          style={{
+            top: band.top,
+            maskImage:
+              'linear-gradient(180deg, transparent 0%, #000 22%, #000 70%, transparent 100%)',
+            WebkitMaskImage:
+              'linear-gradient(180deg, transparent 0%, #000 22%, #000 70%, transparent 100%)',
+          }}
+        >
+          <img
+            src={skyStars}
+            alt=""
+            className="h-full w-full object-cover"
+            draggable="false"
+            style={{ filter: 'saturate(0.22)', opacity: band.opacity, transform: band.flip }}
+          />
+        </div>
+      ))}
 
       {/* The supplied field, top of the page. Held to a fixed 1100px rather
           than a percentage: this layer is thousands of pixels tall and a
           percentage would stretch a star field into streaks. Masked out at the
           foot so it ends in sky rather than on an edge. */}
       <div
-        className="absolute inset-x-0 top-0 h-[1100px]"
+        data-drift="320"
+        className="absolute inset-x-0 top-0 h-[1100px] will-change-transform"
         style={{
           maskImage:
             'linear-gradient(180deg, #000 0%, #000 46%, rgba(0,0,0,0.45) 74%, transparent 100%)',
@@ -145,14 +305,14 @@ export default function AboutAtmosphere({ horizon = true }) {
         <img
           src={skyStars}
           alt=""
-          className="h-full w-full object-cover opacity-80"
+          className="h-full w-full object-cover"
           draggable="false"
           /* Desaturated hard. The artwork's stars are 342 in #50FFFF — pure
              cyan — and 59 in #5095FF. On the homepage they sit inside a
              neon-lit city and read as part of that scene; over this page's
              plain dark sky the same dots read as coloured noise rather than
              stars. At 0.22 they keep a cool cast and nothing more. */
-          style={{ filter: 'saturate(0.22)' }}
+          style={{ filter: 'saturate(0.22)', opacity: topStars }}
         />
       </div>
 
@@ -167,7 +327,8 @@ export default function AboutAtmosphere({ horizon = true }) {
           is already dark (NightScene has to push it to 1.35 to read at all),
           so 0.42 was very nearly invisible. */}
       <div
-        className="absolute bottom-[480px] left-0 hidden h-[280px] w-[58%] sm:block"
+        data-depth={DEPTH.range}
+        className="absolute bottom-[480px] left-0 hidden h-[280px] w-[58%] will-change-transform sm:block"
         style={{
           maskImage:
             'linear-gradient(90deg, #000 0%, #000 44%, rgba(0,0,0,0.55) 72%, transparent 100%)',
@@ -206,7 +367,8 @@ export default function AboutAtmosphere({ horizon = true }) {
           horizon. 560px at a 15% onset brings its top up to meet the foot, so
           the range now sits on the skyline the way it does on the homepage. */}
       <div
-        className="absolute inset-x-0 bottom-0 h-[560px]"
+        data-depth-end={DEPTH.skyline}
+        className="absolute inset-x-0 bottom-0 h-[560px] will-change-transform"
         style={{
           maskImage:
             'linear-gradient(180deg, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 34%, rgba(0,0,0,0.72) 60%, #000 82%)',
@@ -223,6 +385,7 @@ export default function AboutAtmosphere({ horizon = true }) {
         />
       </div>
 
+      <div data-drift="220" className="absolute inset-0 will-change-transform">
       {STARS.map((s, i) => (
         <span
           key={i}
@@ -239,6 +402,7 @@ export default function AboutAtmosphere({ horizon = true }) {
           }}
         />
       ))}
+      </div>
 
 
       {/* Ground. The skyline now runs behind the footer, and the foot of that
@@ -261,8 +425,8 @@ export default function AboutAtmosphere({ horizon = true }) {
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(90deg, rgba(2,3,10,0.45) 0%, transparent 17%,' +
-            ' transparent 83%, rgba(2,3,10,0.45) 100%)',
+            `linear-gradient(90deg, ${soft('3 10 24', 0.4, 22)}),` +
+            `linear-gradient(270deg, ${soft('3 10 24', 0.4, 22)})`,
         }}
       />
     </div>

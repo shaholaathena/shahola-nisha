@@ -43,7 +43,7 @@ export default function SectionRow({ id, label, eyebrow, lede, meta, children })
       }
 
   return (
-    <section id={id} className="relative border-t border-white/10">
+    <section id={id} className="relative">
       <div className="mx-auto max-w-[1440px] px-6 py-16 lg:px-10 lg:py-24">
         <div className="grid grid-cols-12 gap-y-8 lg:gap-x-16">
           <div className="col-span-12 lg:col-span-3">

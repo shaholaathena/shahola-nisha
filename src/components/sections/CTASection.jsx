@@ -54,7 +54,7 @@ export default function CTASection() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden border-t border-white/10 py-24 text-hero-ink lg:py-36"
+      className="relative overflow-hidden py-24 text-hero-ink lg:py-36"
     >
       {/* A warm pool at the base, so the page ends on light rather than on a
           hard edge. Same gold as every other accent, at a whisper. */}

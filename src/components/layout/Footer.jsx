@@ -43,8 +43,11 @@ export default function Footer({ dark = false }) {
   return (
     <footer
       className={
+        /* No rule on the dark footer: the sections above it no longer carry
+           hairlines between them, and one left here would be the only line on
+           the page. The light pages keep theirs. */
         dark
-          ? 'border-t border-white/10'
+          ? ''
           : 'border-t border-border-subtle bg-surface-base'
       }
     >

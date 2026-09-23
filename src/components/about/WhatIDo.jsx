@@ -1,52 +1,45 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import SectionIntro from './SectionIntro'
+import Star from './Star'
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   WhatIDo — the process, full width.
+   WhatIDo — the process, as a constellation.
 
-   Lifted out of ExperienceSection and given its own file, because it stopped
-   sharing that file's shape. It no longer uses SectionRow at all: the statement
-   runs across the top instead of sitting in a left rail, and the three stages
-   run beneath it as equal columns. Leaving it inside a component whose other
-   half is a rail-and-content timeline would have meant one file holding two
-   unrelated layouts.
+   The heading says "the whole product journey", and this page is a night sky.
+   So the three stages are three stars joined by one line: as the section
+   scrolls into view the line draws from the first star to the next, and each
+   star lights as the line reaches it. The journey is something that happens
+   in front of the reader rather than three columns that are simply there.
 
-   It is also the one section that stayed full width when Experience, Who I am
-   and Contact all moved to a 35%/65% two-column split. It was tried that way
-   and put back: the three stages read as a row, and stacked into a 65% column
-   they became three lines of a list instead — the numerals stopped being a
-   sequence you take in at a glance. Full width is also what keeps this section
-   and the gallery from letting the middle of the scroll settle into five
-   variations on one grid.
+   It replaced three columns of dim numerals over dot-separated lists. That read
+   as a spec sheet — nothing ranked, nothing connected the stages, and the
+   dot separators broke badly wherever a list wrapped (a line could open on
+   "· React"). Here each stage has a clear order of reading — its number, its
+   name in display type, then its items one to a line — and the line between
+   the stars is what says they are one process.
 
-   The header is `SectionIntro`, shared with Experience and Who I am.
+   Across on desktop; on a phone the same line runs down the left edge, like a
+   timeline, with each stage hanging off its star.
 
-   A closing band used to sit at the foot of this section — "People · Ideas ·
-   Better products" against "Always learning. Always building." — echoing the
-   opening dash. It is gone: it restated the three stages above it in adjective
-   form and then added a slogan, so the section ended on its weakest line. The
-   AI tools row now occupies that position and keeps the opening dash answered,
-   but with something the reader did not already know.
+   No mark before any label: the gold rules and diamonds were taken off every
+   label on this page at her request, and that includes the AI row here, which
+   carried the last one.
+
+   Motion is the scroll itself — the line's length and each star's light are
+   read straight off the section's scroll progress, so it is always exactly as
+   far along as the reader is, never an animation playing at them. Transform and
+   opacity only. Under reduced motion the whole constellation is simply lit.
 
    ── Copy ──
 
-   Verbatim from her mockup with one edit: the lede's em dash is a comma here,
-   because this project does not use em dashes. WhoIAm carries the same note for
-   the same reason.
+   The heading, the lede and the three stages are hers; the item lists were
+   trimmed to four each at her request (see STAGES). The lede's em dash is a
+   comma because this project does not use em dashes.
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* Trimmed to the mockup. Against what the data file previously listed, this
-   drops "Flow design" from 01, "Design tokens" and "Usability review" from 02,
-   and shortens "Design-to-code handoff" to "Design handoff". The lists are
-   load-bearing now — the layout wants each one to land in two lines, and a
-   fifth or sixth entry pushes a column to three and breaks the row's rhythm. */
-/* Moved here from Who I am. It sat there as a personal aside next to reading
-   habits and playlists, which is the wrong neighbourhood: these are things she
-   builds with, and this is the section that says what she builds with. It is
-   set apart from the three stages rather than made a fourth, because it is not
-   a phase of the work — it runs through all three. */
-const AI_TOOLS = ['Claude', 'Antigravity', 'Cursor', 'Gemini', 'ChatGPT']
-
+/* Four items a stage at most, so the three columns end level. "Bring to life"
+   had six: Framer Motion went, and JavaScript and React share a line. */
 const STAGES = [
   {
     n: '01',
@@ -61,12 +54,58 @@ const STAGES = [
   {
     n: '03',
     title: 'Bring to life',
-    items: ['HTML & CSS', 'JavaScript', 'React', 'Tailwind', 'Framer Motion', 'Design handoff'],
+    items: ['HTML & CSS', 'JavaScript & React', 'Tailwind', 'Design handoff'],
   },
 ]
 
+/* Not a fourth stage: it runs through all three, so it sits under the
+   constellation rather than on it. */
+const AI_TOOLS = ['Claude', 'Antigravity', 'Cursor', 'Gemini', 'ChatGPT']
+
+/* Where along the line each star sits, as a share of the scroll progress. */
+const AT = [0, 0.5, 1]
+
+function Stage({ s, i, progress, reduce }) {
+  // Both ranges end by 1: the scroll progress stops there, and a range that
+  // runs past it leaves the last star stuck part-lit.
+  const lit = useTransform(progress, [AT[i] - 0.06, Math.min(1, AT[i] + 0.02)], [0, 1])
+  // The stage's text brightens with its star, from present-but-quiet to full.
+  const text = useTransform(progress, [AT[i] - 0.1, Math.min(1, AT[i] + 0.04)], [0.45, 1])
+
+  return (
+    <div className="relative pl-9 lg:pl-0">
+      <div className="absolute left-0 top-[4px] lg:static">
+        <Star lit={reduce ? 1 : lit} />
+      </div>
+
+      <motion.div style={{ opacity: reduce ? 1 : text }} className="lg:mt-8">
+        <p className="font-mono text-[11px] tabular-nums tracking-[0.2em] text-hero-hot">{s.n}</p>
+        <h3 className="mt-3 font-display text-[clamp(1.55rem,2.2vw,2rem)] font-semibold leading-none tracking-[-0.025em] text-hero-ink">
+          {s.title}
+        </h3>
+        <ul className="mt-6 space-y-3">
+          {s.items.map((it) => (
+            <li key={it} className="flex items-center gap-3 text-[14px] leading-snug text-[#b9c0dd] lg:text-[15px]">
+              <span aria-hidden className="h-px w-3 shrink-0 bg-white/25" />
+              {it}
+            </li>
+          ))}
+        </ul>
+      </motion.div>
+    </div>
+  )
+}
+
 export default function WhatIDo() {
   const reduce = useReducedMotion()
+  const stagesRef = useRef(null)
+
+  /* 0 as the constellation's top reaches the lower part of the screen, 1 as its
+     foot passes the middle — so the last star lights while the reader is still
+     looking at it, not after it has scrolled away. */
+  const { scrollYProgress } = useScroll({ target: stagesRef, offset: ['start 78%', 'end 58%'] })
+  const draw = useTransform(scrollYProgress, [0, 1], [0, 1])
+
   const reveal = (d = 0) =>
     reduce
       ? {}
@@ -78,76 +117,60 @@ export default function WhatIDo() {
         }
 
   return (
-    <section id="what-i-do" className="relative border-t border-white/10">
+    <section id="what-i-do" className="relative">
       <div className="mx-auto max-w-[1440px] px-6 py-16 lg:px-10 lg:py-24">
-
         <div className="max-w-3xl">
           <SectionIntro
             eyebrow="What I do"
             lede="I turn complex problems into simple, meaningful digital experiences, from understanding people to building solutions that make a real impact."
           >
-            I work across the <span className="text-hero-hot">whole product</span>{' '}
-            journey.
+            I work across the <span className="text-hero-hot">whole product</span> journey.
           </SectionIntro>
         </div>
 
-        {/* ── The three stages ── */}
-        <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:mt-24 lg:grid-cols-3 lg:gap-x-9">
+        {/* ── The constellation ── */}
+        <div ref={stagesRef} className="relative mt-16 lg:mt-24">
+          {/* Desktop: across, from the first star's centre to the third's.
+              Stars sit at each column's left edge; with three columns and a
+              2.5rem gap the third begins at 66.667% + 1.667rem. Past the last
+              star the line keeps going, faintly, and fades — the journey does
+              not stop at "hand-off". */}
+          <div aria-hidden className="pointer-events-none absolute left-[5px] top-[5px] hidden h-px w-[calc(66.667%+1.667rem)] bg-white/10 lg:block">
+            <motion.div
+              className="h-full origin-left bg-gradient-to-r from-hero-hot/80 to-hero-hot/60"
+              style={{ scaleX: reduce ? 1 : draw }}
+            />
+          </div>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute right-0 top-[5px] hidden h-px bg-gradient-to-r from-white/10 to-transparent lg:block"
+            style={{ left: 'calc(66.667% + 1.667rem + 5px)' }}
+          />
+
+          {/* Phone and tablet: down the left edge. */}
+          <div aria-hidden className="pointer-events-none absolute bottom-0 left-[5px] top-[5px] w-px bg-gradient-to-b from-white/10 via-white/10 to-transparent lg:hidden">
+            <motion.div
+              className="h-full origin-top bg-gradient-to-b from-hero-hot/80 via-hero-hot/60 to-transparent"
+              style={{ scaleY: reduce ? 1 : draw }}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-y-14 lg:grid-cols-3 lg:gap-x-10">
             {STAGES.map((s, i) => (
-              <motion.div key={s.n} {...reveal(0.06 + i * 0.07)} className="flex items-start gap-3.5">
-                {/* Light weight and low contrast: at this size a numeral set in
-                    the page's usual semibold would outweigh the stage it labels.
-
-                    Its size, the dash width and the column gap are all tuned
-                    together against one target: each stage's items must land in
-                    two lines, as they do in her mockup. The longest pair,
-                    "Journey mapping · Information architecture", measures 313px,
-                    so the list column has to clear that — at the first attempt
-                    the numeral and dash left it only 280px and every stage
-                    spilled to three lines. */}
-                <span className="shrink-0 font-display text-[clamp(2.6rem,3.2vw,3.1rem)] font-light leading-[0.8] tabular-nums text-white/[0.16]">
-                  {s.n}
-                </span>
-
-                {/* The dash sits between the numeral and the title, and the item
-                    list hangs under the TITLE rather than under the numeral —
-                    which is why the title and list share a block and the dash
-                    does not. */}
-                <span aria-hidden className="mt-[0.55rem] h-px w-6 shrink-0 bg-white/25" />
-
-                <div className="min-w-0">
-                  <h3 className="text-[1.05rem] font-medium uppercase leading-none tracking-[0.05em] text-hero-ink lg:text-[1.15rem]">
-                    {s.title}
-                  </h3>
-
-                  <ul className="mt-4 flex flex-wrap items-baseline gap-x-2.5 gap-y-2 text-[13.5px] leading-snug text-[#b9c0dd] lg:text-[14px]">
-                    {s.items.map((it, j) => (
-                      <li key={it} className="flex items-baseline gap-2.5">
-                        {j > 0 && (
-                          <span aria-hidden className="text-white/25">
-                            ·
-                          </span>
-                        )}
-                        {it}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
+              <Stage key={s.n} s={s} i={i} progress={scrollYProgress} reduce={reduce} />
             ))}
+          </div>
         </div>
 
+        {/* ── The tools that run through all three ── */}
         <motion.div
-          {...reveal(0.28)}
-          className="mt-14 border-t border-white/[0.08] pt-10 lg:mt-20"
+          {...reveal(0.1)}
+          className="mt-20 flex flex-col gap-5 lg:mt-28 lg:flex-row lg:items-center lg:gap-10"
         >
-          <div className="flex items-center gap-4">
-            <span aria-hidden className="h-px w-6 bg-hero-hot" />
-            <h3 className="font-mono text-[10px] uppercase tracking-[0.22em] text-hero-mute">
-              AI in my workflow
-            </h3>
-          </div>
-          <ul className="mt-5 flex flex-wrap gap-2.5">
+          <h3 className="shrink-0 font-mono text-[10px] uppercase tracking-[0.22em] text-hero-mute sm:text-[11px]">
+            AI in my workflow
+          </h3>
+          <ul className="flex flex-wrap gap-2.5">
             {AI_TOOLS.map((t) => (
               <li
                 key={t}

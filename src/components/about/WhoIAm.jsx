@@ -8,12 +8,7 @@
    content beneath it — this was the last section still splitting the fold
    vertically, and it read as a different page.
 
-   So: `SectionIntro` for the header in the left column and the four personal
-   facts as a 2x2 in the right. Nothing else — the closing band that used to run
-   across the foot lost the tools list to What I do and then its remaining
-   sentence, and the section ends on the facts. Experience and
-   What I do are built the same way, which is the point — the three sections
-   that carry the page's substance now share one shape.
+   That split has since gone too; see "Four small lights" below.
 
    ── Copy ──
 
@@ -31,10 +26,13 @@
    Copy is hers verbatim, with one change: "UX Analyst at SSL Wireless — I
    design ..." lost its em dash, because this project does not use them.
 
-   The four personal marks are bare 24px outline glyphs. They were briefly set
-   inside the hero's ring, but that circle came off with every other mark on the
-   page; what is left is the glyph, brightening from muted to full ink on
-   approach.
+   ── Layout ──
+
+   Back on its original 2x2 beside the statement, after an editorial-row
+   version and a card version were both tried. What those rounds kept is the
+   motion: on hover the mark turns gold and the fact leans in a few pixels,
+   200ms, transform and colour only, and only on devices that hover.
+
    ───────────────────────────────────────────────────────────────────────────── */
 import { motion, useReducedMotion } from 'framer-motion'
 import SectionIntro from './SectionIntro'
@@ -88,59 +86,41 @@ export default function WhoIAm() {
         }
 
   return (
-    <section id="who-i-am" className="relative border-t border-white/10">
+    <section id="who-i-am" className="relative">
       <div className="mx-auto max-w-[1440px] px-6 py-16 lg:px-10 lg:py-24">
-
-        <div className="grid grid-cols-1 lg:grid-cols-[35%_1fr] gap-y-12 lg:gap-x-16">
+        <div className="grid grid-cols-1 gap-y-12 lg:grid-cols-[35%_1fr] lg:gap-x-16">
           <div>
-          <SectionIntro
-            eyebrow="Who I am"
-            lede="Curious about people, drawn to details, and always looking for a better way to make things feel simple."
-          >
-            I notice the <span className="text-hero-hot">little things</span>.
-          </SectionIntro>
+            <SectionIntro
+              eyebrow="Who I am"
+              lede="Curious about people, drawn to details, and always looking for a better way to make things feel simple."
+            >
+              I notice the <span className="text-hero-hot">little things</span>.
+            </SectionIntro>
           </div>
 
-          <div>
-          {/* Two by two, in the right-hand column. They were four across while
-              this section's header ran the full width; with the header now taking
-              the left half there is no longer a full measure to spread them over,
-              and four in half a page would be columns too narrow to hold
-              "Alt-rock & nostalgic playlists" in fewer than four lines. */}
           <div className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2">
             {PERSONAL.map((p, i) => {
               const Mark = Icon[p.icon]
               return (
                 <motion.div key={p.label} {...reveal(0.06 + i * 0.06)} className="group">
-                  {/* The mark stands on its own. It sat in a 48px ring for a
-                      while — the hero's circle, the same one the CTA arrow uses
-                      — but the rings came off with the rest of the page's
-                      marks, and four of them in a 2x2 read as a control panel
-                      rather than as four facts. */}
                   <Mark
-                    className="h-6 w-6 text-hero-mute transition-colors duration-300 group-hover:text-hero-ink"
+                    className="h-6 w-6 text-hero-mute transition-colors duration-200 ease-out group-hover:text-hero-hot"
                     aria-hidden="true"
                   />
-                  <h3 className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-hero-mute">
-                    {p.label}
-                  </h3>
+                  <h3 className="mt-5 font-mono text-[10px] uppercase tracking-[0.2em] text-hero-mute">{p.label}</h3>
                   <span
                     aria-hidden
                     className="mt-2.5 block h-px w-12 bg-white/15 transition-all duration-500 group-hover:w-20 group-hover:bg-white/35"
                   />
-                  <p className="mt-3.5 text-[15px] font-semibold leading-snug text-hero-ink sm:text-[16px]">
-                    {p.title}
-                  </p>
-                  <p className="mt-1.5 text-[13px] leading-relaxed text-hero-mute">
-                    {p.sub}
-                  </p>
+                  <div className="transition-transform duration-200 ease-out group-hover:translate-x-1">
+                    <p className="mt-3.5 text-[15px] font-semibold leading-snug text-hero-ink sm:text-[16px]">{p.title}</p>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-hero-mute">{p.sub}</p>
+                  </div>
                 </motion.div>
               )
             })}
           </div>
-          </div>
         </div>
-
       </div>
     </section>
   )

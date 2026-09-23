@@ -57,6 +57,10 @@ export default function Navigation({ dark = false, variant = 'default' }) {
 
   return (
     <>
+      {/* Scrolled, on the dark pages: a light veil and a blur, no rule and no
+          shadow. At 90% void with a hairline under it the bar sat on About's
+          navy sky as a black slab with an edge; this lets the sky run up into
+          it, while the blur still quiets whatever scrolls underneath. */}
       <motion.header
         initial={false}
         animate={{ y: 0, opacity: 1 }}
@@ -64,7 +68,7 @@ export default function Navigation({ dark = false, variant = 'default' }) {
         className={`fixed top-0 left-0 right-0 z-[900] transition-colors duration-500 ${
           scrolled
             ? isDark
-              ? 'bg-hero-void/90 backdrop-blur-xl border-b border-white/10 shadow-[0_1px_28px_rgba(0,0,0,0.4)]'
+              ? 'bg-hero-void/55 backdrop-blur-xl'
               : 'bg-surface-base/90 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_28px_rgba(0,0,0,0.07)]'
             : 'bg-transparent shadow-none'
         }`}

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   motion,
   useReducedMotion,
   useMotionValue,
+  useMotionValueEvent,
   useTransform,
 } from 'framer-motion'
 import { getLenis } from '../../lib/lenisInstance'
@@ -41,9 +42,11 @@ import MerchantCoverQR from '../ui/MerchantCoverQR'
    ── Type ──
 
    Dossier, index column and counter are DOM, one layer per project, all mounted
-   and crossfaded by the same `pos` that drives the covers. Nothing here is React
-   state: state in the motion path is what used to unmount and remount the
-   dossier on every crossing and leave the column blank.
+   and crossfaded by the same `pos` that drives the covers. None of that is
+   React state: state in the motion path is what used to unmount and remount the
+   dossier on every crossing and leave the column blank. The one piece of state
+   is which cover is in focus, for clicks — an index that changes only when a
+   crossing completes, and never mounts or unmounts anything.
 
    ── Reduced motion ──
 
@@ -56,7 +59,24 @@ const ROW = 56 // right-hand column row height, px
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 
-const SMOOTH = 0.12 // how hard `pos` chases `target` each frame
+/* How hard `pos` chases `target`, per SECOND rather than per frame.
+
+   This was `pos += d * 0.12` on every frame, which is a different speed on
+   every screen: twice as fast on a 120Hz display as on a 60Hz one, and a
+   visible lurch whenever a frame was dropped. `1 - exp(-rate * dt)` closes the
+   same share of the gap per unit of time however often the frame lands. 9/s is
+   the old 0.12 at 60fps. The finger gets a much stiffer rate so a drag feels
+   held rather than towed. */
+const DAMP = 9
+const DAMP_TOUCH = 22
+const DAMP_PARALLAX = 5 // the pointer drift, slower still — it is ambience
+
+const WHEEL_PX = 300 // wheel delta that travels one project — continuous now
+const SETTLE_MS = 140 // stillness before the reel comes to rest on a project
+/* Past either end the input is resisted rather than stopped, so the first and
+   last cover give a little and spring back instead of hitting a wall. */
+const OVERSCROLL = 0.22
+const RESIST = 0.3
 
 /* Crossfade weight for the text layers.
 
@@ -137,7 +157,7 @@ const deep = (u) => Math.sign(u) * Math.max(0, Math.abs(u) - 1)
 
 function Media({ p }) {
   if (p.image) {
-    return <img src={p.image} alt="" className="h-full w-full object-cover" draggable="false" />
+    return <img src={p.image} alt="" decoding="async" className="h-full w-full object-cover" draggable="false" />
   }
   if (p.coverQR) {
     return (
@@ -165,7 +185,7 @@ function Media({ p }) {
 
 /* One cover on the track. Everything is a motion value derived from `pos`, so
    the cascade never re-renders React and the image is never remounted. */
-function TrackCard({ p, i, pos, c, mx, my }) {
+function TrackCard({ p, i, pos, c, mx, my, focal, onPick, navigate }) {
   const transform = useTransform([pos, mx, my], ([v, px, py]) => {
     const u = around(i - v)
     const l = lead(u)
@@ -216,11 +236,31 @@ function TrackCard({ p, i, pos, c, mx, my }) {
     const a = Math.abs(around(i - v))
     return a <= c.fade - 1 ? 1 : clamp(c.fade - a, 0, 1)
   })
+  // A cover faded out in a corner must not catch clicks meant for what is on top.
+  const pointerEvents = useTransform(opacity, (o) => (o > 0.3 ? 'auto' : 'none'))
+
+  /* Clickable, two ways. The cover in focus opens its case study; one in a
+     corner pile is brought to the centre first. The focal cover of a project
+     with no case study does nothing, so it carries no pointer and no swell of
+     the custom cursor — a target that looks live and is not is worse than none.
+
+     Still `aria-hidden` and out of the tab order: this is a shortcut for the
+     pointer. The dossier's "View case study" link and the index buttons are the
+     same two actions, and they are the ones a keyboard and a screen reader use. */
+  const opens = focal && p.link
+  const clickable = !focal || opens
 
   return (
     <motion.div
       aria-hidden
-      className="absolute left-1/2 top-1/2 aspect-[5/4] overflow-hidden bg-hero-void shadow-[0_18px_40px_-18px_rgba(0,0,0,0.95)] ring-1 ring-white/[0.14]"
+      data-cursor={clickable ? '' : undefined}
+      onClick={() => {
+        if (opens) navigate(p.link)
+        else if (!focal) onPick(i)
+      }}
+      className={`group absolute left-1/2 top-1/2 aspect-[5/4] overflow-hidden bg-hero-void shadow-[0_18px_40px_-18px_rgba(0,0,0,0.95)] ring-1 ring-white/[0.14] ${
+        clickable ? 'cursor-pointer' : ''
+      }`}
       /* Clamped, not a bare vw.
 
          28vw is a good proportion on a desktop and 105px on a phone, which is
@@ -232,10 +272,32 @@ function TrackCard({ p, i, pos, c, mx, my }) {
         transform,
         opacity,
         zIndex,
+        pointerEvents,
         willChange: 'transform, opacity',
       }}
     >
-      <Media p={p} />
+      {/* The hover lives on an inner layer. The outer transform is written by
+          the reel every frame, so a CSS scale on it would be overwritten. */}
+      <div
+        className={`h-full w-full transition-transform duration-500 ease-out-quint ${
+          opens ? 'group-hover:scale-[1.035] group-active:scale-[1.01]' : ''
+        }`}
+      >
+        <Media p={p} />
+      </div>
+
+      {/* Just the words, centred along the foot of the cover. No button shape:
+          the cover itself is the target, so the label only has to name what the
+          click does. A gradient up from the bottom edge, rather than a veil over
+          the whole cover, keeps the artwork unchanged above it while still
+          giving the type a dark ground on a white dashboard shot. */}
+      {opens && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-1.5 justify-center bg-gradient-to-t from-hero-void/95 via-hero-void/60 to-transparent pb-4 pt-12 opacity-0 transition-[opacity,transform] duration-200 ease-out-quint group-hover:translate-y-0 group-hover:opacity-100">
+          <span className="font-mono text-[10px] uppercase leading-none tracking-[0.28em] text-hero-hot">
+            View case study
+          </span>
+        </div>
+      )}
     </motion.div>
   )
 }
@@ -252,7 +314,14 @@ function ListRow({ p, i, pos, onJump }) {
 
   return (
     <motion.li style={{ height: ROW, opacity }} className="flex items-center justify-end">
-      <button type="button" onClick={() => onJump(i)} className="pointer-events-auto block w-full text-right">
+      <button
+        type="button"
+        onClick={() => onJump(i)}
+        className="pointer-events-auto flex w-full items-baseline justify-end gap-3 text-right"
+      >
+        <span className="font-mono text-[9.5px] tabular-nums tracking-[0.18em] text-hero-mute">
+          {String(i + 1).padStart(2, '0')}
+        </span>
         <motion.span
           style={{ color: nameColor }}
           className="block font-display text-[clamp(1.05rem,1.6vw,1.5rem)] font-medium uppercase leading-none tracking-[0.02em]"
@@ -399,20 +468,64 @@ export default function WorkReel() {
      parallax costs no renders. */
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
+  /* Where the pointer actually is. `mx`/`my` ease toward these, so leaving the
+     stage drifts the focal cover home instead of snapping it there. */
+  const pointer = useRef({ x: 0, y: 0 })
+  const damp = useRef(DAMP)
+  const wake = useRef(() => {})
 
+  /* One loop, and only while something is moving. It used to run every frame
+     for the life of the page, setting values that had long since arrived. */
   useEffect(() => {
     let raf = 0
-    const tick = () => {
-      raf = requestAnimationFrame(tick)
-      const to = target.get()
-      const at = pos.get()
+    let last = 0
+    const ease = (mv, to, rate, dt, eps) => {
+      const at = mv.get()
       const d = to - at
-      pos.set(Math.abs(d) < 0.0005 ? to : at + d * SMOOTH)
+      if (Math.abs(d) < eps) {
+        if (at !== to) mv.set(to)
+        return false
+      }
+      mv.set(at + d * (1 - Math.exp(-rate * dt)))
+      return true
     }
-    raf = requestAnimationFrame(tick)
+    const tick = (now) => {
+      // Capped, so a backgrounded tab coming back does not land in one step.
+      // The frame's timestamp can predate the `performance.now()` read at wake.
+      const dt = clamp((now - last) / 1000, 0, 1 / 20)
+      last = now
+      // `|`, not `||`: all three have to advance, not just the first that moves.
+      const moving =
+        ease(pos, target.get(), damp.current, dt, 0.0004) |
+        ease(mx, pointer.current.x, DAMP_PARALLAX, dt, 0.001) |
+        ease(my, pointer.current.y, DAMP_PARALLAX, dt, 0.001)
+      raf = moving ? requestAnimationFrame(tick) : 0
+    }
+    wake.current = () => {
+      if (raf) return
+      last = performance.now()
+      raf = requestAnimationFrame(tick)
+    }
+    const unsub = target.on('change', () => wake.current())
     if (import.meta.env.DEV) window.__reel = { target, pos }
-    return () => cancelAnimationFrame(raf)
-  }, [target, pos])
+    return () => {
+      unsub()
+      cancelAnimationFrame(raf)
+    }
+  }, [target, pos, mx, my])
+
+  /* The covers are remote PNGs up to 1700px wide. Left to the browser, each one
+     decodes the first time it rises into view — mid-flight, on the main
+     thread, which is exactly when a dropped frame shows. Decoding all nine up
+     front moves that cost to the moment the page loads. */
+  useEffect(() => {
+    projects.forEach((p) => {
+      if (!p.image) return
+      const img = new Image()
+      img.src = p.image
+      img.decode?.().catch(() => {})
+    })
+  }, [])
 
   useEffect(() => {
     if (reduce) return undefined
@@ -424,51 +537,85 @@ export default function WorkReel() {
     const lenis = getLenis()
     lenis?.stop()
 
-    /* Settle on a project once the input stops.
+    /* ── Follow, then settle ──
 
-       With the page locked the reel rests wherever the wheel left it, and
-       halfway between two projects is a valid state for the covers but not for
-       the text: the dossier crossfade sits at 50/50 and two blocks of copy stand
-       on top of each other. Snapping after a beat of stillness keeps every
-       resting frame clean. It is not a jump — the spring carries it there, the
-       same way it carries everything else. */
-    /* The input steps by whole projects; the MOTION between them stays
-       continuous.
+       The input used to be quantised: wheel delta piled up in a bucket and
+       nothing moved until 260px of it had arrived, then the reel lurched a
+       whole project. On a trackpad that is the first third of a second of every
+       gesture spent motionless, followed by a jump — the opposite of smooth.
 
-       Feeding raw wheel delta straight into `target` left it resting on values
-       like 1.98, so the focal cover sat permanently 12px off centre while the
-       dossier and the index column — which centre themselves — were exactly on
-       it. Snapping the position afterwards was the other way to fix that, and it
-       is the one that produces a visible jerk. Quantising the INPUT has neither
-       problem: `pos` still eases across fractional values, so two covers are
-       genuinely mid-transition, but it always comes to rest on a project. */
-    let acc = 0
-    const STEP = 260 // wheel delta that counts as one project
+       Now `target` follows the input continuously, so the covers move the
+       instant the fingers do. The old reason for quantising still holds, though
+       — a reel resting at 1.98 leaves the focal cover off centre and two
+       dossiers half-faded over each other — so once the input has been still
+       for SETTLE_MS, `target` is moved to a whole project and `pos` eases the
+       last stretch. That is `target` moving, not `pos`, so there is no jump:
+       it is the same glide as everything else, just aimed at a round number.
 
-    const nudge = (dy) => {
-      acc += dy
-      while (Math.abs(acc) >= STEP) {
-        const dir = Math.sign(acc)
-        acc -= dir * STEP
-        target.set(clamp(Math.round(target.get()) + dir, 0, N - 1))
-      }
+       Where it settles leans toward the direction of travel. From the project
+       the gesture started on, any real movement means the next one — so a
+       single mouse-wheel notch (100px, a third of a project) advances one
+       instead of drifting and springing back, and a nudge that barely registers
+       returns home. */
+    let anchor = null
+    let settleTimer = 0
+
+    const settle = (fling = 0) => {
+      clearTimeout(settleTimer)
+      damp.current = DAMP
+      const from = anchor ?? Math.round(target.get())
+      const d = target.get() + fling - from
+      /* +0.2 in the direction of travel: four quick notches (1.33 projects)
+         rounded down to one, which read as the wheel being ignored. */
+      const to = Math.abs(d) > 0.12 ? from + Math.sign(d) * Math.max(1, Math.round(Math.abs(d) + 0.2)) : from
+      target.set(clamp(to, 0, N - 1))
+      anchor = null
+    }
+
+    const move = (delta) => {
+      if (anchor === null) anchor = Math.round(target.get())
+      const t = target.get()
+      // Rubber band: past either end, the same input goes a third as far.
+      const k = (t < 0 && delta < 0) || (t > N - 1 && delta > 0) ? RESIST : 1
+      target.set(clamp(t + delta * k, -OVERSCROLL, N - 1 + OVERSCROLL))
     }
 
     const onWheel = (e) => {
       e.preventDefault()
-      nudge(e.deltaY)
+      // Firefox reports lines and pages for mouse wheels, not pixels.
+      const px = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? window.innerHeight : 1)
+      move(px / WHEEL_PX)
+      clearTimeout(settleTimer)
+      settleTimer = setTimeout(settle, SETTLE_MS)
     }
 
-    let lastTouch = null
+    /* Touch drags the reel directly and keeps its velocity, so a flick carries
+       on past the finger instead of stopping dead where it lifted. */
+    let touch = null
     const onTouchStart = (e) => {
-      lastTouch = e.touches[0].clientY
+      clearTimeout(settleTimer)
+      damp.current = DAMP_TOUCH
+      touch = { y: e.touches[0].clientY, t: performance.now(), v: 0 }
     }
     const onTouchMove = (e) => {
-      if (lastTouch === null) return
-      const y = e.touches[0].clientY
+      if (!touch) return
       e.preventDefault()
-      nudge((lastTouch - y) * 2.2)
-      lastTouch = y
+      const y = e.touches[0].clientY
+      const now = performance.now()
+      const per = window.innerHeight * 0.55 // a drag this long is one project
+      const delta = (touch.y - y) / per
+      const dt = Math.max(now - touch.t, 1)
+      touch.v = touch.v * 0.6 + (delta / dt) * 0.4 // projects per ms, smoothed
+      touch.y = y
+      touch.t = now
+      move(delta)
+    }
+    const onTouchEnd = () => {
+      if (!touch) return
+      // A stale velocity from a drag that stopped before lifting is not a flick.
+      const v = performance.now() - touch.t > 80 ? 0 : touch.v
+      touch = null
+      settle(clamp(v * 220, -2.5, 2.5))
     }
 
     const onKey = (e) => {
@@ -485,12 +632,14 @@ export default function WorkReel() {
 
     const onMove = (e) => {
       const r = el.getBoundingClientRect()
-      mx.set(clamp(((e.clientX - r.left) / r.width - 0.5) * 2, -1, 1))
-      my.set(clamp(((e.clientY - r.top) / r.height - 0.5) * 2, -1, 1))
+      pointer.current.x = clamp(((e.clientX - r.left) / r.width - 0.5) * 2, -1, 1)
+      pointer.current.y = clamp(((e.clientY - r.top) / r.height - 0.5) * 2, -1, 1)
+      wake.current()
     }
     const onLeave = () => {
-      mx.set(0)
-      my.set(0)
+      pointer.current.x = 0
+      pointer.current.y = 0
+      wake.current()
     }
 
     el.addEventListener('pointermove', onMove)
@@ -498,13 +647,18 @@ export default function WorkReel() {
     el.addEventListener('wheel', onWheel, { passive: false })
     el.addEventListener('touchstart', onTouchStart, { passive: true })
     el.addEventListener('touchmove', onTouchMove, { passive: false })
+    el.addEventListener('touchend', onTouchEnd)
+    el.addEventListener('touchcancel', onTouchEnd)
     window.addEventListener('keydown', onKey)
     return () => {
+      clearTimeout(settleTimer)
       el.removeEventListener('pointermove', onMove)
       el.removeEventListener('pointerleave', onLeave)
       el.removeEventListener('wheel', onWheel)
       el.removeEventListener('touchstart', onTouchStart)
       el.removeEventListener('touchmove', onTouchMove)
+      el.removeEventListener('touchend', onTouchEnd)
+      el.removeEventListener('touchcancel', onTouchEnd)
       window.removeEventListener('keydown', onKey)
       lenis?.start()
     }
@@ -512,8 +666,16 @@ export default function WorkReel() {
 
   const listY = useTransform(pos, (v) => -(ROW / 2) - v * ROW)
   const railScale = useTransform(pos, (v) => clamp(v / (N - 1), 0, 1))
+  const counter = useTransform(pos, (v) => String(clamp(Math.round(v), 0, N - 1) + 1).padStart(2, '0'))
 
   const jumpTo = (i) => target.set(clamp(i, 0, N - 1))
+
+  /* Which cover is in focus, as state — but only the index, and it only changes
+     when the reel crosses a halfway point, so this renders nine times across the
+     whole reel, never per frame. The motion itself stays in motion values. */
+  const navigate = useNavigate()
+  const [focal, setFocal] = useState(0)
+  useMotionValueEvent(pos, 'change', (v) => setFocal(clamp(Math.round(v), 0, N - 1)))
 
   if (reduce) {
     return (
@@ -552,10 +714,34 @@ export default function WorkReel() {
           }}
         />
 
+        {/* The light the focal cover sits in. About stands Nisha's portrait in
+            a cool halo and the homepage has its moon; this is the same idea for
+            the work — the cover in focus is lit, the piles in the corners are
+            not. Static and behind everything, so it costs nothing per frame. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[70vh] w-[62vw] -translate-x-1/2 -translate-y-1/2"
+          style={{
+            background:
+              'radial-gradient(closest-side, rgba(120,140,210,0.16) 0%, rgba(var(--hero-hot-rgb) / 0.05) 45%, transparent 100%)',
+          }}
+        />
+
         {/* ── The covers, as planes in a real 3D scene ── */}
         <div className="absolute inset-0 z-[10]">
           {projects.map((proj, i) => (
-            <TrackCard key={proj.id} p={proj} i={i} pos={pos} c={cfg} mx={mx} my={my} />
+            <TrackCard
+              key={proj.id}
+              p={proj}
+              i={i}
+              pos={pos}
+              c={cfg}
+              mx={mx}
+              my={my}
+              focal={focal === i}
+              onPick={jumpTo}
+              navigate={navigate}
+            />
           ))}
         </div>
 
@@ -604,6 +790,26 @@ export default function WorkReel() {
 
         {tuning && <TunePanel cfg={cfg} setCfg={setCfg} />}
 
+        {/* The page's title and where you are in it, on the column's edges
+            like everything else. The page had no h1 at all — the dossier's h3s
+            were the top of its outline. It gets the header's scrim, mirrored:
+            the incoming cover rises straight through this band, and on a phone
+            the label sat on top of its screenshot. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[390] h-28"
+          style={{ background: 'linear-gradient(0deg, rgba(5,16,31,0.94) 0%, rgba(5,16,31,0.7) 45%, rgba(5,16,31,0) 100%)' }}
+        />
+        <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[400] mx-auto flex max-w-[1440px] items-center justify-between px-6 lg:px-10">
+          <h1 className="font-mono text-[9.5px] uppercase tracking-[0.28em] text-hero-mute sm:text-[10px]">
+            Selected work <span className="text-hero-mute/60">· {N} projects</span>
+          </h1>
+          <p className="font-mono text-[9.5px] tabular-nums tracking-[0.2em] text-hero-mute sm:text-[10px]">
+            <motion.span className="text-hero-hot">{counter}</motion.span>
+            <span className="text-hero-mute/60"> / {String(N).padStart(2, '0')}</span>
+          </p>
+        </div>
+
         <div className="absolute inset-x-0 bottom-0 z-[400] h-[3px] bg-white/10">
           <motion.div className="h-full origin-left bg-hero-hot" style={{ scaleX: railScale }} />
         </div>
@@ -614,17 +820,29 @@ export default function WorkReel() {
 
 /* Role / Launch / Recognition in the reference. Here: the fields this data
    actually has, in that same three-block shape. */
+/* The eyebrow, rule and pills are the homepage's and About's own — the lit
+   diamond before the hero's "UX Designer / UX Engineer", the short gold rule
+   under About's intro, the mono pills on its timeline. Without them this column
+   was the one block of type on the site set in none of its details. */
 function Dossier({ p }) {
   return (
     <>
-      <p className="font-mono text-[9.5px] uppercase tracking-[0.24em] text-hero-hot">
-        {categoryOf(p.id)}
-      </p>
-      <h3 className="mt-2.5 font-display text-[clamp(1.35rem,1.9vw,1.9rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-hero-ink">
+      <div className="flex items-center gap-2.5">
+        <span
+          aria-hidden
+          className="h-[5px] w-[5px] shrink-0 rotate-45 bg-hero-hot"
+          style={{ boxShadow: '0 0 6px rgba(var(--hero-hot-rgb) / 1), 0 0 18px rgba(var(--hero-hot-rgb) / 0.6)' }}
+        />
+        <p className="font-mono text-[9.5px] uppercase tracking-[0.24em] text-hero-hot">
+          {categoryOf(p.id)}
+        </p>
+      </div>
+      <h3 className="mt-3 font-display text-[clamp(1.35rem,1.9vw,1.9rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-hero-ink">
         {shortOf(p.id, p.company)}
       </h3>
+      <span aria-hidden className="mt-5 block h-px w-10 bg-hero-hot/70" />
 
-      <dl className="mt-6 space-y-3.5">
+      <dl className="mt-5 space-y-3.5">
         <div>
           <dt className="font-mono text-[9px] uppercase tracking-[0.22em] text-hero-mute">Client</dt>
           <dd className="mt-1 text-[12.5px] leading-snug text-[#c9cfe9]">{p.company}</dd>
@@ -638,9 +856,14 @@ function Dossier({ p }) {
         {p.tags?.length > 0 && (
           <div>
             <dt className="font-mono text-[9px] uppercase tracking-[0.22em] text-hero-mute">Scope</dt>
-            <dd className="mt-1 flex flex-col gap-0.5 text-[12.5px] leading-snug text-[#c9cfe9]">
+            <dd className="mt-2 flex flex-wrap gap-1.5">
               {p.tags.slice(0, 4).map((t) => (
-                <span key={t}>{t}</span>
+                <span
+                  key={t}
+                  className="rounded-full border border-white/[0.14] bg-white/[0.03] px-2.5 py-1 font-mono text-[9px] uppercase leading-none tracking-[0.14em] text-[#b9c0dd]"
+                >
+                  {t}
+                </span>
               ))}
             </dd>
           </div>
