@@ -345,14 +345,12 @@ export default function Hero() {
              tracked and small is five legibility penalties stacked on the one
              control that has to be scannable on sight.
 
-             The <nav> spans the frame because its two halves answer to
-             different edges — the mark to the centred 1440 column, the links to
-             the viewport's own right margin, which is where the socials sit.
-             Anything narrower than 1440 makes those the same edge; anything
-             wider does not, and then a nav that respects the column no longer
-             lines up with the rail below it. pointer-events-none with the links
-             opting back in, because an element this size must not sit on top of
-             the scene. ── */}
+             Mark, links and the social rail all answer to the centred 1440
+             column. The links used to follow the viewport's right margin
+             instead, which is the same edge below 1440 and a lopsided one above
+             it: on a 2000px screen the bar had 330px of air on the left and 28px
+             on the right. pointer-events-none with the links opting back in,
+             because an element this size must not sit on top of the scene. ── */}
       <nav className="pointer-events-none absolute inset-0 z-30" aria-label="Primary">
 
         <div className="absolute inset-x-0 top-0 mx-auto flex max-w-[1440px] items-center justify-between px-6 pt-7 lg:px-10 lg:pt-9">
@@ -368,7 +366,7 @@ export default function Hero() {
             onClick={(e) => go(e, '/')}
             data-nav
             aria-label="Alimoon Nisha, home"
-            className="pointer-events-auto block"
+            className="pointer-events-auto flex h-11 items-center"
           >
             <img
               src={logo}
@@ -389,30 +387,34 @@ export default function Hero() {
           >
             Work
           </a>
-        </div>
 
-        {/* Same right margin as the social rail at the bottom of the frame, so
-            the two read as one edge. No box around the words: the capsules were
-            legible but they made three links look like three buttons, and the
-            rule under the word already says which one the cursor is on. The
-            padding stays for the hit area — it is just no longer drawn. */}
-        <ul className="absolute right-6 top-7 hidden items-center gap-7 md:flex lg:right-10 lg:top-9">
-          {NAV.map((item) => (
-            <li key={item.label} data-nav>
-              {/* No aria-current: Home has left the list — the mark is the way
-                  back — and none of what remains is the page you are on. */}
-              <a
-                href={item.to}
-                onClick={(e) => go(e, item.to)}
-                className="hero-navlink group pointer-events-auto relative block py-3"
-              >
-                <span className="block font-mono text-[11px] uppercase tracking-[0.2em] text-[#c9cfe9] transition-colors duration-200 group-hover:text-hero-hot lg:text-[12px]">
-                  {item.label}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
+          {/* Same right edge as the social rail at the bottom of the frame, so
+              the two read as one edge. No box around the words: the capsules were
+              legible but they made three links look like three buttons, and the
+              rule under the word already says which one the cursor is on. The
+              padding stays for the hit area — it is just no longer drawn.
+
+              h-11 here and on the mark's link, so the two share a centreline
+              by construction. Left to their content, the 40px mark and the 43px
+              link row sat 1.6px apart (2.8px below lg). */}
+          <ul className="hidden h-11 items-center gap-7 md:flex">
+            {NAV.map((item) => (
+              <li key={item.label} data-nav>
+                {/* No aria-current: Home has left the list — the mark is the way
+                    back — and none of what remains is the page you are on. */}
+                <a
+                  href={item.to}
+                  onClick={(e) => go(e, item.to)}
+                  className="hero-navlink group pointer-events-auto relative block py-3"
+                >
+                  <span className="block font-mono text-[11px] uppercase tracking-[0.2em] text-[#c9cfe9] transition-colors duration-200 group-hover:text-hero-hot lg:text-[12px]">
+                    {item.label}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </nav>
 
       {/* ── Social rail, right side, raised clear of the ticker.
@@ -424,7 +426,10 @@ export default function Hero() {
              carries LinkedIn inline, so the link is never only in the rail. ── */}
       <div
         data-rail
-        className="absolute bottom-20 right-6 z-20 hidden flex-col items-center gap-4 lg:right-10 lg:flex"
+        /* The column's right edge, not the viewport's: 2.5rem in from the
+           1440 column, which is 2.5rem in from the viewport until the screen
+           is wider than the column. */
+        className="absolute bottom-20 right-6 z-20 hidden flex-col items-center gap-4 lg:right-[max(2.5rem,calc((100%_-_1440px)/2_+_2.5rem))] lg:flex"
       >
         <span className="h-16 w-px bg-gradient-to-b from-transparent to-hero-signal/70" />
         <div className="flex flex-col items-center gap-5">

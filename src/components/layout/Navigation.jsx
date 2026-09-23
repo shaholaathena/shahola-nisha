@@ -69,8 +69,18 @@ export default function Navigation({ dark = false, variant = 'default' }) {
             : 'bg-transparent shadow-none'
         }`}
       >
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 lg:px-10">
-          <Link to="/" className="group" aria-label="Home">
+        {/* At rest the bar matches the homepage's nav exactly — same top
+            padding, same h-11 boxes on mark and links — so crossing from / to
+            an inner page moves nothing. It was 20px of padding against the
+            homepage's 36px, and the whole bar jumped 16px up on arrival. Once
+            scrolled, the bar has a background and the tall top would read as
+            dead space, so it tightens to a symmetric 16px. */}
+        <div
+          className={`mx-auto flex max-w-[1440px] items-center justify-between px-6 transition-[padding] duration-500 lg:px-10 ${
+            scrolled ? 'py-4' : 'pb-4 pt-7 lg:pt-9'
+          }`}
+        >
+          <Link to="/" className="group flex h-11 items-center" aria-label="Home">
             <img
               src={logo}
               alt="Alimoon Nisha"
@@ -87,7 +97,7 @@ export default function Navigation({ dark = false, variant = 'default' }) {
               ul/li, not bare links: the homepage's nav is a list, and matching
               the structure matters because the two are measured against each
               other — a bare <a> sat 3px narrower than its <li> equivalent. */}
-          <ul className="hidden items-center gap-7 md:flex" aria-label="Primary">
+          <ul className="hidden h-11 items-center gap-7 md:flex" aria-label="Primary">
             {links.map((link) => {
               const active = isActive(link.to)
               return (

@@ -78,10 +78,15 @@ const POSE = {
   /* Measured off the reference. A cover is ~37% of the viewport wide; the step
      to the next one is about 38% of the height and 20% of the width, so the run
      is a DIAGONAL — bottom-left, through the centre, out top-right — not the
-     near-vertical column a literal reading of "x = 20px" produced. */
-  cw: 34, // cover width, % of viewport width
-  cwMin: 270, // px floor, so a phone still shows a real cover
-  cwMax: 560, // px ceiling
+     near-vertical column a literal reading of "x = 20px" produced.
+
+     Then taken down ~18% (34 → 28, cap 560 → 460): at the reference size the
+     focal cover filled the middle of the frame and crowded the dossier and the
+     index either side of it. The steps are unchanged, so the neighbours still
+     land in the corners; they just sit a little further from the focal one. */
+  cw: 28, // cover width, % of viewport width
+  cwMin: 240, // px floor, so a phone still shows a real cover
+  cwMax: 460, // px ceiling
   /* The vertical step is in vh, the horizontal in vw.
 
      vh because this distance is about the VIEWPORT, not the cover: at 50 the
@@ -95,10 +100,10 @@ const POSE = {
   rotTop: -6, // and for the ones already read, top-right — tilted harder, so the
   // corner they are stuck in reads as a tossed pile rather than a neat column
   scaleStep: 0.05, // a neighbour is 0.95 — measured
-  /* Has to clear the cover in front. That one's half-width is cw/2 = 17vw and a
-     squashed one's is about 11.6vw, so anything under ~5.4vw leaves the sliver
-     hidden behind it entirely — which is what 2.6 was doing. */
-  pile: 8, // vw each cover behind the first one peeks out by, sideways only
+  /* Has to clear the cover in front. That one's half-width is cw/2 = 14vw and a
+     squashed one's is about 9.5vw, so anything under ~4.5vw leaves the sliver
+     hidden behind it entirely — which is what 2.6 was doing. Scaled with cw. */
+  pile: 6.6, // vw each cover behind the first one peeks out by, sideways only
   /* Positive now, which slides BOTH piles right — it scales with l squared, so
      it is the only term that moves them the same way; xStep pushes them apart. */
   bow: 2, // sideways bend of the run — negative is concave
@@ -218,7 +223,7 @@ function TrackCard({ p, i, pos, c, mx, my }) {
       className="absolute left-1/2 top-1/2 aspect-[5/4] overflow-hidden bg-hero-void shadow-[0_18px_40px_-18px_rgba(0,0,0,0.95)] ring-1 ring-white/[0.14]"
       /* Clamped, not a bare vw.
 
-         34vw is a good proportion on a desktop and 128px on a phone, which is
+         28vw is a good proportion on a desktop and 105px on a phone, which is
          what made the reel look empty on a narrow window — nine covers were
          there, all of them thumbnail-sized. The floor keeps a cover readable at
          any width; the ceiling stops it swallowing a very wide monitor. */
@@ -246,8 +251,8 @@ function ListRow({ p, i, pos, onJump }) {
   const nameColor = useTransform(pos, [i - 0.85, i, i + 0.85], ['#e7ebf7', '#e8b862', '#e7ebf7'])
 
   return (
-    <motion.li style={{ height: ROW, opacity }} className="flex items-center justify-center">
-      <button type="button" onClick={() => onJump(i)} className="pointer-events-auto block w-full">
+    <motion.li style={{ height: ROW, opacity }} className="flex items-center justify-end">
+      <button type="button" onClick={() => onJump(i)} className="pointer-events-auto block w-full text-right">
         <motion.span
           style={{ color: nameColor }}
           className="block font-display text-[clamp(1.05rem,1.6vw,1.5rem)] font-medium uppercase leading-none tracking-[0.02em]"
@@ -269,7 +274,7 @@ function DossierLayer({ p, i, pos }) {
 
   return (
     <motion.div
-      className="absolute left-6 top-1/2 hidden w-[200px] -translate-y-1/2 lg:left-10 lg:block xl:w-[230px]"
+      className="absolute left-6 top-1/2 hidden w-[200px] -translate-y-1/2 lg:left-[max(2.5rem,calc((100%_-_1440px)/2_+_2.5rem))] lg:block xl:w-[230px]"
       style={{ opacity, pointerEvents, visibility }}
     >
       <Dossier p={p} />
@@ -573,8 +578,15 @@ export default function WorkReel() {
           ))}
         </div>
 
-        {/* ── RIGHT: the full index, scrolling to keep the active one centred ── */}
-        <div className="pointer-events-none absolute right-6 top-1/2 z-[400] hidden w-[240px] -translate-y-1/2 md:block lg:right-10 xl:w-[290px]">
+        {/* ── RIGHT: the full index, scrolling to keep the active one centred ──
+
+            The dossier and this index sit on the 1440 column's
+            edges, the same ones the header's mark and links use. They were
+            measured from the viewport instead, which is the same edge below
+            1440 and 280px outside the header on a 2000px screen. The names are
+            right-aligned so their ragged edge is the inside one and the
+            column's edge stays straight under "Contact". */}
+        <div className="pointer-events-none absolute right-6 top-1/2 z-[400] hidden w-[240px] -translate-y-1/2 md:block lg:right-[max(2.5rem,calc((100%_-_1440px)/2_+_2.5rem))] xl:w-[290px]">
           <div
             className="relative h-[78vh] overflow-hidden"
             style={{
@@ -589,11 +601,6 @@ export default function WorkReel() {
             </motion.ul>
           </div>
         </div>
-
-        {/* ── BOTTOM LEFT: the numeral, laid over the deck ── */}
-        <p className="pointer-events-none absolute bottom-8 right-6 z-[400] font-mono text-[9.5px] uppercase tracking-[0.26em] text-hero-mute lg:right-10">
-          Scroll
-        </p>
 
         {tuning && <TunePanel cfg={cfg} setCfg={setCfg} />}
 

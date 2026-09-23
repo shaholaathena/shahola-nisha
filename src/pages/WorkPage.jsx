@@ -90,6 +90,20 @@ export default function WorkPage() {
           <WorkReel />
         </main>
       </div>
+
+      {/* Header scrim. The page never scrolls, so the nav never gets the
+          background it earns on scroll elsewhere, and the covers fly straight
+          through the band it sits in: gold "Work" over a lit laptop screen was
+          unreadable. The covers fade out under this strip instead. Above the
+          reel (z-10), below the header (z-900). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-[800] h-40"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(5,16,31,0.96) 0%, rgba(5,16,31,0.82) 45%, rgba(5,16,31,0) 100%)',
+        }}
+      />
     </div>
   )
 }

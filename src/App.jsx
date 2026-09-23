@@ -12,9 +12,13 @@ import Grain from './components/ui/Grain'
 import SmoothScroll from './components/util/SmoothScroll'
 import { getLenis } from './lib/lenisInstance'
 
+/* `transitionEnd: filter none` matters. A settled `blur(0px)` is still a
+   filter, and any filter makes this wrapper the containing block for
+   position:fixed descendants — so the inner pages' fixed header scrolled away
+   with the page instead of staying pinned. */
 const pageVariants = {
   initial: { opacity: 0, filter: 'blur(6px)' },
-  animate: { opacity: 1, filter: 'blur(0px)', transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+  animate: { opacity: 1, filter: 'blur(0px)', transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] }, transitionEnd: { filter: 'none' } },
   exit:    { opacity: 0, filter: 'blur(6px)', transition: { duration: 0.3,  ease: [0.22, 1, 0.36, 1] } },
 }
 
