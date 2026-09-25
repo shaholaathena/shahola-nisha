@@ -380,7 +380,7 @@ export default function Hero() {
             aria-label="Alimoon Nisha, home"
             className="pointer-events-auto flex h-11 items-center"
           >
-            {/* 36/40px in an h-11 box, the same as Navigation and CaseStudyBar,
+            {/* 36/40px in an h-11 box, the same as Navigation,
                 so the mark is one size on every page and does not jump when
                 crossing from / to an inner page. (It was 48/56px here; the name
                 now leads as the h1, so the corner mark no longer has to carry

@@ -3,10 +3,11 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import logo from '../../assets/logo.png'
 
-/* Routes, not anchors. On desktop this header is rendered on the inner pages
-   only — the homepage carries its own editorial nav and the case studies a
-   back bar. Below `md` it is the header on EVERY page, homepage and case
-   studies included, so the mobile header is the same everywhere. It no
+/* Routes, not anchors. This is the header on every inner page — About, Work
+   and the case studies (which had their own logo-and-back bar until they were
+   brought into line). The homepage keeps its own editorial nav on desktop and
+   renders this one below `md`, so the mobile header is the same everywhere.
+   It no
    longer has to hide behind a hero or track which section is on screen. It is
    present from the top; active state comes from the URL.
 

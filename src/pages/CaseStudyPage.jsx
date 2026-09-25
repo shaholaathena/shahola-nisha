@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion'
 import { projects } from '../data/portfolio'
 import Footer from '../components/layout/Footer'
-import CaseStudyBar from '../components/layout/CaseStudyBar'
+import Navigation from '../components/layout/Navigation'
+import CTASection from '../components/sections/CTASection'
 import AboutAtmosphere from '../components/about/AboutAtmosphere'
 import ScrollProgress from '../components/layout/ScrollProgress'
 import { getLenis } from '../lib/lenisInstance'
@@ -151,7 +152,9 @@ export default function CaseStudyPage() {
         )}
       </AnimatePresence>
 
-      <CaseStudyBar />
+      {/* The site's shared header and, at the foot, About's contact band and
+          footer: a case study wears the same chrome as every other page. */}
+      <Navigation variant="hero" dark />
 
       <div className="relative">
         <AboutAtmosphere topStars={0.38} />
@@ -462,31 +465,11 @@ export default function CaseStudyPage() {
           </div>
         </section>
 
-        {/* ── CTA ── */}
-        <section className="relative overflow-hidden">
-          <div className="relative z-10 max-w-[1440px] mx-auto px-6 lg:px-10 py-20 lg:py-28 text-center">
+        {/* Somewhere to go next that is not back to the list. */}
+        <section className="relative">
+          <div className="relative z-10 mx-auto max-w-[1440px] px-6 py-16 text-center lg:px-10 lg:py-20">
             <motion.div {...fadeUp}>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-ink-muted mb-6">Interested in working together?</p>
-              <h2 className="font-display text-5xl sm:text-6xl lg:text-7xl font-semibold text-ink-primary tracking-tight leading-[1.06] mb-12">
-                Let&apos;s build something<br />
-                <span className="text-hero-hot">meaningful.</span>
-              </h2>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="https://www.linkedin.com/in/shahola-nisha/" target="_blank" rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 px-7 py-3.5 text-sm font-semibold text-hero-void bg-hero-hot rounded-md hover:bg-[#f0c97f] transition-all hover:-translate-y-0.5 shadow-sm">
-                  Get in touch
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
-                    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
-                  </svg>
-                </a>
-                <Link to="/work" className="inline-flex items-center gap-2 px-7 py-3.5 text-sm font-medium text-ink-secondary hover:text-ink-primary border border-border-strong rounded-md transition-colors">
-                  View all work
-                </Link>
-              </div>
-
-              {/* Somewhere to go next that is not back to the list. Quiet on
-                  purpose: the headline above is the ending, this is the door. */}
-              <Link to={nextProject.link} className="group mt-16 inline-flex flex-col items-center gap-2">
+              <Link to={nextProject.link} className="group inline-flex flex-col items-center gap-2">
                 <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-muted">
                   Next case study
                 </span>
@@ -498,6 +481,8 @@ export default function CaseStudyPage() {
             </motion.div>
           </div>
         </section>
+
+        <CTASection />
 
       </main>
       <Footer dark />
