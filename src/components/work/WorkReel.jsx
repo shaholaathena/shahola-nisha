@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {
   motion,
   useReducedMotion,
@@ -11,6 +11,7 @@ import { getLenis } from '../../lib/lenisInstance'
 import { projects } from '../../data/portfolio'
 import { categoryOf, shortOf } from './groups'
 import MerchantCoverQR from '../ui/MerchantCoverQR'
+import WorkCta from '../ui/WorkCta'
 
 /* ─────────────────────────────────────────────────────────────────────────────
    WorkReel — the work index as a scroll-driven reel of nine covers.
@@ -55,7 +56,6 @@ import MerchantCoverQR from '../ui/MerchantCoverQR'
    ───────────────────────────────────────────────────────────────────────────── */
 
 const N = projects.length
-const ROW = 56 // right-hand column row height, px
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v))
 
@@ -73,10 +73,12 @@ const DAMP_PARALLAX = 5 // the pointer drift, slower still — it is ambience
 
 const WHEEL_PX = 300 // wheel delta that travels one project — continuous now
 const SETTLE_MS = 140 // stillness before the reel comes to rest on a project
-/* Past either end the input is resisted rather than stopped, so the first and
-   last cover give a little and spring back instead of hitting a wall. */
-const OVERSCROLL = 0.22
-const RESIST = 0.3
+/* No ends. The reel is an infinite loop: after the last project comes the
+   first again, in either direction, so the input is never resisted or stopped.
+   `pos` is an unbounded number; every consumer reads it modulo N. (It used to
+   rubber-band past the first and last cover and spring back, which read as the
+   page getting stuck.) */
+const mod = (v, n) => ((v % n) + n) % n
 
 /* Crossfade weight for the text layers.
 
@@ -143,6 +145,9 @@ const POSE = {
    there is always something arriving from below and something leaving above,
    including on the first frame. */
 const around = (u) => ((((u + N / 2) % N) + N) % N) - N / 2
+/* The project index a loop position shows. */
+const indexAt = (v) => mod(Math.round(v), N)
+const serial = (i) => String(i + 1).padStart(2, '0')
 
 /* A cover's place is two pieces.
 
@@ -302,34 +307,32 @@ function TrackCard({ p, i, pos, c, mx, my, focal, onPick, navigate }) {
   )
 }
 
-/* One name in the right-hand column. Names only — the description belonged to
-   the reference's wider column and here it just crowded the flight; the dossier
-   on the left already carries the detail for whichever project is centred. */
-function ListRow({ p, i, pos, onJump }) {
-  const opacity = useTransform(pos, (v) => clamp(1 - Math.abs(v - i) * 0.3, 0.12, 1))
-  /* Interpolated, not switched. This was a ternary flipping at |d| < 0.5, which
-     made the gold snap on at the halfway point while everything else was still
-     gliding — the one hard edge in the whole column. */
-  const nameColor = useTransform(pos, [i - 0.85, i, i + 0.85], ['#e7ebf7', '#e8b862', '#e7ebf7'])
+/* The right-hand column for ONE project: a short description and, when the
+   project has a case study, the site's primary button. Stacked and crossfaded
+   exactly like the dossier on the left.
+
+   This column used to be the full index of project names, which put each name
+   on screen twice (index and dossier). The index went; the name stays on the
+   left with its facts, and this side says what the project IS and where to go
+   next. Projects without a case study show the description alone: a button to
+   nowhere would read as broken. */
+function DescLayer({ p, i, pos }) {
+  const opacity = useTransform(pos, (v) => textWeight(around(v - i)))
+  const pointerEvents = useTransform(pos, (v) => (Math.abs(around(v - i)) < 0.4 ? 'auto' : 'none'))
+  const visibility = useTransform(pos, (v) => (Math.abs(around(v - i)) > 0.7 ? 'hidden' : 'visible'))
 
   return (
-    <motion.li style={{ height: ROW, opacity }} className="flex items-center justify-end">
-      <button
-        type="button"
-        onClick={() => onJump(i)}
-        className="pointer-events-auto flex w-full items-baseline justify-end gap-3 text-right"
-      >
-        <span className="font-mono text-[9.5px] tabular-nums tracking-[0.18em] text-hero-mute">
-          {String(i + 1).padStart(2, '0')}
-        </span>
-        <motion.span
-          style={{ color: nameColor }}
-          className="block font-display text-[clamp(1.05rem,1.6vw,1.5rem)] font-medium uppercase leading-none tracking-[0.02em]"
-        >
-          {shortOf(p.id, p.company)}
-        </motion.span>
-      </button>
-    </motion.li>
+    <motion.div
+      className="absolute right-6 top-1/2 hidden w-[260px] -translate-y-1/2 lg:right-[max(2.5rem,calc((100%_-_1440px)/2_+_2.5rem))] lg:block xl:w-[290px]"
+      style={{ opacity, pointerEvents, visibility }}
+    >
+      {/* A mono label, like the dossier's Client / Launch / Scope, so the two
+          columns read as one system. (A large serial sat here briefly; it
+          repeated the "03 / 09" counter and moved to the dossier's eyebrow.) */}
+      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-hero-mute">Overview</p>
+      <p className="mt-2.5 text-[13.5px] leading-relaxed text-[#b9c0dd]">{p.description}</p>
+      {p.link && <WorkCta to={p.link} label="View case study" className="work-cta--sm mt-6" />}
+    </motion.div>
   )
 }
 
@@ -337,39 +340,46 @@ function ListRow({ p, i, pos, onJump }) {
    close that project is to the centre. Nine of these are stacked; at any moment
    one is solid and at most one other is fading past it. */
 function DossierLayer({ p, i, pos }) {
-  const opacity = useTransform(pos, (v) => textWeight(v - i))
-  const pointerEvents = useTransform(pos, (v) => (Math.abs(v - i) < 0.4 ? 'auto' : 'none'))
-  const visibility = useTransform(pos, (v) => (Math.abs(v - i) > 0.7 ? 'hidden' : 'visible'))
+  const opacity = useTransform(pos, (v) => textWeight(around(v - i)))
+  const pointerEvents = useTransform(pos, (v) => (Math.abs(around(v - i)) < 0.4 ? 'auto' : 'none'))
+  const visibility = useTransform(pos, (v) => (Math.abs(around(v - i)) > 0.7 ? 'hidden' : 'visible'))
 
   return (
     <motion.div
       className="absolute left-6 top-1/2 hidden w-[200px] -translate-y-1/2 lg:left-[max(2.5rem,calc((100%_-_1440px)/2_+_2.5rem))] lg:block xl:w-[230px]"
       style={{ opacity, pointerEvents, visibility }}
     >
-      <Dossier p={p} />
+      <Dossier p={p} i={i} />
     </motion.div>
   )
 }
 
-/* On a narrow screen the dossier and the index column are both hidden, which
-   left a phone showing covers with nothing to say what any of them were. This is
-   the minimum that fixes that: category and name, under the focal cover, on the
-   same crossfade as everything else. */
+/* Below `lg` the dossier and the description column are both hidden, so this
+   carries the essentials under the focal cover: serial and category, name, the
+   short description, and the case-study button where there is one. Same
+   crossfade as everything else. */
 function MobileLabel({ p, i, pos }) {
-  const opacity = useTransform(pos, (v) => textWeight(v - i))
-  const visibility = useTransform(pos, (v) => (Math.abs(v - i) > 0.7 ? 'hidden' : 'visible'))
+  const opacity = useTransform(pos, (v) => textWeight(around(v - i)))
+  const pointerEvents = useTransform(pos, (v) => (Math.abs(around(v - i)) < 0.4 ? 'auto' : 'none'))
+  const visibility = useTransform(pos, (v) => (Math.abs(around(v - i)) > 0.7 ? 'hidden' : 'visible'))
 
   return (
     <motion.div
       className="absolute inset-x-0 top-[64%] px-6 text-center lg:hidden"
-      style={{ opacity, visibility }}
+      style={{ opacity, pointerEvents, visibility }}
     >
       <p className="font-mono text-[9.5px] uppercase tracking-[0.24em] text-hero-hot">
+        <span className="tabular-nums">{serial(i)}</span>
+        <span className="mx-2 text-hero-mute/60">·</span>
         {categoryOf(p.id)}
       </p>
       <h3 className="mt-2 font-display text-[clamp(1.3rem,6vw,1.9rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-hero-ink">
         {shortOf(p.id, p.company)}
       </h3>
+      <p className="mx-auto mt-3 max-w-[340px] text-[13px] leading-relaxed text-[#b9c0dd]">
+        {p.description}
+      </p>
+      {p.link && <WorkCta to={p.link} label="View case study" className="work-cta--sm mt-5" />}
     </motion.div>
   )
 }
@@ -568,16 +578,14 @@ export default function WorkReel() {
       /* +0.2 in the direction of travel: four quick notches (1.33 projects)
          rounded down to one, which read as the wheel being ignored. */
       const to = Math.abs(d) > 0.12 ? from + Math.sign(d) * Math.max(1, Math.round(Math.abs(d) + 0.2)) : from
-      target.set(clamp(to, 0, N - 1))
+      target.set(to)
       anchor = null
     }
 
     const move = (delta) => {
       if (anchor === null) anchor = Math.round(target.get())
-      const t = target.get()
-      // Rubber band: past either end, the same input goes a third as far.
-      const k = (t < 0 && delta < 0) || (t > N - 1 && delta > 0) ? RESIST : 1
-      target.set(clamp(t + delta * k, -OVERSCROLL, N - 1 + OVERSCROLL))
+      // No ends to resist: the loop just keeps going.
+      target.set(target.get() + delta)
     }
 
     const onWheel = (e) => {
@@ -622,11 +630,11 @@ export default function WorkReel() {
       const step = { ArrowDown: 1, PageDown: 1, ArrowRight: 1, ArrowUp: -1, PageUp: -1, ArrowLeft: -1 }[e.key]
       if (step) {
         e.preventDefault()
-        target.set(clamp(Math.round(target.get()) + step, 0, N - 1))
-      } else if (e.key === 'Home') {
-        target.set(0)
-      } else if (e.key === 'End') {
-        target.set(N - 1)
+        target.set(Math.round(target.get()) + step)
+      } else if (e.key === 'Home' || e.key === 'End') {
+        // To the first (or last) project by the shortest way round the loop.
+        const t = Math.round(target.get())
+        target.set(t + Math.round(around((e.key === 'Home' ? 0 : N - 1) - t)))
       }
     }
 
@@ -664,29 +672,34 @@ export default function WorkReel() {
     }
   }, [reduce, target, mx, my])
 
-  const listY = useTransform(pos, (v) => -(ROW / 2) - v * ROW)
-  const railScale = useTransform(pos, (v) => clamp(v / (N - 1), 0, 1))
-  const counter = useTransform(pos, (v) => String(clamp(Math.round(v), 0, N - 1) + 1).padStart(2, '0'))
+  const wrapped = useTransform(pos, (v) => mod(v, N))
+  const railScale = useTransform(wrapped, (v) => clamp(v / (N - 1), 0, 1))
+  const counter = useTransform(pos, (v) => String(indexAt(v) + 1).padStart(2, '0'))
 
-  const jumpTo = (i) => target.set(clamp(i, 0, N - 1))
+  // To project i by the shortest way round the loop.
+  const jumpTo = (i) => {
+    const t = Math.round(target.get())
+    target.set(t + Math.round(around(i - t)))
+  }
+  const step = (d) => target.set(Math.round(target.get()) + d)
 
   /* Which cover is in focus, as state — but only the index, and it only changes
      when the reel crosses a halfway point, so this renders nine times across the
      whole reel, never per frame. The motion itself stays in motion values. */
   const navigate = useNavigate()
   const [focal, setFocal] = useState(0)
-  useMotionValueEvent(pos, 'change', (v) => setFocal(clamp(Math.round(v), 0, N - 1)))
+  useMotionValueEvent(pos, 'change', (v) => setFocal(indexAt(v)))
 
   if (reduce) {
     return (
       <section id="all-work" className="relative border-t border-white/10">
-        {projects.map((p) => (
+        {projects.map((p, i) => (
           <div key={p.id} className="relative flex h-screen items-center overflow-hidden">
             <div className="absolute right-0 top-0 h-full w-[52%] overflow-hidden">
               <Media p={p} />
             </div>
             <div className="relative z-10 mx-auto w-full max-w-[1440px] px-6 lg:px-10">
-              <Dossier p={p} />
+              <Dossier p={p} i={i} />
             </div>
           </div>
         ))}
@@ -764,28 +777,15 @@ export default function WorkReel() {
           ))}
         </div>
 
-        {/* ── RIGHT: the full index, scrolling to keep the active one centred ──
+        {/* ── RIGHT: what the project is, and the way into it ──
 
-            The dossier and this index sit on the 1440 column's
-            edges, the same ones the header's mark and links use. They were
-            measured from the viewport instead, which is the same edge below
-            1440 and 280px outside the header on a 2000px screen. The names are
-            right-aligned so their ragged edge is the inside one and the
-            column's edge stays straight under "Contact". */}
-        <div className="pointer-events-none absolute right-6 top-1/2 z-[400] hidden w-[240px] -translate-y-1/2 md:block lg:right-[max(2.5rem,calc((100%_-_1440px)/2_+_2.5rem))] xl:w-[290px]">
-          <div
-            className="relative h-[78vh] overflow-hidden"
-            style={{
-              maskImage: 'linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%)',
-            }}
-          >
-            <motion.ul className="absolute inset-x-0 top-1/2" style={{ y: listY }}>
-              {projects.map((proj, i) => (
-                <ListRow key={proj.id} p={proj} i={i} pos={pos} onJump={jumpTo} />
-              ))}
-            </motion.ul>
-          </div>
+            A short description and the case-study button, one layer per
+            project, crossfaded by the same value that flies the covers. On the
+            1440 column's right edge, where the header's links end. */}
+        <div className="pointer-events-none absolute inset-0 z-[400]">
+          {projects.map((proj, i) => (
+            <DescLayer key={proj.id} p={proj} i={i} pos={pos} />
+          ))}
         </div>
 
         {tuning && <TunePanel cfg={cfg} setCfg={setCfg} />}
@@ -802,12 +802,34 @@ export default function WorkReel() {
         />
         <div className="pointer-events-none absolute inset-x-0 bottom-6 z-[400] mx-auto flex max-w-[1440px] items-center justify-between px-6 lg:px-10">
           <h1 className="font-mono text-[9.5px] uppercase tracking-[0.28em] text-hero-mute sm:text-[10px]">
-            Selected work <span className="text-hero-mute/60">· {N} projects</span>
+            Selected work <span className="hidden text-hero-mute/60 sm:inline">· {N} projects</span>
           </h1>
-          <p className="font-mono text-[9.5px] tabular-nums tracking-[0.2em] text-hero-mute sm:text-[10px]">
-            <motion.span className="text-hero-hot">{counter}</motion.span>
-            <span className="text-hero-mute/60"> / {String(N).padStart(2, '0')}</span>
-          </p>
+          {/* Previous / next beside the counter. The index column used to be
+              the way to jump between projects; with it gone these, the wheel,
+              and the covers in the corner piles are. The loop has no ends, so
+              neither arrow ever disables. */}
+          <div className="pointer-events-auto flex shrink-0 items-center gap-3 sm:gap-4">
+            <button
+              type="button"
+              onClick={() => step(-1)}
+              aria-label="Previous project"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 text-hero-mute transition-colors duration-200 hover:border-hero-hot/60 hover:text-hero-hot"
+            >
+              <span aria-hidden>←</span>
+            </button>
+            <p className="whitespace-nowrap font-mono text-[9.5px] tabular-nums tracking-[0.2em] text-hero-mute sm:text-[10px]">
+              <motion.span className="text-hero-hot">{counter}</motion.span>
+              <span className="text-hero-mute/60"> / {String(N).padStart(2, '0')}</span>
+            </p>
+            <button
+              type="button"
+              onClick={() => step(1)}
+              aria-label="Next project"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 text-hero-mute transition-colors duration-200 hover:border-hero-hot/60 hover:text-hero-hot"
+            >
+              <span aria-hidden>→</span>
+            </button>
+          </div>
         </div>
 
         <div className="absolute inset-x-0 bottom-0 z-[400] h-[3px] bg-white/10">
@@ -824,7 +846,7 @@ export default function WorkReel() {
    diamond before the hero's "Design Engineer", the short gold rule
    under About's intro, the mono pills on its timeline. Without them this column
    was the one block of type on the site set in none of its details. */
-function Dossier({ p }) {
+function Dossier({ p, i }) {
   return (
     <>
       <div className="flex items-center gap-2.5">
@@ -833,16 +855,17 @@ function Dossier({ p }) {
           className="h-[5px] w-[5px] shrink-0 rotate-45 bg-hero-hot"
           style={{ boxShadow: '0 0 6px rgba(var(--hero-hot-rgb) / 1), 0 0 18px rgba(var(--hero-hot-rgb) / 0.6)' }}
         />
+        {/* Serial, then category: which of the set this is and what kind. */}
         <p className="font-mono text-[9.5px] uppercase tracking-[0.24em] text-hero-hot">
+          <span className="tabular-nums">{serial(i)}</span>
+          <span className="mx-2 text-hero-mute/60">·</span>
           {categoryOf(p.id)}
         </p>
       </div>
       <h3 className="mt-3 font-display text-[clamp(1.35rem,1.9vw,1.9rem)] font-semibold leading-[1.04] tracking-[-0.03em] text-hero-ink">
         {shortOf(p.id, p.company)}
       </h3>
-      <span aria-hidden className="mt-5 block h-px w-10 bg-hero-hot/70" />
-
-      <dl className="mt-5 space-y-3.5">
+      <dl className="mt-6 space-y-3.5">
         <div>
           <dt className="font-mono text-[9px] uppercase tracking-[0.22em] text-hero-mute">Client</dt>
           <dd className="mt-1 text-[12.5px] leading-snug text-[#c9cfe9]">{p.company}</dd>
@@ -870,16 +893,6 @@ function Dossier({ p }) {
         )}
       </dl>
 
-      {p.link && (
-        <Link to={p.link} className="group mt-6 inline-flex items-center gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hero-hot/60 text-hero-hot transition-colors duration-200 group-hover:border-hero-hot group-hover:bg-hero-hot/15">
-            <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-          </span>
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-hero-ink">
-            View case study
-          </span>
-        </Link>
-      )}
     </>
   )
 }

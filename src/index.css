@@ -706,6 +706,23 @@ html:has(.bg-hero-void) ::-webkit-scrollbar-thumb:hover {
   .work-cta:hover .work-cta-arrows > svg:first-child { transform: translateX(160%); }
   .work-cta:hover .work-cta-arrows > svg + svg { transform: translateX(0); }
 }
+/* Compact size, for the Work page, where the button sits in a narrow column
+   beside the reel rather than leading a hero. Same parts, scaled down. */
+.work-cta--sm {
+  height: 44px;
+  gap: 0.85rem;
+  padding: 4px 4px 4px 20px;
+  font-size: 13.5px;
+}
+.work-cta--sm .work-cta-disc {
+  width: 36px;
+  height: 36px;
+}
+.work-cta--sm .work-cta-arrows,
+.work-cta--sm .work-cta-arrows > svg {
+  width: 15px;
+  height: 15px;
+}
 .work-cta:focus-visible {
   outline: 2px solid rgba(243, 207, 134, 0.9);
   outline-offset: 4px;
