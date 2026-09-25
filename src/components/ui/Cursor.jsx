@@ -24,10 +24,10 @@ const INTERACTIVE = 'a, button, [role="button"], summary, label[for], [data-curs
 const TEXT = 'input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), textarea, select, [contenteditable="true"]'
 const LARGE_W = 320
 const LARGE_H = 120
-// Toned down twice after it read as too busy: a star every ~32px of travel,
-// small, faint and gone in well under a second. A hint of dust, not a tail.
-const MAX_PARTICLES = 40
-const SPAWN_EVERY = 32 // px of travel per star
+// Toned down after it read as too busy, then back up a step when it vanished:
+// a star every ~24px of travel, small, soft and gone in under a second.
+const MAX_PARTICLES = 60
+const SPAWN_EVERY = 24 // px of travel per star
 
 export default function Cursor() {
   // Read once at mount. This is a client-only SPA, so window is always there.
@@ -83,8 +83,8 @@ export default function Cursor() {
         y: y + (Math.random() - 0.5) * 8,
         vx: -dx * 0.01 + (Math.random() - 0.5) * 0.3,
         vy: -dy * 0.01 + (Math.random() - 0.5) * 0.3 + 0.05,
-        size: 0.7 + Math.random() * 0.9,
-        life: 450 + Math.random() * 300,
+        size: 0.9 + Math.random() * 1.1,
+        life: 550 + Math.random() * 350,
         age: 0,
         seed: Math.random() * 6.28,
         rgb: Math.random() < goldShare ? GOLD : WHITE,
@@ -127,17 +127,18 @@ export default function Cursor() {
         s.vx *= 0.985
         s.vy *= 0.985
         const t = s.age / s.life
-        // Faint by design (35% at most), and each mote eases in over its first
-        // ~90ms instead of popping on, so the trail reads as a soft haze.
+        // Soft but visible: 65% at most (35% vanished; at 75% with larger,
+        // denser motes it read as too strong). Each mote eases in over its first ~90ms instead
+        // of popping on, so the trail reads as a haze rather than dots.
         const fadeIn = Math.min(1, s.age / 90)
-        const a = 0.35 * fadeIn * Math.pow(1 - t, 1.8) * (0.55 + 0.45 * Math.sin(s.seed + s.age * 0.018))
+        const a = 0.65 * fadeIn * Math.pow(1 - t, 1.8) * (0.55 + 0.45 * Math.sin(s.seed + s.age * 0.018))
         const r = s.size * (1 - t * 0.5)
         // A soft halo first, so each mote glows rather than just dots.
-        ctx.fillStyle = `rgba(${s.rgb}, ${a * 0.08})`
+        ctx.fillStyle = `rgba(${s.rgb}, ${a * 0.12})`
         ctx.beginPath()
         ctx.arc(s.x, s.y, r * 3, 0, Math.PI * 2)
         ctx.fill()
-        if (s.size > 1.45) {
+        if (s.size > 1.55) {
           // The larger ones are tiny four-arm sparkles, the cursor's own shape.
           const l = r * 3
           const k = r * 0.45
