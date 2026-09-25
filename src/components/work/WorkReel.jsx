@@ -821,7 +821,7 @@ export default function WorkReel() {
 /* Role / Launch / Recognition in the reference. Here: the fields this data
    actually has, in that same three-block shape. */
 /* The eyebrow, rule and pills are the homepage's and About's own — the lit
-   diamond before the hero's "UX Designer / UX Engineer", the short gold rule
+   diamond before the hero's "Design Engineer", the short gold rule
    under About's intro, the mono pills on its timeline. Without them this column
    was the one block of type on the site set in none of its details. */
 function Dossier({ p }) {

@@ -485,9 +485,34 @@ html:has(.bg-hero-void) ::-webkit-scrollbar-thumb:hover {
   color: #9aa3c4;
   border: 1px solid rgba(255, 255, 255, 0.16);
 }
+/* Nav underline. A 1px gold rule under the word that draws in from the left
+   on hover and leaves to the right, with the text turning gold (set on the
+   span in the markup). An earlier sweep-in rule was removed; she asked for an
+   underline back. It is a scaled pseudo-element, not text-decoration, so it
+   can animate and sit a fixed distance under the letters: the link has 12px
+   of vertical padding (py-3), so `bottom: 7px` puts it about 5px under them. */
+.hero-navlink::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0.2em; /* the letter-spacing trails the last glyph; do not underline it */
+  bottom: 7px;
+  height: 1px;
+  background: var(--color-hero-hot);
+  box-shadow: 0 0 6px rgba(232, 184, 98, 0.6);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 320ms var(--ease-out-quint);
+  pointer-events: none;
+}
+.hero-navlink:focus-visible::after {
+  transform: scaleX(1);
+}
 @media (hover: hover) and (pointer: fine) {
-  /* The nav has no hover motion or rule any more — its hover is the text
-     colour change, set on the span in the markup. Only the socials move. */
+  .hero-navlink:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
   .hero-social:hover {
     transform: translateX(-5px) scale(1.08);
     color: var(--color-hero-hot);
@@ -513,9 +538,249 @@ html:has(.bg-hero-void) ::-webkit-scrollbar-thumb:hover {
   .hero-social { transition: color 200ms ease; }
   .hero-navlink:hover,
   .hero-social:hover { transform: none; }
+  .hero-navlink::after { transition: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-split { text-shadow: none; }
   .hero-headline { font-variation-settings: 'wght' var(--hero-wght, 700), 'wdth' 100; }
 }
+
+/* ── The call to action (WorkCta.jsx) ──
+   A liquid-glass pill: a frosted, slightly lifted surface with a bright top
+   edge, set in the page's sans at sentence case so it reads as a product
+   control rather than a terminal label. Three quiet layers of light:
+
+     · the beam: a short gold arc that travels the hairline border, slowly
+       (7s a lap), the only idle motion
+     · the spotlight: a soft gold glow inside the glass that follows the
+       pointer on hover (--mx / --my, set in WorkCta)
+     · the disc: the key holding the arrow. Only tinted gold at rest, so the
+       label reads first; on hover it lights up solid, like a window
+       switching on in the skyline behind it
+
+   The root's transform belongs to GSAP (the hero's magnetic lean), so nothing
+   here animates `transform` on `.work-cta` itself. */
+@property --work-cta-beam {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.work-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.1rem;
+  height: 56px;
+  padding: 6px 6px 6px 26px;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--color-hero-ink);
+  /* One soft, long curve for every state change on this control. Gradients
+     cannot be interpolated, so nothing here swaps one gradient for another:
+     the glass brightens through background-color under a fixed gradient, and
+     the disc's gold is a layer that fades in. Swapping gradients made both
+     jump instead of ease. */
+  --work-cta-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  background-color: rgba(255, 255, 255, 0);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03),
+    0 12px 32px -14px rgba(0, 0, 0, 0.7);
+  transition:
+    box-shadow 600ms var(--work-cta-ease),
+    background-color 600ms var(--work-cta-ease);
+}
+/* The border: a faint white hairline with the gold beam running along it.
+   Masked so only the 1px ring shows. */
+.work-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 1px;
+  border-radius: inherit;
+  background:
+    conic-gradient(from var(--work-cta-beam),
+      transparent 0deg, transparent 250deg,
+      rgba(243, 207, 134, 0.95) 320deg, transparent 360deg),
+    linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+  animation: work-cta-beam 7s linear infinite;
+}
+/* The spotlight. */
+.work-cta::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(140px circle at var(--mx, 80%) var(--my, 50%),
+    rgba(232, 184, 98, 0.24), rgba(232, 184, 98, 0) 70%);
+  opacity: 0;
+  transition: opacity 600ms var(--work-cta-ease);
+  pointer-events: none;
+}
+.work-cta-label {
+  white-space: nowrap;
+  transition: color 450ms var(--work-cta-ease);
+}
+.work-cta-disc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  position: relative;
+  isolation: isolate;
+  border-radius: 9999px;
+  color: var(--color-hero-hot);
+  background-color: rgba(232, 184, 98, 0.10);
+  box-shadow: inset 0 0 0 1px rgba(232, 184, 98, 0.35);
+  transition:
+    color 450ms var(--work-cta-ease),
+    box-shadow 600ms var(--work-cta-ease);
+}
+/* The gold, as a layer that fades in rather than a background that swaps. */
+.work-cta-disc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #f5d594 0%, #e8b862 60%, #d9a24d 100%);
+  opacity: 0;
+  transition: opacity 500ms var(--work-cta-ease);
+}
+/* Two arrows in a clipped slot: one leaves right as the other arrives. */
+.work-cta-arrows {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  overflow: hidden;
+}
+.work-cta-arrows > svg {
+  position: absolute;
+  inset: 0;
+  /* A gentle start and a long glide, so the swap reads as one motion. */
+  transition: transform 650ms cubic-bezier(0.45, 0, 0.15, 1);
+}
+.work-cta-arrows > svg + svg { transform: translateX(-160%); }
+
+@keyframes work-cta-beam {
+  to { --work-cta-beam: 360deg; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .work-cta:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+      0 16px 40px -14px rgba(232, 184, 98, 0.45);
+  }
+  .work-cta:hover::after { opacity: 1; }
+  .work-cta:hover .work-cta-label { color: #fff; }
+  /* The key lights up, staying the same size (it used to stretch into a
+     capsule; she found that unnecessary). At rest it is only tinted, so the
+     label reads first. */
+  .work-cta:hover .work-cta-disc {
+    color: #1a1408;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 246, 220, 0.85),
+      inset 0 -1px 0 rgba(120, 78, 20, 0.3),
+      0 0 24px -2px rgba(232, 184, 98, 0.6);
+  }
+  .work-cta:hover .work-cta-disc::before { opacity: 1; }
+  .work-cta:hover .work-cta-arrows > svg:first-child { transform: translateX(160%); }
+  .work-cta:hover .work-cta-arrows > svg + svg { transform: translateX(0); }
+}
+.work-cta:focus-visible {
+  outline: 2px solid rgba(243, 207, 134, 0.9);
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Park the beam at the top edge instead of running it. */
+  .work-cta::before { animation: none; --work-cta-beam: 200deg; }
+  .work-cta-arrows > svg { transition: none; }
+}
+
+/* ── Star cursor ──
+   The cursor IS the system cursor, drawn from an SVG, so the browser and OS
+   render it on the hardware cursor plane: it moves exactly as fast as a
+   normal cursor and cannot lag. (Two JS-driven cursors before this were
+   reported as slow.)
+
+   A four-arm sparkle, the same figure as the stars in the hero sky, with
+   equal arms, gently pinched sides and rounded points (the round-joined
+   strokes do the rounding), so it reads soft rather than needle-sharp. It is
+   tilted 20 degrees so the top arm leans up-left like an arrow's tip, and the
+   hotspot (11 3) sits on that tip, so it aims the way a cursor does.
+
+   A dark outline, as a system arrow has, keeps it legible on anything; a soft
+   blurred shadow down-right gives it lift; the fill is a gradient (white to
+   cool silver, or pale gold to amber) with a glint down the tip. White at
+   rest, gold with a warmer glow over anything clickable; while the button is
+   held it tucks to 86% about its tip, so the aim never moves.
+
+   The image is 32px. The star body is 88% opaque at rest and 72%, with a
+   softer glow, as the gold hover star, so the page shows through it (gold
+   reads heavier than white at the same opacity); image-set gives retina screens a 64px drawing of it,
+   and the plain url() line before it is the fallback for browsers without
+   image-set cursors. Keep it at or under 64px: some platforms refuse larger
+   cursor images and fall back to the default arrow. Text fields keep the
+   I-beam. Only applied on fine pointers, via the class Cursor.jsx sets. */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'%20stop-opacity='0.32'/%3E%3Cstop%20offset='1'%20stop-color='%23ffffff'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'/%3E%3Cstop%20offset='0.55'%20stop-color='%23f1f4ff'/%3E%3Cstop%20offset='1'%20stop-color='%23c9d2f0'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='11.9'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.37'%20stroke='%23000'%20stroke-opacity='0.37'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.88'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.85'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 11 3, auto !important;
+  cursor: image-set(url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'%20stop-opacity='0.32'/%3E%3Cstop%20offset='1'%20stop-color='%23ffffff'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'/%3E%3Cstop%20offset='0.55'%20stop-color='%23f1f4ff'/%3E%3Cstop%20offset='1'%20stop-color='%23c9d2f0'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='11.9'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.37'%20stroke='%23000'%20stroke-opacity='0.37'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.88'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.85'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 1x, url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='64'%20height='64'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'%20stop-opacity='0.32'/%3E%3Cstop%20offset='1'%20stop-color='%23ffffff'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'/%3E%3Cstop%20offset='0.55'%20stop-color='%23f1f4ff'/%3E%3Cstop%20offset='1'%20stop-color='%23c9d2f0'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='11.9'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.37'%20stroke='%23000'%20stroke-opacity='0.37'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.88'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.85'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 2x) 11 3, auto !important;
+}
+html.has-custom-cursor :is(a, button, [role="button"], summary, label[for], [data-cursor]),
+html.has-custom-cursor :is(a, button, [role="button"], summary, label[for], [data-cursor]) * {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23e8b862'%20stop-opacity='0.3'/%3E%3Cstop%20offset='1'%20stop-color='%23e8b862'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23fff4d8'/%3E%3Cstop%20offset='0.5'%20stop-color='%23f3cf86'/%3E%3Cstop%20offset='1'%20stop-color='%23d09a45'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='11.9'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.30'%20stroke='%23000'%20stroke-opacity='0.30'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.72'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.70'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 11 3, pointer !important;
+  cursor: image-set(url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23e8b862'%20stop-opacity='0.3'/%3E%3Cstop%20offset='1'%20stop-color='%23e8b862'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23fff4d8'/%3E%3Cstop%20offset='0.5'%20stop-color='%23f3cf86'/%3E%3Cstop%20offset='1'%20stop-color='%23d09a45'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='11.9'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.30'%20stroke='%23000'%20stroke-opacity='0.30'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.72'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.70'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 1x, url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='64'%20height='64'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23e8b862'%20stop-opacity='0.3'/%3E%3Cstop%20offset='1'%20stop-color='%23e8b862'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23fff4d8'/%3E%3Cstop%20offset='0.5'%20stop-color='%23f3cf86'/%3E%3Cstop%20offset='1'%20stop-color='%23d09a45'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='11.9'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.30'%20stroke='%23000'%20stroke-opacity='0.30'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.72'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.70'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 2x) 11 3, pointer !important;
+}
+/* Pressed: the star tucks toward its tip while the button is held. */
+html.has-custom-cursor *:active {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'%20stop-opacity='0.55'/%3E%3Cstop%20offset='1'%20stop-color='%23ffffff'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'/%3E%3Cstop%20offset='0.55'%20stop-color='%23f1f4ff'/%3E%3Cstop%20offset='1'%20stop-color='%23c9d2f0'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20transform='translate%289.93%203.12%29%20scale%28.86%29%20translate%28-9.93%20-3.12%29'%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='13.1'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.37'%20stroke='%23000'%20stroke-opacity='0.37'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.88'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.85'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 11 3, auto !important;
+  cursor: image-set(url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'%20stop-opacity='0.55'/%3E%3Cstop%20offset='1'%20stop-color='%23ffffff'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'/%3E%3Cstop%20offset='0.55'%20stop-color='%23f1f4ff'/%3E%3Cstop%20offset='1'%20stop-color='%23c9d2f0'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20transform='translate%289.93%203.12%29%20scale%28.86%29%20translate%28-9.93%20-3.12%29'%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='13.1'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.37'%20stroke='%23000'%20stroke-opacity='0.37'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.88'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.85'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 1x, url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='64'%20height='64'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'%20stop-opacity='0.55'/%3E%3Cstop%20offset='1'%20stop-color='%23ffffff'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23ffffff'/%3E%3Cstop%20offset='0.55'%20stop-color='%23f1f4ff'/%3E%3Cstop%20offset='1'%20stop-color='%23c9d2f0'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20transform='translate%289.93%203.12%29%20scale%28.86%29%20translate%28-9.93%20-3.12%29'%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='13.1'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.37'%20stroke='%23000'%20stroke-opacity='0.37'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.88'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.85'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 2x) 11 3, auto !important;
+}
+html.has-custom-cursor :is(a, button, [role="button"], summary, label[for], [data-cursor]):active,
+html.has-custom-cursor :is(a, button, [role="button"], summary, label[for], [data-cursor]):active * {
+  cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23e8b862'%20stop-opacity='0.45'/%3E%3Cstop%20offset='1'%20stop-color='%23e8b862'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23fff4d8'/%3E%3Cstop%20offset='0.5'%20stop-color='%23f3cf86'/%3E%3Cstop%20offset='1'%20stop-color='%23d09a45'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20transform='translate%289.93%203.12%29%20scale%28.86%29%20translate%28-9.93%20-3.12%29'%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='13.1'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.30'%20stroke='%23000'%20stroke-opacity='0.30'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.72'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.70'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 11 3, pointer !important;
+  cursor: image-set(url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23e8b862'%20stop-opacity='0.45'/%3E%3Cstop%20offset='1'%20stop-color='%23e8b862'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23fff4d8'/%3E%3Cstop%20offset='0.5'%20stop-color='%23f3cf86'/%3E%3Cstop%20offset='1'%20stop-color='%23d09a45'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20transform='translate%289.93%203.12%29%20scale%28.86%29%20translate%28-9.93%20-3.12%29'%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='13.1'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.30'%20stroke='%23000'%20stroke-opacity='0.30'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.72'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.70'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 1x, url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='64'%20height='64'%20viewBox='0%200%2028%2028'%3E%3Cdefs%3E%3CradialGradient%20id='h'%3E%3Cstop%20offset='0'%20stop-color='%23e8b862'%20stop-opacity='0.45'/%3E%3Cstop%20offset='1'%20stop-color='%23e8b862'%20stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient%20id='f'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23fff4d8'/%3E%3Cstop%20offset='0.5'%20stop-color='%23f3cf86'/%3E%3Cstop%20offset='1'%20stop-color='%23d09a45'/%3E%3C/linearGradient%3E%3Cfilter%20id='s'%20x='-30%25'%20y='-30%25'%20width='160%25'%20height='160%25'%3E%3CfeGaussianBlur%20stdDeviation='1.1'/%3E%3C/filter%3E%3C/defs%3E%3Cg%20transform='translate%289.93%203.12%29%20scale%28.86%29%20translate%28-9.93%20-3.12%29'%3E%3Ccircle%20cx='14.0'%20cy='14.3'%20r='13.1'%20fill='url%28%23h%29'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20transform='translate%28.9%201.3%29'%20fill='%23000'%20fill-opacity='0.30'%20stroke='%23000'%20stroke-opacity='0.30'%20stroke-width='2'%20stroke-linejoin='round'%20filter='url%28%23s%29'/%3E%3Cg%20opacity='0.72'%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='%2305101f'%20fill-opacity='.75'%20stroke='%2305101f'%20stroke-opacity='.75'%20stroke-width='3.4'%20stroke-linejoin='round'/%3E%3Cpath%20d='M9.93%203.12%20Q15.27%2011.58%2025.18%2010.23%20Q16.72%2015.57%2018.07%2025.48%20Q12.73%2017.02%202.82%2018.37%20Q11.28%2013.03%209.93%203.12%20Z'%20fill='url%28%23f%29'%20stroke='url%28%23f%29'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/g%3E%3Cpath%20d='M10.66%205.13%20L12.17%209.27'%20stroke='%23fff'%20stroke-opacity='0.70'%20stroke-width='1'%20stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") 2x) 11 3, pointer !important;
+}
+html.has-custom-cursor :is(input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), textarea, select, [contenteditable="true"]) {
+  cursor: text !important;
+}
+/* The "View" tag beside the star over a large clickable card. */
+.cursor-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #1a1408;
+  background: linear-gradient(180deg, #f5d594 0%, #e8b862 100%);
+  box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.6), 0 0 18px rgba(232, 184, 98, 0.35);
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 160ms ease;
+}
+.cursor-tag[data-on="true"] { opacity: 1; }

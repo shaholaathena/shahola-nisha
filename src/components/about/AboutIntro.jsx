@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import WorkCta from '../ui/WorkCta'
 import nisha from '../../assets/nisha-3.png'
 import Eyebrow from './Eyebrow'
 import { softStops } from '../../lib/softGradient'
@@ -16,7 +16,7 @@ import { softStops } from '../../lib/softGradient'
 
      · the short gold rule between the two paragraphs, which separates the
        professional line from the personal one without a heading, and
-     · the "Explore my work" ring, the same control the homepage hero ends on,
+     · the "Explore my work" pill, the same control the homepage hero ends on,
        so the About page offers a way onward instead of dead-ending.
 
    ── The photograph ──
@@ -135,8 +135,8 @@ export default function AboutIntro() {
               {...step(0.1)}
               className="mt-6 max-w-2xl text-[16px] leading-relaxed text-[#b9c0dd] sm:text-[17px]"
             >
-              A UX Analyst based in Dhaka, designing digital products and
-              experiences that are useful, usable, and meaningful.
+              A design engineer based in Dhaka, designing and building digital
+              products and experiences that are useful, usable, and meaningful.
             </motion.p>
 
             {/* The rule that separates what she does from what she is like. */}
@@ -156,21 +156,9 @@ export default function AboutIntro() {
               daydreaming about my next travel.
             </motion.p>
 
-            {/* Same ring the homepage hero ends on. */}
+            {/* Same control the homepage hero ends on. */}
             <motion.div {...step(0.22)} className="mt-10">
-              <Link to="/work" className="group inline-flex items-center gap-4">
-                <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-hero-ink">
-                  Explore my work
-                </span>
-                <span className="relative flex h-10 w-10 items-center justify-center rounded-full border border-hero-hot/50 transition-colors duration-200 group-hover:border-hero-hot group-hover:bg-hero-hot/15">
-                  <span
-                    className="text-hero-hot transition-transform duration-200 group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  >
-                    →
-                  </span>
-                </span>
-              </Link>
+              <WorkCta />
             </motion.div>
           </div>
 

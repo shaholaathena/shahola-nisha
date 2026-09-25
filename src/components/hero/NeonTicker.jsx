@@ -26,8 +26,8 @@
    to the number of copies, not to their content.
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* Nothing here repeats what the hero already states in place — "8 yrs · Dhaka,
-   BD" sits next to the call to action, so this strip must not say Dhaka again.
+/* Nothing here repeats what the hero already states in place — the line above
+   her name says her role and years of experience, so this strip must not say those again.
 
    It used to solve that by printing the coordinates instead: 23.8103° N,
    90.4125° E. Technically not a repeat, and useless — nobody reads a latitude

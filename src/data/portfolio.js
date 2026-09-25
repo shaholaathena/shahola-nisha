@@ -3,9 +3,9 @@ import easyHealthImg from '../assets/easy-health.jpg';
 export const meta = {
   name: 'AN',
   fullName: 'Alimoon Nisha',
-  title: 'UX Designer & UX Engineer',
+  title: 'Design Engineer',
   tagline: 'Designing banking,\nhealth, and platform\nexperiences.',
-  bio: 'I am a UX Designer and UX Engineer based in Dhaka, Bangladesh. I specialize in problem solving, research, visual design, and prototyping for mobile banking, healthcare, social platforms, and learning products.',
+  bio: 'I am a Design Engineer based in Dhaka, Bangladesh. I design and build products for mobile banking, healthcare, social platforms, and learning, from research and prototyping to production front-end.',
   location: 'Dhaka, Bangladesh',
   availability: 'Currently working as UX Analyst at SSL Wireless',
   linkedin: 'https://www.linkedin.com/in/shahola-nisha/',
@@ -539,7 +539,7 @@ export const projects = [
         },
       ],
 
-      // ── Designed AND built — the UX-Engineer angle. ──
+      // ── Designed AND built — the design-engineer angle. ──
       buildIntro: 'I did not hand this off as a spec. I designed the flow in Figma and then built the front-end, so the decisions above survived contact with real code instead of being renegotiated in handoff.',
       buildPoints: [
         'Designed the onboarding, dashboard, and storefront in Figma.',

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NightScene from '../hero/NightScene'
+import WorkCta from '../ui/WorkCta'
 import NeonTicker from '../hero/NeonTicker'
 import logo from '../../assets/logo.png'
 import { meta } from '../../data/portfolio'
@@ -51,9 +52,13 @@ const NAV = [
    colon is the hinge that makes the second half read as a restatement of the
    first rather than as a separate claim.
 
-   THREE LINES MAXIMUM, which is a hard constraint and not a preference. It
-   also happens to be the honest break: the colon ends line one, so each half
-   of the parallel gets a line of its own and the arrival gets the third.
+   TWO LINES, broken where she asked: "From wondering to making: I follow" /
+   "questions to solutions." (It was three lines, then two split at the colon;
+   she asked for this break and a smaller size.) Line one is now the long one
+   and sets the size at every width, so the font tracks the column below the
+   cap: clamp(1rem, 5.7vw - 2.75px, 2.125rem) keeps line one at roughly 90% of
+   the column from 320px up to where the 34px cap takes over. Re-measure line
+   one at 320, 375 and 1440 after any edit to the words.
 
    What three lines cost is SIZE, and the trade is worth understanding before
    anyone edits these words. "From wondering to making:" is 25 characters, the
@@ -70,11 +75,10 @@ const NAV = [
    would have passed this. Shorter copy is what buys big type here, not the other way round: at
    four lines the same sentence set half again as large.
 
-   The last break must not move. "to solutions." alone, in the accent, is the
-   arrival, and pulling it up to join line two would leave the sentence
-   trailing off rather than landing.
+   "to solutions." keeps the accent at the end of line two, where the eye
+   finishes, so the sentence still lands on colour.
 
-   The accent sits on the whole last line, where the eye finishes. Marking
+   The accent sits only on that closing phrase. Marking
    words mid-sentence was tried on an earlier headline and rejected: two marks
    stop the eye twice on the way in, the sentence stops reading as a sentence,
    and the line loses its landing, since at display size the colour rather than
@@ -101,9 +105,8 @@ const NAV = [
    three-line ceiling a wrap is worse still, because it produces the fourth
    line this headline is not allowed to have. */
 const HEADLINE = [
-  ['From wondering to making:'],
-  ['I follow questions'],
-  [{ a: 'to solutions.' }],
+  ['From wondering to making: I follow'],
+  ['questions ', { a: 'to solutions.' }],
 ]
 
 /* Socials are icons, not words: the rail is 9px mono everywhere else and two
@@ -191,7 +194,6 @@ export default function Hero() {
           { '--hero-wdth': 78, '--hero-gx': 7 },
           { '--hero-wdth': 100, '--hero-gx': 0, duration: 0.73, ease: 'power2.out' }, 0.52)
 
-        .from('[data-sub]', { opacity: 0, y: 12, duration: 0.6 }, 0.8)
         .from('[data-cta]', { opacity: 0, y: 12, duration: 0.6 }, 0.9)
         .from('[data-rail]', { opacity: 0, duration: 0.65 }, 0.95)
         .from('[data-ticker]', { opacity: 0, y: 14, duration: 0.6 }, 1.0)
@@ -283,8 +285,9 @@ export default function Hero() {
              only within its own bounds. Enough to register as responsive; not
              enough to move the target away from someone aiming at it. */
           const btn = cta.current
-          const toX = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3.out' })
-          const toY = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3.out' })
+          // 0.7s, up from 0.4: a slower settle reads as smooth rather than twitchy.
+          const toX = gsap.quickTo(btn, 'x', { duration: 0.7, ease: 'power3.out' })
+          const toY = gsap.quickTo(btn, 'y', { duration: 0.7, ease: 'power3.out' })
 
           const onBtnMove = (e) => {
             const r = btn.getBoundingClientRect()
@@ -366,16 +369,17 @@ export default function Hero() {
             onClick={(e) => go(e, '/')}
             data-nav
             aria-label="Alimoon Nisha, home"
-            className="pointer-events-auto flex h-12 items-center lg:h-14"
+            className="pointer-events-auto flex h-11 items-center"
           >
-            {/* 48/56px, up from 36/40. It is the only drawing of her name on the
-                page, and at 40px a signature this thin read as an ornament in
-                the corner. The homepage does not scroll, so there is no tighter
-                state for it to shrink to. */}
+            {/* 36/40px in an h-11 box, the same as Navigation and CaseStudyBar,
+                so the mark is one size on every page and does not jump when
+                crossing from / to an inner page. (It was 48/56px here; the name
+                now leads as the h1, so the corner mark no longer has to carry
+                it.) */}
             <img
               src={logo}
               alt="Alimoon Nisha"
-              className="h-12 w-auto object-contain lg:h-14"
+              className="h-9 w-auto object-contain lg:h-10"
               draggable="false"
               style={{
                 filter: 'brightness(0) invert(1) drop-shadow(0 0 18px rgba(232, 184, 98,0.35))',
@@ -401,7 +405,7 @@ export default function Hero() {
               The same box height here and on the mark's link, so the two share
               a centreline by construction. Left to their content, the mark and
               the 43px link row sat 1.6px apart (2.8px below lg). */}
-          <ul className="hidden h-12 items-center gap-7 md:flex lg:h-14">
+          <ul className="hidden h-11 items-center gap-7 md:flex">
             {NAV.map((item) => (
               <li key={item.label} data-nav>
                 {/* No aria-current: Home has left the list — the mark is the way
@@ -432,8 +436,12 @@ export default function Hero() {
         data-rail
         /* The column's right edge, not the viewport's: 2.5rem in from the
            1440 column, which is 2.5rem in from the viewport until the screen
-           is wider than the column. */
-        className="absolute bottom-20 right-6 z-20 hidden flex-col items-center gap-4 lg:right-[max(2.5rem,calc((100%_-_1440px)/2_+_2.5rem))] lg:flex"
+           is wider than the column.
+
+           z-30, not z-20: the copy wrapper below is also z-20, spans the full
+           frame, and comes later in the DOM, so at an equal z it sat on top of
+           the rail and swallowed every hover and click on the socials. */
+        className="absolute bottom-20 right-6 z-30 hidden flex-col items-center gap-4 lg:right-[max(2.5rem,calc((100%_-_1440px)/2_+_2.5rem))] lg:flex"
       >
         <span className="h-16 w-px bg-gradient-to-b from-transparent to-hero-signal/70" />
         <div className="flex flex-col items-center gap-5">
@@ -462,16 +470,6 @@ export default function Hero() {
       <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-[1440px] items-center px-6 pb-32 pt-28 md:h-full md:min-h-0 lg:px-10">
         <div data-copy className="w-full max-w-[46rem]">
 
-          <div data-eyebrow className="mb-6 flex items-center gap-3">
-            <span
-              className="h-[5px] w-[5px] rotate-45 bg-hero-hot"
-              style={{ boxShadow: '0 0 6px rgba(232, 184, 98,1), 0 0 18px rgba(232, 184, 98,0.6)' }}
-            />
-            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-hero-signal sm:text-[11px]">
-              UX Designer / UX Engineer
-            </span>
-          </div>
-
           {/* Lines are explicit, not left to wrapping. At this size the browser
               broke "I turn complex problems" mid-phrase and produced a fourth
               line, which also meant two visual lines sharing one clip mask and
@@ -496,13 +494,40 @@ export default function Hero() {
               white, 1.7:1 — and they read as two titles stacked, neither
               leading. Now the difference is in kind: the name at 700 and the
               headline at 420 in a softer ink, with only its gold phrase in full
-              colour, and the name about 2.2x the headline, not 1.7x.
+              colour, and the name about 1.9x the headline, not 1.7x. (It was 2.2x at
+              a 5.5rem cap; she asked for the name a little smaller, now 4.75rem.)
 
               Tracking is -0.03em, not tighter. At -0.045em the l-i-m in
               "Alimoon" touched and the name set as one dark slab. */}
+          {/* Who and how long: the facts a visitor looks for first, in one
+              line above the name. It used to sit as a faint caption beside the
+              button, where it read as clutter and pulled from the CTA. The role
+              is here because nothing else in the hero says what she does.
+              White, not gold: the gold is kept for "to solutions." and the
+              button's arrow. */}
+          {/* Two unbreakable groups, role and experience. Below `sm` the line is
+              too narrow for both, so the experience drops whole to a second
+              line, indented under the role, and the dot between them is hidden
+              so no line starts or ends on a stray separator. "8+ years of
+              experience", not "8 yrs": on its own, "8 yrs" did not say of what. */}
+          <p data-eyebrow className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.2em] sm:text-[12px] sm:tracking-[0.24em]">
+            <span className="flex items-center gap-3 whitespace-nowrap">
+              <span
+                aria-hidden="true"
+                className="h-[5px] w-[5px] rotate-45 bg-hero-ink"
+                style={{ boxShadow: '0 0 6px rgba(255, 255, 255, 0.6), 0 0 14px rgba(255, 255, 255, 0.25)' }}
+              />
+              <span className="text-hero-ink">Design Engineer</span>
+            </span>
+            <span aria-hidden="true" className="hidden text-hero-mute/50 sm:inline">·</span>
+            <span className="whitespace-nowrap text-hero-ink/80 max-sm:w-full max-sm:pl-[17px]">
+              8+ years of experience
+            </span>
+          </p>
+
           <h1
             data-headline
-            className="hero-headline hero-split leading-[0.98] tracking-[-0.03em] text-hero-ink text-[clamp(2.6rem,8.2vw,5.5rem)]"
+            className="hero-headline hero-split leading-[0.98] tracking-[-0.03em] text-hero-ink text-[clamp(2.35rem,7vw,4.75rem)]"
           >
             <span className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
               <span data-line className="inline-block">Alimoon Nisha</span>
@@ -511,7 +536,7 @@ export default function Hero() {
 
           <p
             data-headline
-            className="hero-headline hero-headline--voice hero-split mt-4 leading-[1.14] tracking-[-0.02em] text-[#c9cfe9] text-[clamp(1.2rem,3.3vw,2.5rem)]"
+            className="hero-headline hero-headline--voice hero-split mt-4 leading-[1.14] tracking-[-0.02em] text-[#c9cfe9] text-[clamp(1rem,calc(5.7vw-2.75px),2.125rem)]"
           >
             {HEADLINE.map((parts, i) => (
               <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
@@ -526,75 +551,10 @@ export default function Hero() {
             ))}
           </p>
 
-          {/* The sub carries everything the headline is free NOT to say: who she
-              is, where, and what she works on. The headline above is a mood; if
-              this paragraph goes vague the hero states nothing at all.
-
-              Four edits from the version handed over:
-                · "This is Alimoon Nisha" -> "I'm". The headline is first person
-                  ("I follow questions"), so a third-person introduction between
-                  it and "I design ..." switched voice twice in three lines.
-                · The name has since moved out of this sentence and up into
-                  the h1. "I'm Alimoon Nisha, a UX Analyst" directly under a
-                  title reading "Alimoon Nisha" said it twice in one glance, so
-                  this now opens "I'm a UX Analyst", with her sign-off.
-                · Then her own line, shortened at her request. Its opening
-                  sentence ("UX Designer & Engineer based in Dhaka, Bangladesh.")
-                  went: the eyebrow already names both roles and the meta line
-                  under the CTA already says Dhaka. "From research and
-                  interaction to" became "from research to", and the em dash a
-                  comma, per the note below.
-                · "etc." is gone. A capability list that trails off says the
-                  list ran out of energy, and it is the last thing read before
-                  the call to action.
-                · The front-end clause is back in its place. Designing AND
-                  shipping the code is the rarer half of what she does and the
-                  only claim here another designer could not also make.
-
-              THREE LINES at 183 characters. A two-line version was tried and
-              is not reachable with this copy: at the 672px measure a line holds
-              about 64 characters, so two lines is roughly a 128-character
-              budget. Widening further would buy it, and is refused — 672px is
-              already at the edge of a comfortable measure, and the fix for a
-              long paragraph is a shorter paragraph, not a wider column.
-
-              The em dash in "products—then" was replaced with a comma. No em
-              dashes anywhere in this project's copy.
-
-              MEASURE: max-w-2xl (672px), widened from max-w-lg (512px). It now
-              sits just inside the headline's longest line rather than stepping
-              well in from it, so the two blocks read as one column. The cost is
-              about 64 characters per line, which lands inside the 45-75 that is
-              comfortable to read. Do not widen it further to absorb a longer
-              paragraph; shorten the paragraph instead.
-
-              If this is edited, re-measure the RENDERED line count rather than
-              counting characters, and check it at 375px as well as desktop.
-              Below 672px the viewport, not this cap, sets the width, so the
-              mobile line count does not follow from the desktop one. */}
-          <p data-sub className="mt-6 max-w-2xl text-[15px] leading-relaxed text-[#b9c0dd] sm:text-[16px]">
-            I design thoughtful experiences for banking, payments, healthcare, and
-            enterprise products, from research to production-ready interfaces.
-          </p>
-
-          <div data-cta className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <a
-              ref={cta}
-              href="/work"
-              onClick={(e) => go(e, '/work')}
-              className="group inline-flex items-center gap-4 transition-transform duration-150 active:scale-[0.97]"
-            >
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-hero-ink">
-                Explore my work
-              </span>
-              <span className="relative flex h-10 w-10 items-center justify-center rounded-full border border-hero-hot/50 transition-colors duration-200 group-hover:border-hero-hot group-hover:bg-hero-hot/15 group-hover:shadow-[0_0_10px_rgba(232,184,98,0.6),0_0_30px_rgba(232,184,98,0.35)]">
-                <span className="text-hero-hot transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-              </span>
-            </a>
-            <span className="hidden h-8 w-px bg-white/15 sm:block" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-hero-mute">
-              8 yrs · Dhaka, BD
-            </span>
+          {/* The CTA's look lives in WorkCta / `.work-cta`. Its transform is
+              GSAP's — the magnetic lean below — so no CSS animates it. */}
+          <div data-cta className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-5">
+            <WorkCta ref={cta} />
             {/* The rail's job below `lg`, where the rail is not rendered. */}
             <div className="flex items-center gap-4 lg:hidden">
               <a
