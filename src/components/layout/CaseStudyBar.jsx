@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/logo.png'
+import Navigation from './Navigation'
 
 /* The case studies' only chrome: the logo and a way back to /work, no nav.
 
@@ -21,9 +22,16 @@ export default function CaseStudyBar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  /* Below `md` the case studies use the shared Navigation too, so the mobile
+     header (logo and menu button) is the same on every page. The bar with the
+     back arrow is the desktop header. */
   return (
+    <>
+    <div className="md:hidden">
+      <Navigation variant="hero" dark />
+    </div>
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
+      className={`fixed inset-x-0 top-0 z-50 hidden transition-colors duration-500 md:block ${
         scrolled ? 'bg-hero-void/55 backdrop-blur-xl' : 'bg-transparent'
       }`}
     >
@@ -56,5 +64,6 @@ export default function CaseStudyBar() {
         </Link>
       </div>
     </header>
+    </>
   )
 }

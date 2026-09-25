@@ -47,7 +47,9 @@
    already on their way to /work, and a number that changes whenever a case
    study is added is a maintenance trap in a file nobody would think to open. */
 const ITEMS = [
-  { text: 'Available for work', tone: 'hot' },
+  // Same quiet tone as the rest: in gold it pulled the eye off the hero's
+  // own gold ("to solutions." and the CTA arrow) to a moving strip.
+  { text: 'Available for work', tone: 'dim' },
   { text: 'UX strategy · Interaction design · Front-end', tone: 'dim' },
   { text: 'Banking · Payments · Platform', tone: 'dim' },
 ]

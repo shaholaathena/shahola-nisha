@@ -8,16 +8,14 @@ import { softStops } from '../../lib/softGradient'
    AboutIntro — the arrival band of the About page.
 
    Composition follows her mockup: the statement stacked down the left, the
-   portrait holding the right half. Copy is hers from that mockup, including the
-   second, quieter paragraph, which is the one place on the site that says what
-   she is like rather than what she does.
+   portrait holding the right half. Copy is hers, now one paragraph: what she
+   does, then the line that says what she is like (the one place on the site
+   that does). It was two paragraphs split by a short gold rule until she
+   asked for one.
 
-   Two details carried over from the mockup because they do real work:
-
-     · the short gold rule between the two paragraphs, which separates the
-       professional line from the personal one without a heading, and
-     · the "Explore my work" pill, the same control the homepage hero ends on,
-       so the About page offers a way onward instead of dead-ending.
+   The "Explore my work" pill carries over from the mockup: the same control
+   the homepage hero ends on, so the About page offers a way onward instead of
+   dead-ending.
 
    ── The photograph ──
 
@@ -131,33 +129,26 @@ export default function AboutIntro() {
               Hi, I&rsquo;m <span className="text-hero-hot">Nisha.</span>
             </motion.h1>
 
+            {/* One paragraph, not two. It was a professional line and a quieter
+                personal one split by a short gold rule; she asked for them as
+                one. The two work sentences are folded together ("designing and
+                building" + "complex requirements into simple, intuitive
+                solutions"), and the personal sentence closes it. "Behind a camera"
+                became sketching at her request; "just for fun" keeps it a
+                hobby, not a second discipline. */}
             <motion.p
               {...step(0.1)}
               className="mt-6 max-w-2xl text-[16px] leading-relaxed text-[#b9c0dd] sm:text-[17px]"
             >
-              A design engineer based in Dhaka, designing and building digital
-              products and experiences that are useful, usable, and meaningful.
-            </motion.p>
-
-            {/* The rule that separates what she does from what she is like. */}
-            <motion.span
-              {...step(0.14)}
-              aria-hidden
-              className="mt-8 block h-px w-12 bg-hero-hot/70"
-            />
-
-            <motion.p
-              {...step(0.18)}
-              className="mt-7 max-w-2xl text-[14px] leading-relaxed text-hero-mute sm:text-[15px]"
-            >
-              I enjoy turning complex requirements into simple, intuitive
-              solutions that create real impact. When I&rsquo;m not designing,
-              you&rsquo;ll probably find me lost in a book, behind a camera, or
-              daydreaming about my next travel.
+              A design engineer based in Dhaka, turning complex requirements into
+              simple, intuitive products that are useful, usable, and meaningful.
+              When I&rsquo;m not designing, you&rsquo;ll probably find me lost in
+              a book, sketching (just for fun), or daydreaming about my next
+              travel.
             </motion.p>
 
             {/* Same control the homepage hero ends on. */}
-            <motion.div {...step(0.22)} className="mt-10">
+            <motion.div {...step(0.16)} className="mt-10">
               <WorkCta />
             </motion.div>
           </div>

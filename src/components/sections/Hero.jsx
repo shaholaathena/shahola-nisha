@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import NightScene from '../hero/NightScene'
 import WorkCta from '../ui/WorkCta'
+import Navigation from '../layout/Navigation'
 import NeonTicker from '../hero/NeonTicker'
 import logo from '../../assets/logo.png'
 import { meta } from '../../data/portfolio'
@@ -354,7 +355,15 @@ export default function Hero() {
              it: on a 2000px screen the bar had 330px of air on the left and 28px
              on the right. pointer-events-none with the links opting back in,
              because an element this size must not sit on top of the scene. ── */}
-      <nav className="pointer-events-none absolute inset-0 z-30" aria-label="Primary">
+      {/* Below `md` the homepage uses the site's shared Navigation (logo and
+          menu button), so the mobile header is identical on every page. It
+          used to carry a lone underlined "Work" link here instead, while the
+          inner pages had a menu and the case studies a back arrow. */}
+      <div className="md:hidden">
+        <Navigation variant="hero" dark />
+      </div>
+
+      <nav className="pointer-events-none absolute inset-0 z-30 hidden md:block" aria-label="Primary">
 
         <div className="absolute inset-x-0 top-0 mx-auto flex max-w-[1440px] items-center justify-between px-6 pt-7 lg:px-10 lg:pt-9">
           {/* The real mark, not the `A.` that stood in for it. The file is dark
@@ -385,15 +394,6 @@ export default function Hero() {
                 filter: 'brightness(0) invert(1) drop-shadow(0 0 18px rgba(232, 184, 98,0.35))',
               }}
             />
-          </a>
-
-          <a
-            href="/work"
-            onClick={(e) => go(e, '/work')}
-            data-nav
-            className="pointer-events-auto font-mono text-[10px] uppercase tracking-[0.2em] text-hero-signal underline decoration-hero-signal/40 underline-offset-[6px] md:hidden"
-          >
-            Work
           </a>
 
           {/* Same right edge as the social rail at the bottom of the frame, so

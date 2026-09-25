@@ -18,8 +18,8 @@
    and employer.
 
    Losing that paragraph costs the page nothing. AboutIntro already opens with
-   "A design engineer based in Dhaka, designing and building digital products
-   and experiences that are useful, usable, and meaningful", and the Experience timeline names SSL
+   "A design engineer based in Dhaka, turning complex requirements into simple,
+   intuitive products ...", and the Experience timeline names SSL
    Wireless as the current role two sections above this one. Saying it a third
    time here was the weakest use of the most prominent paragraph in the section.
 
