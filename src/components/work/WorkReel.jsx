@@ -258,7 +258,11 @@ function TrackCard({ p, i, pos, c, mx, my, focal, onPick, navigate }) {
   return (
     <motion.div
       aria-hidden
-      data-cursor={clickable ? '' : undefined}
+      /* `plain`: the gold star still marks the cover as clickable, but no
+         "View" tag follows the cursor. The cover used to carry its own "View
+         case study" caption on hover too, so hovering said "view" twice while
+         the same button already sits in the right-hand column. */
+      data-cursor={clickable ? 'plain' : undefined}
       onClick={() => {
         if (opens) navigate(p.link)
         else if (!focal) onPick(i)
@@ -291,18 +295,6 @@ function TrackCard({ p, i, pos, c, mx, my, focal, onPick, navigate }) {
         <Media p={p} />
       </div>
 
-      {/* Just the words, centred along the foot of the cover. No button shape:
-          the cover itself is the target, so the label only has to name what the
-          click does. A gradient up from the bottom edge, rather than a veil over
-          the whole cover, keeps the artwork unchanged above it while still
-          giving the type a dark ground on a white dashboard shot. */}
-      {opens && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-1.5 justify-center bg-gradient-to-t from-hero-void/95 via-hero-void/60 to-transparent pb-4 pt-12 opacity-0 transition-[opacity,transform] duration-200 ease-out-quint group-hover:translate-y-0 group-hover:opacity-100">
-          <span className="font-mono text-[10px] uppercase leading-none tracking-[0.28em] text-hero-hot">
-            View case study
-          </span>
-        </div>
-      )}
     </motion.div>
   )
 }
@@ -365,7 +357,9 @@ function MobileLabel({ p, i, pos }) {
 
   return (
     <motion.div
-      className="absolute inset-x-0 top-[64%] px-6 text-center lg:hidden"
+      /* Top = the focal cover's centre (36vh, see the track) + half its
+         height on a phone (~96px) + a 20px gap. */
+      className="absolute inset-x-0 top-[calc(36vh+116px)] px-6 text-center lg:hidden"
       style={{ opacity, pointerEvents, visibility }}
     >
       <p className="font-mono text-[9.5px] uppercase tracking-[0.24em] text-hero-hot">
@@ -376,7 +370,8 @@ function MobileLabel({ p, i, pos }) {
       <h3 className="mt-2 font-display text-[clamp(1.3rem,6vw,1.9rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-hero-ink">
         {shortOf(p.id, p.company)}
       </h3>
-      <p className="mx-auto mt-3 max-w-[340px] text-[13px] leading-relaxed text-[#b9c0dd]">
+      <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.22em] text-hero-mute">Overview</p>
+      <p className="mx-auto mt-1.5 max-w-[340px] text-[13px] leading-relaxed text-[#b9c0dd]">
         {p.description}
       </p>
       {p.link && <WorkCta to={p.link} label="View case study" className="work-cta--sm mt-5" />}
@@ -740,8 +735,13 @@ export default function WorkReel() {
           }}
         />
 
-        {/* ── The covers, as planes in a real 3D scene ── */}
-        <div className="absolute inset-0 z-[10]">
+        {/* ── The covers, as planes in a real 3D scene ──
+
+            Below `lg` the whole track rides 14vh higher, so the label under
+            the focal cover (serial, name, overview, button) has room above the
+            bottom bar even on a short phone. MobileLabel's top is measured
+            from the same 36vh centre. */}
+        <div className="absolute inset-0 z-[10] max-lg:-translate-y-[14vh]">
           {projects.map((proj, i) => (
             <TrackCard
               key={proj.id}
