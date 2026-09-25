@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { meta } from '../../data/portfolio'
-import { SPLIT, MAIN, HEADING } from '../about/columns'
+import { HEADING } from '../about/columns'
 import Eyebrow from '../about/Eyebrow'
 
 const EASE = [0.22, 1, 0.36, 1]
@@ -85,14 +85,18 @@ export default function CTASection() {
             The grid lost its top rule and top margin with the masthead: the
             section element already draws a border above itself, and a second
             one immediately under it read as a doubled line. */}
-        <div className={SPLIT}>
+        {/* Its own split, not the shared thirds: in a third (~426px at 1440)
+            the closing line broke into three short lines. 5/12 gives it room
+            for two, "Let's make something / worth using.", and the links take
+            the other 7/12. */}
+        <div className="grid grid-cols-1 gap-y-12 lg:grid-cols-12 lg:gap-x-10">
 
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 30, filter: 'blur(6px)' }}
             whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             viewport={VP}
             transition={{ duration: 1, ease: EASE }}
-            
+            className="lg:col-span-5"
           >
             {/* The closing line moved out of its own full-width band and into
                 the left column, so it sits level with the two links instead of
@@ -100,8 +104,7 @@ export default function CTASection() {
                 one now use, which makes the contact band the fourth rather than
                 a layout of its own.
 
-                Its column is the shared third from columns.js and its heading
-                the shared HEADING, with the same small label every other
+                Its heading is the shared HEADING, with the same small label every other
                 section opens on, so the page ends on the rhythm it kept all
                 the way down. "worth using" is held together so the line never
                 breaks inside the gold phrase. */}
@@ -118,7 +121,7 @@ export default function CTASection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VP}
             transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-            className={MAIN}
+            className="lg:col-span-7"
           >
             {CHANNELS.map((c) => (
               <a

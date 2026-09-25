@@ -327,12 +327,18 @@ export default function AboutAtmosphere({ horizon = true, parallax = true, topSt
           560px up now, where the only thing over it is the closing headline in
           full-strength ink. Both edges fade so it is cut off by the frame
           rather than stopping in open sky — NightScene's treatment, same
-          reason. Brightness 0.8 rather than the 0.42 first tried: this artwork
+          reason. The FOOT fades too: it used to be opaque to the image's
+          bottom edge, which drew a flat horizontal cut across the page where
+          the range ended above the skyline. It now sits 80px lower (bottom
+          400px) and dissolves over its lowest ~40% into the skyline's own
+          fade-in, so the two read as one horizon. Sized 44% x 260px, down
+          from 58% x 340px: she wanted the range smaller on this page, where
+          it is backdrop to text rather than the subject. Brightness 0.8 rather than the 0.42 first tried: this artwork
           is already dark (NightScene has to push it to 1.35 to read at all),
           so 0.42 was very nearly invisible. */}
       <div
         data-depth={DEPTH.range}
-        className="absolute bottom-[480px] left-0 hidden h-[280px] w-[58%] will-change-transform sm:block"
+        className="absolute bottom-[400px] left-0 hidden h-[260px] w-[44%] will-change-transform sm:block"
         style={{
           maskImage:
             'linear-gradient(90deg, #000 0%, #000 44%, rgba(0,0,0,0.55) 72%, transparent 100%)',
@@ -343,8 +349,8 @@ export default function AboutAtmosphere({ horizon = true, parallax = true, topSt
         <div
           className="absolute inset-0"
           style={{
-            maskImage: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 10%, #000 24%, #000 100%)',
-            WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 10%, #000 24%, #000 100%)',
+            maskImage: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 9%, #000 20%, #000 56%, rgba(0,0,0,0.55) 76%, rgba(0,0,0,0.15) 90%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 9%, #000 20%, #000 56%, rgba(0,0,0,0.55) 76%, rgba(0,0,0,0.15) 90%, transparent 100%)',
           }}
         >
           <img
